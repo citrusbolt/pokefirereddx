@@ -94,7 +94,7 @@ struct BoxPokemon
     u8 hasSpecies:1;
     u8 isEgg:1;
     u8 altBall:3;
-    u8 unused:2;
+    u8 form:2;
     u8 otName[PLAYER_NAME_LENGTH];
     u8 markings;
     u16 checksum;
@@ -204,6 +204,8 @@ struct BaseStats
  /* 0x18 */ u8 safariZoneFleeRate;
  /* 0x19 */ u8 bodyColor : 7;
             u8 noFlip : 1;
+			bool8 hasForms;
+			u16 forms[4];
 };
 
 struct BattleMove
@@ -419,5 +421,6 @@ bool8 HasTwoFramesAnimation(u16 species);
 struct Unknown_806F160_Struct *sub_806F2AC(u8 id, u8 arg1);
 void sub_806F47C(u8 id);
 u8 *sub_806F4F8(u8 id, u8 arg1);
+void ChangeForm(u8 form);
 
 #endif // GUARD_POKEMON_H

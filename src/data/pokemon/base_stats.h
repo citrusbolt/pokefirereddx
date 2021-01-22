@@ -868,6 +868,8 @@ const struct BaseStats gBaseStats[] =
         .safariZoneFleeRate = 0,
         .bodyColor = BODY_COLOR_YELLOW,
         .noFlip = FALSE,
+		.hasForms = TRUE,
+		.forms = {SPECIES_RAICHU, FORM_RAICHU_1, SPECIES_RAICHU, SPECIES_RAICHU},
     },
 
     [SPECIES_SANDSHREW] =
@@ -12438,5 +12440,37 @@ const struct BaseStats gBaseStats[] =
         .safariZoneFleeRate = 0,
         .bodyColor = BODY_COLOR_BLUE,
         .noFlip = FALSE,
-    }
+    },
+
+    [FORM_RAICHU_1] =
+    {
+        .baseHP        = 60,
+        .baseAttack    = 85,
+        .baseDefense   = 50,
+        .baseSpeed     = 100,
+        .baseSpAttack  = 95,
+        .baseSpDefense = 85,
+        .type1 = TYPE_ELECTRIC,
+        .type2 = TYPE_PSYCHIC,
+        .catchRate = 75,
+        .expYield = 122,
+        .evYield_HP        = 0,
+        .evYield_Attack    = 0,
+        .evYield_Defense   = 0,
+        .evYield_Speed     = 3,
+        .evYield_SpAttack  = 0,
+        .evYield_SpDefense = 0,
+        .item1 = ITEM_NONE,
+        .item2 = ITEM_ORAN_BERRY,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 10,
+        .friendship = 70,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroup1 = EGG_GROUP_FIELD,
+        .eggGroup2 = EGG_GROUP_FAIRY,
+        .abilities = {ABILITY_LIGHTNING_ROD, ABILITY_NONE},
+        .safariZoneFleeRate = 0,
+        .bodyColor = BODY_COLOR_YELLOW,
+        .noFlip = FALSE,
+    },
 };

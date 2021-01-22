@@ -1343,12 +1343,16 @@ static void CopyMonToSummaryStruct(struct Pokemon *mon)
 static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
 {
     u32 i;
+	u8 form;
     struct PokeSummary *sum = &sMonSummaryScreen->summary;
     // Spread the data extraction over multiple frames.
     switch (sMonSummaryScreen->switchCounter)
     {
     case 0:
         sum->species = GetMonData(mon, MON_DATA_SPECIES);
+		form = GetMonData(mon, MON_DATA_FORM);
+		if (gBaseStats[sum->species].hasForms)
+			sum->species = gBaseStats[sum->species].forms[form];
         sum->species2 = GetMonData(mon, MON_DATA_SPECIES2);
         sum->exp = GetMonData(mon, MON_DATA_EXP);
         sum->level = GetMonData(mon, MON_DATA_LEVEL);

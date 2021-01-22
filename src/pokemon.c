@@ -48,6 +48,8 @@
 #include "constants/moves.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
+#include "printf.h"
+#include "mgba.h"
 
 struct SpeciesItem
 {
@@ -2782,8 +2784,12 @@ void CalculateMonStats(struct Pokemon *mon)
     s32 spDefenseIV = GetMonData(mon, MON_DATA_SPDEF_IV, NULL);
     s32 spDefenseEV = GetMonData(mon, MON_DATA_SPDEF_EV, NULL);
     u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
+	u8 form = GetMonData(mon, MON_DATA_FORM, NULL);
     s32 level = GetLevelFromMonExp(mon);
     s32 newMaxHP;
+
+	if (gBaseStats[species].hasForms)
+		species = gBaseStats[species].forms[form];
 
     SetMonData(mon, MON_DATA_LEVEL, &level);
 
@@ -3803,7 +3809,9 @@ u32 GetBoxMonData(struct BoxPokemon *boxMon, s32 field, u8 *data)
         retVal = substruct3->pokeball;
         if (retVal == BALL_LEVEL)
         {
+			mgba_printf(MGBA_LOG_DEBUG, "%s %X %s %X", "READING\npokeball:", substruct3->pokeball, "\naltBall: ", boxMon->altBall);
             retVal += boxMon->altBall;
+			mgba_printf(MGBA_LOG_DEBUG, "%X", retVal);
         }
         break;
     case MON_DATA_OT_GENDER:
@@ -3961,6 +3969,9 @@ u32 GetBoxMonData(struct BoxPokemon *boxMon, s32 field, u8 *data)
                 | (substruct3->giftRibbon6 << 25)
                 | (substruct3->giftRibbon7 << 26);
         }
+	case MON_DATA_FORM:
+		retVal = boxMon->form;
+		break;
     default:
         break;
     }
@@ -4180,6 +4191,8 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         {
             substruct3->pokeball = BALL_LEVEL;
             boxMon->altBall = pokeball - BALL_LEVEL;
+			mgba_printf(MGBA_LOG_DEBUG, "%s %X %s %X", "SAVING\npokeball:", substruct3->pokeball, "\naltBall: ", boxMon->altBall);
+			mgba_printf(MGBA_LOG_DEBUG, "%X", pokeball);
         }
         else
         {
@@ -4286,6 +4299,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         substruct3->spDefenseIV = (ivs >> 25) & 0x1F;
         break;
     }
+	case MON_DATA_FORM:
+		boxMon->form = *data;
+		break;
     default:
         break;
     }
@@ -6980,4 +6996,9 @@ u8 *sub_806F4F8(u8 id, u8 arg1)
 
         return structPtr->byteArrays[arg1];
     }
+}
+
+void ChangeForm(u8 form)
+{
+	SetMonData(&gPlayerParty[0], MON_DATA_FORM, &form);
 }
