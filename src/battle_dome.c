@@ -500,7 +500,7 @@ static const u8 sBattleStyleMovePoints[MOVES_COUNT][NUM_MOVE_POINT_TYPES] =
 
 // This array is searched in-order to determine what battle style a tourney trainer uses.
 // If the sum of the points for the party's moves meets/exceeds all the point totals of an element, then they use that battle style
-static const u8 sBattleStyleThresholds[NUM_BATTLE_STYLES - 1][NUM_MOVE_POINT_TYPES] =
+static const u8 sBattleStyleThresholds[NUM_BATTLE_STYLES][NUM_MOVE_POINT_TYPES] =
 {
     [DOME_BATTLE_STYLE_RISKY]           = {[MOVE_POINTS_RISKY] = 1},
     [DOME_BATTLE_STYLE_STALL]           = {[MOVE_POINTS_HEAL] = 2, [MOVE_POINTS_STATUS] = 1, [MOVE_POINTS_DEF] = 2},
@@ -530,21 +530,6 @@ static const u8 sBattleStyleThresholds[NUM_BATTLE_STYLES - 1][NUM_MOVE_POINT_TYP
     [DOME_BATTLE_STYLE_POPULAR_STRONG]  = {[MOVE_POINTS_POPULAR] = 2, [MOVE_POINTS_STRONG] = 4},
     [DOME_BATTLE_STYLE_EFFECTS]         = {[MOVE_POINTS_EFFECT] = 4},
     [DOME_BATTLE_STYLE_BALANCED]        = {0}, // If no other thresholds are met, this battle style is used
-    [DOME_BATTLE_STYLE_UNUSED1]         = {0}, // Here below is unreachable
-    [DOME_BATTLE_STYLE_UNUSED2]         = {0},
-    [DOME_BATTLE_STYLE_UNUSED3]         = {0},
-  //[DOME_BATTLE_STYLE_UNUSED4]         = {0}, // Excluded here, presumably was meant to be a style just for Dome Ace Tucker
-};
-static const u8 sUnusedArray[] =
-{
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    3, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0,
-    0, 0, 3, 0, 0, 0, 0, 0, 3, 2, 0, 0, 0, 0, 0, 2,
-    0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0,
-    0, 2, 253, 0, 0, 0, 0, 0, 253, 0, 0, 0, 0, 0, 253, 0,
-    0, 0, 0, 0, 253, 0, 0, 0, 0, 0, 253, 254, 0, 0, 0, 0,
-    0, 254, 0, 0, 0, 0, 0, 254, 0, 0, 0, 0, 0, 254, 0, 0,
-    0, 0, 0, 254, 0, 0, 0, 0, 0,
 };
 
 // 1st array is for cursor position (sprite id): cursor can be on a trainer info button, a match info button, or the exit/cancel button
@@ -863,9 +848,7 @@ static const struct WindowTemplate sInfoCardWindowTemplates[] =
         .paletteNum = 15,
         .baseBlock = 372,
     },
-    #ifdef UBFIX
     DUMMY_WIN_TEMPLATE,
-    #endif
 };
 
 static const struct ScanlineEffectParams sTourneyTreeScanlineEffectParams =
@@ -878,13 +861,6 @@ static const struct ScanlineEffectParams sTourneyTreeScanlineEffectParams =
 static const struct CompressedSpriteSheet sTourneyTreeButtonsSpriteSheet[] =
 {
     {gDomeTourneyTreeButtons_Gfx, 0x0600, 0x0000},
-    {},
-};
-
-// Unused
-static const struct CompressedSpritePalette sTourneyTreeButtonsSpritePal[] =
-{
-    {gDomeTourneyTreeButtons_Pal, 0x0000},
     {},
 };
 
@@ -1265,10 +1241,6 @@ static const u8 *const sBattleDomeOpponentStyleTexts[NUM_BATTLE_STYLES] =
     [DOME_BATTLE_STYLE_POPULAR_STRONG]  = BattleDome_Text_StyleAttacksQuicklyStrongMoves,
     [DOME_BATTLE_STYLE_EFFECTS]         = BattleDome_Text_StyleUsesAddedEffectMoves,
     [DOME_BATTLE_STYLE_BALANCED]        = BattleDome_Text_StyleUsesBalancedMixOfMoves,
-    [DOME_BATTLE_STYLE_UNUSED1]         = BattleDome_Text_StyleSampleMessage1,
-    [DOME_BATTLE_STYLE_UNUSED2]         = BattleDome_Text_StyleSampleMessage2,
-    [DOME_BATTLE_STYLE_UNUSED3]         = BattleDome_Text_StyleSampleMessage3,
-    [DOME_BATTLE_STYLE_UNUSED4]         = BattleDome_Text_StyleSampleMessage4,
 };
 
 // The second line of text on a trainers info card that gives information about their party's stat spread
@@ -2535,7 +2507,8 @@ static void CreateDomeOpponentMon(u8 monPartyId, u16 tournamentTrainerId, u8 tou
                                          level,
                                          gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]].nature,
                                          fixedIv,
-                                         gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]].evSpread, otId);
+                                         gFacilityTrainerMons[DOME_MONS[tournamentTrainerId][tournamentMonId]].evSpread, otId,
+                                         0);
 
     friendship = MAX_FRIENDSHIP;
     for (i = 0; i < MAX_MON_MOVES; i++)
@@ -4245,7 +4218,8 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                                                                   SpriteCb_MonIcon,
                                                                   x | sInfoTrainerMonX[i],
                                                                   y + sInfoTrainerMonY[i],
-                                                                  0, 0);
+                                                                  0, 0,
+                                                                  0);
             gSprites[sInfoCard->spriteIds[2 + i + arrId]].oam.priority = 0;
         }
         else if (trainerId == TRAINER_FRONTIER_BRAIN)
@@ -4254,7 +4228,8 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                                                                   SpriteCb_MonIcon,
                                                                   x | sInfoTrainerMonX[i],
                                                                   y + sInfoTrainerMonY[i],
-                                                                  0, 0);
+                                                                  0, 0,
+                                                                  0);
             gSprites[sInfoCard->spriteIds[2 + i + arrId]].oam.priority = 0;
         }
         else
@@ -4263,7 +4238,8 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
                                                                   SpriteCb_MonIcon,
                                                                   x | sInfoTrainerMonX[i],
                                                                   y + sInfoTrainerMonY[i],
-                                                                  0, 0);
+                                                                  0, 0,
+                                                                  0);
             gSprites[sInfoCard->spriteIds[2 + i + arrId]].oam.priority = 0;
         }
 
@@ -4734,7 +4710,7 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
                                                                   SpriteCb_MonIcon,
                                                                   x | sLeftTrainerMonX[i],
                                                                   y + sLeftTrainerMonY[i],
-                                                                  0, 0);
+                                                                  0, 0, 0);
             gSprites[sInfoCard->spriteIds[2 + i + arrId]].oam.priority = 0;
         }
         else if (trainerIds[0] == TRAINER_FRONTIER_BRAIN)
@@ -4743,7 +4719,7 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
                                                                   SpriteCb_MonIcon,
                                                                   x | sLeftTrainerMonX[i],
                                                                   y + sLeftTrainerMonY[i],
-                                                                  0, 0);
+                                                                  0, 0, 0);
             gSprites[sInfoCard->spriteIds[2 + i + arrId]].oam.priority = 0;
         }
         else
@@ -4752,7 +4728,7 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
                                                                   SpriteCb_MonIcon,
                                                                   x | sLeftTrainerMonX[i],
                                                                   y + sLeftTrainerMonY[i],
-                                                                  0, 0);
+                                                                  0, 0, 0);
             gSprites[sInfoCard->spriteIds[2 + i + arrId]].oam.priority = 0;
         }
 
@@ -4774,7 +4750,7 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
                                                                   SpriteCb_MonIcon,
                                                                   x | sRightTrainerMonX[i],
                                                                   y + sRightTrainerMonY[i],
-                                                                  0, 0);
+                                                                  0, 0, 0);
             gSprites[sInfoCard->spriteIds[5 + i + arrId]].oam.priority = 0;
         }
         else if (trainerIds[1] == TRAINER_FRONTIER_BRAIN)
@@ -4783,7 +4759,7 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
                                                                   SpriteCb_MonIcon,
                                                                   x | sRightTrainerMonX[i],
                                                                   y + sRightTrainerMonY[i],
-                                                                  0, 0);
+                                                                  0, 0, 0);
             gSprites[sInfoCard->spriteIds[5 + i + arrId]].oam.priority = 0;
         }
         else
@@ -4792,7 +4768,7 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
                                                                   SpriteCb_MonIcon,
                                                                   x | sRightTrainerMonX[i],
                                                                   y + sRightTrainerMonY[i],
-                                                                  0, 0);
+                                                                  0, 0, 0);
             gSprites[sInfoCard->spriteIds[5 + i + arrId]].oam.priority = 0;
         }
 
@@ -5938,11 +5914,8 @@ static void DecideRoundWinners(u8 roundId)
         // Decide which one of two trainers wins!
         else if (tournamentId2 != 0xFF)
         {
-            // BUG: points1 and points2 are not cleared at the beginning of the loop resulting in not fair results.
-            #ifdef BUGFIX
             points1 = 0;
             points2 = 0;
-            #endif
 
             // Calculate points for both trainers.
             for (monId1 = 0; monId1 < FRONTIER_PARTY_SIZE; monId1++)

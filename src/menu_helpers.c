@@ -166,15 +166,14 @@ void CreateYesNoMenuWithCallbacks(u8 taskId, const struct WindowTemplate *templa
 
 static void Task_CallYesOrNoCallback(u8 taskId)
 {
+    PlaySE(SE_SELECT);
     switch (Menu_ProcessInputNoWrapClearOnChoose())
     {
     case 0:
-        PlaySE(SE_SELECT);
         gUnknown_0203A138.yesFunc(taskId);
         break;
     case 1:
     case MENU_B_PRESSED:
-        PlaySE(SE_SELECT);
         gUnknown_0203A138.noFunc(taskId);
         break;
     }
@@ -302,7 +301,7 @@ bool8 itemid_80BF6D8_mail_related(u16 itemId)
 
 bool8 MenuHelpers_LinkSomething(void)
 {
-    if (IsUpdateLinkStateCBActive() == TRUE || gReceivedRemoteLinkPlayers == 1)
+    if (IsUpdateLinkStateCBActive() || gReceivedRemoteLinkPlayers == 1)
         return TRUE;
     else
         return FALSE;
@@ -318,7 +317,7 @@ static bool8 sub_81221D0(void)
 
 bool8 MenuHelpers_CallLinkSomething(void)
 {
-    if (sub_81221D0() == TRUE)
+    if (sub_81221D0())
         return TRUE;
     else if (sub_800B504() != TRUE)
         return FALSE;

@@ -62,6 +62,7 @@ static EWRAM_DATA u16 sMovingNpcMapId = 0;
 static EWRAM_DATA u16 sFieldEffectScriptId = 0;
 
 static u8 gBrailleWindowId;
+static bool8 gIsScriptedWildDouble;
 
 extern const SpecialFunc gSpecials[];
 extern const u8 *gStdScripts[];
@@ -92,11 +93,6 @@ static u8 * const sScriptStringVars[] =
 };
 
 bool8 ScrCmd_nop(struct ScriptContext *ctx)
-{
-    return FALSE;
-}
-
-bool8 ScrCmd_nop1(struct ScriptContext *ctx)
 {
     return FALSE;
 }
@@ -653,13 +649,12 @@ bool8 ScrCmd_fadescreenswapbuffers(struct ScriptContext *ctx)
         case FADE_FROM_BLACK:
         case FADE_FROM_WHITE:
             CpuCopy32(gPaletteDecompressionBuffer, gPlttBufferUnfaded, PLTT_DECOMP_BUFFER_SIZE);
-            FadeScreen(mode, 0);
             break;
         default:
             CpuCopy32(gPlttBufferUnfaded, gPaletteDecompressionBuffer, PLTT_DECOMP_BUFFER_SIZE);
-            FadeScreen(mode, 0);
             break;
     }
+    FadeScreen(mode, 0);
 
     SetupNativeScript(ctx, IsPaletteNotActive);
     return TRUE;
@@ -946,7 +941,7 @@ bool8 ScrCmd_playbgm(struct ScriptContext *ctx)
     u16 songId = ScriptReadHalfword(ctx);
     bool8 val = ScriptReadByte(ctx);
 
-    if (val == TRUE)
+    if (val)
         Overworld_SetSavedMusic(songId);
     PlayNewMapMusic(songId);
     return FALSE;
@@ -1348,7 +1343,7 @@ bool8 ScrCmd_yesnobox(struct ScriptContext *ctx)
     u8 left = ScriptReadByte(ctx);
     u8 top = ScriptReadByte(ctx);
 
-    if (ScriptMenu_YesNo(left, top) == TRUE)
+    if (ScriptMenu_YesNo(left, top))
     {
         ScriptContext1_Stop();
         return TRUE;
@@ -1366,7 +1361,7 @@ bool8 ScrCmd_multichoice(struct ScriptContext *ctx)
     u8 multichoiceId = ScriptReadByte(ctx);
     u8 ignoreBPress = ScriptReadByte(ctx);
 
-    if (ScriptMenu_Multichoice(left, top, multichoiceId, ignoreBPress) == TRUE)
+    if (ScriptMenu_Multichoice(left, top, multichoiceId, ignoreBPress))
     {
         ScriptContext1_Stop();
         return TRUE;
@@ -1385,7 +1380,7 @@ bool8 ScrCmd_multichoicedefault(struct ScriptContext *ctx)
     u8 defaultChoice = ScriptReadByte(ctx);
     u8 ignoreBPress = ScriptReadByte(ctx);
 
-    if (ScriptMenu_MultichoiceWithDefault(left, top, multichoiceId, ignoreBPress, defaultChoice) == TRUE)
+    if (ScriptMenu_MultichoiceWithDefault(left, top, multichoiceId, ignoreBPress, defaultChoice))
     {
         ScriptContext1_Stop();
         return TRUE;
@@ -1415,7 +1410,7 @@ bool8 ScrCmd_multichoicegrid(struct ScriptContext *ctx)
     u8 numColumns = ScriptReadByte(ctx);
     u8 ignoreBPress = ScriptReadByte(ctx);
 
-    if (ScriptMenu_MultichoiceGrid(left, top, multichoiceId, ignoreBPress, numColumns) == TRUE)
+    if (ScriptMenu_MultichoiceGrid(left, top, multichoiceId, ignoreBPress, numColumns))
     {
         ScriptContext1_Stop();
         return TRUE;
@@ -1687,11 +1682,9 @@ bool8 ScrCmd_givemon(struct ScriptContext *ctx)
     u16 species = VarGet(ScriptReadHalfword(ctx));
     u8 level = ScriptReadByte(ctx);
     u16 item = VarGet(ScriptReadHalfword(ctx));
-    u32 unkParam1 = ScriptReadWord(ctx);
-    u32 unkParam2 = ScriptReadWord(ctx);
-    u8 unkParam3 = ScriptReadByte(ctx);
+    u8 form = ScriptReadWord(ctx);
 
-    gSpecialVar_Result = ScriptGiveMon(species, level, item, unkParam1, unkParam2, unkParam3);
+    gSpecialVar_Result = ScriptGiveMon(species, level, item, form);
     return FALSE;
 }
 
@@ -1724,7 +1717,7 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
         if (!species)
             break;
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], moveId) == TRUE)
+        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], moveId))
         {
             gSpecialVar_Result = i;
             gSpecialVar_0x8004 = species;
@@ -1875,34 +1868,35 @@ bool8 ScrCmd_setwildbattle(struct ScriptContext *ctx)
     u16 species = ScriptReadHalfword(ctx);
     u8 level = ScriptReadByte(ctx);
     u16 item = ScriptReadHalfword(ctx);
+    u16 species2 = ScriptReadHalfword(ctx);
+    u8 level2 = ScriptReadByte(ctx);
+    u16 item2 = ScriptReadHalfword(ctx);
 
-    CreateScriptedWildMon(species, level, item);
+    if (species2)
+    {
+        CreateScriptedDoubleWildMon(species, level, item, species2, level2, item2);
+        gIsScriptedWildDouble = TRUE;
+    }
+    else
+    {
+        CreateScriptedWildMon(species, level, item);
+        gIsScriptedWildDouble = FALSE;
+    }
+
     return FALSE;
 }
 
 bool8 ScrCmd_dowildbattle(struct ScriptContext *ctx)
 {
-    BattleSetup_StartScriptedWildBattle();
-    ScriptContext1_Stop();
-    return TRUE;
-}
+    if (gIsScriptedWildDouble)
+    {
+        BattleSetup_StartScriptedDoubleWildBattle();
+    }
+    else
+    {
+        BattleSetup_StartScriptedWildBattle();
+    }
 
-bool8 ScrCmd_setdoublewildbattle(struct ScriptContext *ctx)
-{
-    u16 species1 = ScriptReadHalfword(ctx);
-    u8 level1 = ScriptReadByte(ctx);
-    u16 item1 = ScriptReadHalfword(ctx);
-    u16 species2 = ScriptReadHalfword(ctx);
-    u8 level2 = ScriptReadByte(ctx);
-    u16 item2 = ScriptReadHalfword(ctx);
-
-    CreateScriptedDoubleWildMon(species1, level1, item1, species2, level2, item2);
-    return FALSE;
-}
-
-bool8 ScrCmd_dodoublewildbattle(struct ScriptContext *ctx)
-{
-    BattleSetup_StartScriptedDoubleWildBattle();
     ScriptContext1_Stop();
     return TRUE;
 }
@@ -2159,7 +2153,7 @@ bool8 ScrCmd_addcoins(struct ScriptContext *ctx)
 {
     u16 coins = VarGet(ScriptReadHalfword(ctx));
 
-    if (AddCoins(coins) == TRUE)
+    if (AddCoins(coins))
         gSpecialVar_Result = 0;
     else
         gSpecialVar_Result = 1;
@@ -2170,7 +2164,7 @@ bool8 ScrCmd_removecoins(struct ScriptContext *ctx)
 {
     u16 coins = VarGet(ScriptReadHalfword(ctx));
 
-    if (RemoveCoins(coins) == TRUE)
+    if (RemoveCoins(coins))
         gSpecialVar_Result = 0;
     else
         gSpecialVar_Result = 1;
@@ -2260,7 +2254,9 @@ bool8 ScrCmd_gotoram(struct ScriptContext *ctx)
     return FALSE;
 }
 
-bool8 ScrCmd_warpD1(struct ScriptContext *ctx)
+// Unused
+// For the warp used by the Aqua Hideout, see DoTeleportTileWarp
+bool8 ScrCmd_warpspinenter(struct ScriptContext *ctx)
 {
     u8 mapGroup = ScriptReadByte(ctx);
     u8 mapNum = ScriptReadByte(ctx);
@@ -2269,8 +2265,8 @@ bool8 ScrCmd_warpD1(struct ScriptContext *ctx)
     u16 y = VarGet(ScriptReadHalfword(ctx));
 
     SetWarpDestination(mapGroup, mapNum, warpId, x, y);
-    sub_808D074(GetPlayerFacingDirection());
-    sub_80B0244();
+    SetSpinStartFacingDir(GetPlayerFacingDirection());
+    DoSpinEnterWarp();
     ResetInitialPlayerAvatarState();
     return TRUE;
 }

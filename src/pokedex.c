@@ -1373,7 +1373,7 @@ static const struct SearchOptionText sDexSearchColorOptions[] =
     {},
 };
 
-static const struct SearchOptionText sDexSearchTypeOptions[] =
+static const struct SearchOptionText sDexSearchTypeOptions[NUMBER_OF_MON_TYPES + 1] = // + 2 for "None" and terminator, - 1 for Mystery
 {
     {gText_DexEmptyString, gText_DexSearchTypeNone},
     {gText_DexEmptyString, gTypeNames[TYPE_NORMAL]},
@@ -1407,7 +1407,7 @@ static const u8 sOrderOptions[] =
     ORDER_SMALLEST,
 };
 
-static const u8 sDexSearchTypeIds[] =
+static const u8 sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
 {
     TYPE_NONE,
     TYPE_NORMAL,
@@ -1587,9 +1587,6 @@ static void ResetPokedexView(struct PokedexView *pokedexView)
 
 void CB2_OpenPokedex(void)
 {
-    u8 *addr;
-    u32 size;
-
     switch (gMain.state)
     {
     case 0:
@@ -3037,9 +3034,14 @@ static void SpriteCB_PokedexListMonSprite(struct Sprite *sprite)
         u32 var;
 
         sprite->pos2.y = gSineTable[(u8)sprite->data[5]] * 76 / 256;
-        var = 0x10000 / gSineTable[sprite->data[5] + 64];
+
+        if (gSineTable[sprite->data[5] + 64] != 0)
+            var = 0x10000 / gSineTable[sprite->data[5] + 64];
+        else
+            var = 0;
         if (var > 0xFFFF)
             var = 0xFFFF;
+
         SetOamMatrix(sprite->data[1] + 1, 0x100, 0, 0, var);
         sprite->oam.matrixNum = monId + 1;
 
@@ -4498,63 +4500,6 @@ static u8 PrintCryScreenSpeciesName(u8 windowId, u16 num, u8 left, u8 top)
     return i;
 }
 
-static void UnusedPrintMonName(u8 windowId, const u8* name, u8 left, u8 top)
-{
-    u8 str[POKEMON_NAME_LENGTH + 1];
-    u8 i;
-    u8 nameLength;
-
-    for (i = 0; i < ARRAY_COUNT(str); i++)
-        str[i] = CHAR_SPACE;
-    for (nameLength = 0; name[nameLength] != CHAR_SPACE && nameLength < ARRAY_COUNT(str); nameLength++)
-        ;
-    for (i = 0; i < nameLength; i++)
-        str[ARRAY_COUNT(str) - nameLength + i] = name[i];
-#ifdef UBFIX
-    str[ARRAY_COUNT(str) - 1] = EOS;
-#else
-    str[ARRAY_COUNT(str)] = EOS;
-#endif
-    PrintInfoSubMenuText(windowId, str, left, top);
-}
-
-static void UnusedPrintDecimalNum(u8 windowId, u16 b, u8 left, u8 top)
-{
-    u8 str[6];
-    bool8 outputted = FALSE;
-    u8 result;
-
-    result = b / 1000;
-    if (result == 0)
-    {
-        str[0] = 0x77;
-        outputted = FALSE;
-    }
-    else
-    {
-        str[0] = CHAR_0 + result;
-        outputted = TRUE;
-    }
-
-    result = (b % 1000) / 100;
-    if (result == 0 && !outputted)
-    {
-        str[1] = 0x77;
-        outputted = FALSE;
-    }
-    else
-    {
-        str[1] = CHAR_0 + result;
-        outputted = TRUE;
-    }
-
-    str[2] = CHAR_0 + ((b % 1000) % 100) / 10;
-    str[3] = CHAR_PERIOD;
-    str[4] = CHAR_0 + ((b % 1000) % 100) % 10;
-    str[5] = EOS;
-    PrintInfoSubMenuText(windowId, str, left, top);
-}
-
 static void PrintFootprint(u8 windowId, u16 dexNum)
 {
     u8 image[32 * 4];
@@ -4578,38 +4523,17 @@ static void PrintFootprint(u8 windowId, u16 dexNum)
     CopyToWindowPixelBuffer(windowId, image, sizeof(image), 0);
 }
 
-// Unused
-void sub_80C0DC0(u16 a, u16 b)
-{
-    *(u16 *)(VRAM + a * 0x800 + 0x232) = 0xF000 + b + 0;
-    *(u16 *)(VRAM + a * 0x800 + 0x234) = 0xF000 + b + 1;
-    *(u16 *)(VRAM + a * 0x800 + 0x272) = 0xF000 + b + 2;
-    *(u16 *)(VRAM + a * 0x800 + 0x274) = 0xF000 + b + 3;
-}
-
 static u16 GetNextPosition(u8 direction, u16 position, u16 min, u16 max)
 {
     switch (direction)
     {
-    case 1: // Up/Left
-        if (position > min)
-            position--;
-        break;
     case 0: // Down/Right
         if (position < max)
             position++;
         break;
-    case 3: // Up/Left with loop (unused)
+    case 1: // Up/Left
         if (position > min)
             position--;
-        else
-            position = max;
-        break;
-    case 2: // Down/Right with loop (unused)
-        if (position < max)
-            position++;
-        else
-            position = min;
         break;
     }
     return position;
@@ -5469,12 +5393,12 @@ static u8 GetSearchModeSelection(u8 taskId, u8 option)
     case SEARCH_ORDER:
         return sOrderOptions[id];
     case SEARCH_NAME:
-        if (id == 0)
+        if (!id)
             return 0xFF;
         else
             return id;
     case SEARCH_COLOR:
-        if (id == 0)
+        if (!id)
             return 0xFF;
         else
             return id - 1;

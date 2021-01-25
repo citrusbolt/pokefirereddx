@@ -297,9 +297,9 @@ void HandleAction_UseItem(void)
     ClearFuryCutterDestinyBondGrudge(gBattlerAttacker);
     gLastUsedItem = gBattleBufferB[gBattlerAttacker][1] | (gBattleBufferB[gBattlerAttacker][2] << 8);
 
-    if (IS_ITEM_BALL(gLastUsedItem))
+    if (ItemId_GetPocket(gLastUsedItem) == POCKET_POKE_BALLS) // is ball
     {
-        gBattlescriptCurrInstr = gBattlescriptsForBallThrow[ITEM_ID_TO_BALL_ID(gLastUsedItem)];
+        gBattlescriptCurrInstr = gBattlescriptsForBallThrow[ItemId_GetSecondaryId(gLastUsedItem)];
     }
     else if (gLastUsedItem == ITEM_POKE_DOLL || gLastUsedItem == ITEM_FLUFFY_TAIL)
     {
@@ -452,7 +452,7 @@ void HandleAction_Run(void)
 {
     gBattlerAttacker = gBattlerByTurnOrder[gCurrentTurnActionNumber];
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_x2000000))
+    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
     {
         gCurrentTurnActionNumber = gBattlersCount;
 
@@ -536,12 +536,7 @@ void HandleAction_ThrowPokeblock(void)
         gBattleStruct->safariPkblThrowCounter++;
     if (gBattleStruct->safariEscapeFactor > 1)
     {
-        // BUG: safariEscapeFactor can become 0 below. This causes the pokeblock throw glitch.
-        #ifdef BUGFIX
         if (gBattleStruct->safariEscapeFactor <= sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]])
-        #else
-        if (gBattleStruct->safariEscapeFactor < sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]])
-        #endif
             gBattleStruct->safariEscapeFactor = 1;
         else
             gBattleStruct->safariEscapeFactor -= sPkblToEscapeFactor[gBattleStruct->safariPkblThrowCounter][gBattleCommunication[MULTISTRING_CHOOSER]];
@@ -2243,7 +2238,7 @@ bool8 HasNoMonsToSwitch(u8 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2)
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_x800000)
+        if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
         {
             if (GetBattlerSide(battler) == B_SIDE_PLAYER)
             {
@@ -3963,7 +3958,7 @@ u8 IsMonDisobedient(void)
     s32 calc;
     u8 obedienceLevel = 0;
 
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_x2000000))
+    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return 0;
     if (GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT)
         return 0;

@@ -61,7 +61,6 @@ static void HandleInitWindows(void);
 static void LaunchPokeblockFeedTask(void);
 static void SetPokeblockSpritePal(u8 pokeblockCaseId);
 static void sub_817A5CC(void);
-static void sub_8148108(u8 spriteId, bool8 a1);
 static void DoPokeblockCaseThrowEffect(u8 spriteId, bool8 arg1);
 static void PrepareMonToMoveToPokeblock(u8 spriteId);
 static void Task_HandleMonAtePokeblock(u8 taskId);
@@ -81,7 +80,7 @@ static void SpriteCB_ThrownPokeblock(struct Sprite* sprite);
 
 // ram variables
 EWRAM_DATA static struct PokeblockFeedStruct *sPokeblockFeed = NULL;
-EWRAM_DATA static struct CompressedSpritePalette sPokeblockSpritePal = {0};
+EWRAM_DATA static struct SpritePalette sPokeblockSpritePal = {0};
 
 // const rom data
 static const u8 sNatureToMonPokeblockAnim[NUM_NATURES][2] =
@@ -383,7 +382,7 @@ static const struct WindowTemplate sWindowTemplates[] =
 };
 
 // - 1 excludes PBLOCK_CLR_NONE
-static const u32* const sPokeblocksPals[] =
+static const u16* const sPokeblocksPals[] =
 {
     [PBLOCK_CLR_RED - 1]       = gPokeblockRed_Pal,
     [PBLOCK_CLR_BLUE - 1]      = gPokeblockBlue_Pal,
@@ -638,6 +637,8 @@ static void HandleInitBackgrounds(void)
 static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
 {
     u16 species;
+    u8 form;
+    u16 formSpecies;
     u32 personality, trainerId;
     const struct SpritePalette *palette;
 
@@ -645,18 +646,22 @@ static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
     {
     case 0:
         species = GetMonData(mon, MON_DATA_SPECIES2);
+	    form = GetMonData(mon, MON_DATA_FORM);
+        formSpecies = GetFormSpeciesId(species, form);
         personality = GetMonData(mon, MON_DATA_PERSONALITY);
-        HandleLoadSpecialPokePic(&gMonFrontPicTable[species], gMonSpritesGfxPtr->sprites.ptr[1], species, personality);
+        HandleLoadSpecialPokePic(&gMonFrontPicTable[formSpecies], gMonSpritesGfxPtr->sprites.ptr[1], formSpecies, personality);
         sPokeblockFeed->loadGfxState++;
         break;
     case 1:
         species = GetMonData(mon, MON_DATA_SPECIES2);
+	    form = GetMonData(mon, MON_DATA_FORM);
+        formSpecies = GetFormSpeciesId(species, form);
         personality = GetMonData(mon, MON_DATA_PERSONALITY);
         trainerId = GetMonData(mon, MON_DATA_OT_ID);
-        palette = GetMonSpritePalStructFromOtIdPersonality(species, trainerId, personality);
+        palette = GetMonSpritePalStructFromOtIdPersonality(formSpecies, trainerId, personality);
 
         LoadSpritePalette(palette);
-        SetMultiuseSpriteTemplateToPokemon(palette->tag, 1);
+        SetMultiuseSpriteTemplateToPokemon(palette->tag, 1, form);
         sPokeblockFeed->loadGfxState++;
         break;
     case 2:
@@ -664,7 +669,7 @@ static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
         sPokeblockFeed->loadGfxState++;
         break;
     case 3:
-//        LoadCompressedSpritePalette(&gPokeblockCase_SpritePal);
+        LoadSpritePalette(&gPokeblockCase_SpritePal);
         sPokeblockFeed->loadGfxState++;
         break;
     case 4:
@@ -673,7 +678,7 @@ static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
         break;
     case 5:
         SetPokeblockSpritePal(gSpecialVar_ItemId);
-//        LoadCompressedSpritePalette(&sPokeblockSpritePal);
+        LoadSpritePalette(&sPokeblockSpritePal);
         sPokeblockFeed->loadGfxState++;
         break;
     case 6:
@@ -689,7 +694,7 @@ static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
         }
         break;
     case 8:
-//        LoadCompressedPalette(gBattleTerrainPalette_Frontier, 0x20, 0x60);
+        LoadPalette(gBattleTerrainPalette_Frontier, 0x20, 0x60);
         sPokeblockFeed->loadGfxState = 0;
         return TRUE;
     }

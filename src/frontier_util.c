@@ -129,7 +129,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_RAIKOU,
                 .heldItem = ITEM_LUM_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MODEST,
                 .evs = {158, 0, 252, 100, 0, 0},
                 .moves = {MOVE_THUNDERBOLT, MOVE_CALM_MIND, MOVE_REFLECT, MOVE_REST},
@@ -137,7 +137,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_LATIOS,
                 .heldItem = ITEM_BRIGHT_POWDER,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MODEST,
                 .evs = {252, 0, 252, 6, 0, 0},
                 .moves = {MOVE_PSYCHIC, MOVE_CALM_MIND, MOVE_RECOVER, MOVE_DRAGON_CLAW},
@@ -145,7 +145,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_SNORLAX,
                 .heldItem = ITEM_CHESTO_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
                 .evs = {252, 252, 0, 0, 6, 0},
                 .moves = {MOVE_CURSE, MOVE_RETURN, MOVE_REST, MOVE_SHADOW_BALL},
@@ -186,7 +186,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_SWAMPERT,
                 .heldItem = ITEM_LEFTOVERS,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BRAVE,
                 .evs = {252, 252, 6, 0, 0, 0},
                 .moves = {MOVE_SURF, MOVE_EARTHQUAKE, MOVE_ICE_BEAM, MOVE_MIRROR_COAT},
@@ -194,7 +194,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_METAGROSS,
                 .heldItem = ITEM_QUICK_CLAW,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BRAVE,
                 .evs = {252, 252, 6, 0, 0, 0},
                 .moves = {MOVE_PSYCHIC, MOVE_METEOR_MASH, MOVE_EARTHQUAKE, MOVE_PROTECT},
@@ -202,7 +202,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_LATIAS,
                 .heldItem = ITEM_CHESTO_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MODEST,
                 .evs = {252, 0, 252, 6, 0, 0},
                 .moves = {MOVE_THUNDERBOLT, MOVE_PSYCHIC, MOVE_CALM_MIND, MOVE_REST},
@@ -243,7 +243,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_ARCANINE,
                 .heldItem = ITEM_WHITE_HERB,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_HASTY,
                 .evs = {6, 252, 252, 0, 0, 0},
                 .moves = {MOVE_OVERHEAT, MOVE_EXTREME_SPEED, MOVE_ROAR, MOVE_PROTECT},
@@ -251,7 +251,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_SLAKING,
                 .heldItem = ITEM_SCOPE_LENS,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_HARDY,
                 .evs = {6, 252, 0, 252, 0, 0},
                 .moves = {MOVE_HYPER_BEAM, MOVE_EARTHQUAKE, MOVE_SHADOW_BALL, MOVE_YAWN},
@@ -259,7 +259,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_SUICUNE,
                 .heldItem = ITEM_KINGS_ROCK,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_HASTY,
                 .evs = {252, 0, 252, 6, 0, 0},
                 .moves = {MOVE_BLIZZARD, MOVE_SURF, MOVE_BITE, MOVE_CALM_MIND},
@@ -300,7 +300,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_UMBREON,
                 .heldItem = ITEM_CHESTO_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_CALM,
                 .evs = {252, 0, 0, 0, 252, 6},
                 .moves = {MOVE_DOUBLE_EDGE, MOVE_CONFUSE_RAY, MOVE_REST, MOVE_PSYCHIC},
@@ -308,7 +308,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_GENGAR,
                 .heldItem = ITEM_LEFTOVERS,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MODEST,
                 .evs = {252, 0, 252, 0, 6, 0},
                 .moves = {MOVE_PSYCHIC, MOVE_HYPNOSIS, MOVE_DREAM_EATER, MOVE_DESTINY_BOND},
@@ -316,7 +316,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_BRELOOM,
                 .heldItem = ITEM_LUM_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_JOLLY,
                 .evs = {6, 252, 0, 252, 0, 0},
                 .moves = {MOVE_SPORE, MOVE_FOCUS_PUNCH, MOVE_GIGA_DRAIN, MOVE_HEADBUTT},
@@ -331,7 +331,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_METANG,
                 .heldItem = ITEM_SITRUS_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BRAVE,
                 .evs = {0, 252, 252, 0, 6, 0},
                 .moves = {MOVE_LIGHT_SCREEN, MOVE_PSYCHIC, MOVE_REFLECT, MOVE_METAL_CLAW},
@@ -339,7 +339,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_SKARMORY,
                 .heldItem = ITEM_SITRUS_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_IMPISH,
                 .evs = {252, 0, 0, 0, 6, 252},
                 .moves = {MOVE_TOXIC, MOVE_AERIAL_ACE, MOVE_PROTECT, MOVE_STEEL_WING},
@@ -347,7 +347,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_AGGRON,
                 .heldItem = ITEM_SITRUS_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
                 .evs = {0, 252, 0, 0, 252, 6},
                 .moves = {MOVE_THUNDERBOLT, MOVE_PROTECT, MOVE_SOLAR_BEAM, MOVE_DRAGON_CLAW},
@@ -357,7 +357,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_METANG,
                 .heldItem = ITEM_SITRUS_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BRAVE,
                 .evs = {0, 252, 252, 0, 6, 0},
                 .moves = {MOVE_LIGHT_SCREEN, MOVE_PSYCHIC, MOVE_REFLECT, MOVE_METAL_CLAW},
@@ -365,7 +365,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_SKARMORY,
                 .heldItem = ITEM_SITRUS_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_IMPISH,
                 .evs = {252, 0, 0, 0, 6, 252},
                 .moves = {MOVE_TOXIC, MOVE_AERIAL_ACE, MOVE_PROTECT, MOVE_STEEL_WING},
@@ -373,7 +373,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_AGGRON,
                 .heldItem = ITEM_SITRUS_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
                 .evs = {0, 252, 0, 0, 252, 6},
                 .moves = {MOVE_THUNDERBOLT, MOVE_PROTECT, MOVE_SOLAR_BEAM, MOVE_DRAGON_CLAW},
@@ -414,7 +414,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_SEVIPER,
                 .heldItem = ITEM_FOCUS_BAND,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BOLD,
                 .evs = {252, 0, 0, 0, 252, 6},
                 .moves = {MOVE_SWAGGER, MOVE_CRUNCH, MOVE_SLUDGE_BOMB, MOVE_GIGA_DRAIN},
@@ -422,7 +422,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_STEELIX,
                 .heldItem = ITEM_BRIGHT_POWDER,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BRAVE,
                 .evs = {252, 0, 0, 0, 6, 252},
                 .moves = {MOVE_EARTHQUAKE, MOVE_ROCK_SLIDE, MOVE_EXPLOSION, MOVE_SCREECH},
@@ -430,7 +430,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_GYARADOS,
                 .heldItem = ITEM_CHESTO_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
                 .evs = {252, 6, 0, 0, 0, 252},
                 .moves = {MOVE_DRAGON_DANCE, MOVE_RETURN, MOVE_ROAR, MOVE_REST},
@@ -471,7 +471,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_ARTICUNO,
                 .heldItem = ITEM_SCOPE_LENS,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MILD,
                 .evs = {6, 0, 252, 252, 0, 0},
                 .moves = {MOVE_BLIZZARD, MOVE_WATER_PULSE, MOVE_AERIAL_ACE, MOVE_REFLECT},
@@ -479,7 +479,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_ZAPDOS,
                 .heldItem = ITEM_LUM_BERRY,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MILD,
                 .evs = {6, 0, 252, 252, 0, 0},
                 .moves = {MOVE_THUNDER, MOVE_DETECT, MOVE_DRILL_PECK, MOVE_LIGHT_SCREEN},
@@ -487,7 +487,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             {
                 .species = SPECIES_MOLTRES,
                 .heldItem = ITEM_BRIGHT_POWDER,
-                .fixedIV = 31,
+                .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MILD,
                 .evs = {6, 0, 252, 252, 0, 0},
                 .moves = {MOVE_FIRE_BLAST, MOVE_HYPER_BEAM, MOVE_AERIAL_ACE, MOVE_SAFEGUARD},
@@ -1028,7 +1028,7 @@ static void TowerPrintPrevOrCurrentStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x
         break;
     }
 
-    if (isCurrent == TRUE)
+    if (isCurrent)
         TowerPrintStreak(gText_Current, winStreak, x1, x2, y);
     else
         TowerPrintStreak(gText_Prev, winStreak, x1, x2, y);
@@ -1049,8 +1049,8 @@ static void ShowTowerResultsWindow(u8 battleMode)
         StringExpandPlaceholders(gStringVar4, gText_LinkMultiBattleRoomResults);
 
     PrintAligned(gStringVar4, 2);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_Lv502, 16, 49, TEXT_SPEED_FF, NULL);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_OpenLv, 16, 97, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_Lv502, 16, 49, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_OpenLv, 16, 97, TEXT_SPEED_FF, NULL);
     PrintHyphens(10);
     TowerPrintPrevOrCurrentStreak(battleMode, FRONTIER_LVL_50, 72, 132, 49);
     TowerPrintRecordStreak(battleMode, FRONTIER_LVL_50, 72, 132, 65);
@@ -1072,10 +1072,10 @@ static u16 DomeGetWinStreak(u8 battleMode, u8 lvlMode)
 
 static void PrintTwoStrings(const u8 *str1, const u8 *str2, u16 num, u8 x1, u8 x2, u8 y)
 {
-    AddTextPrinterParameterized(gRecordsWindowId, 1, str1, x1, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, str1, x1, y, TEXT_SPEED_FF, NULL);
     ConvertIntToDecimalStringN(gStringVar1, num, STR_CONV_MODE_RIGHT_ALIGN, 4);
     StringExpandPlaceholders(gStringVar4, str2);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
 }
 
 static void DomePrintPrevOrCurrentStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2, u8 y)
@@ -1098,7 +1098,7 @@ static void DomePrintPrevOrCurrentStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2
         break;
     }
 
-    if (isCurrent == TRUE)
+    if (isCurrent)
         PrintTwoStrings(gText_Current, gText_ClearStreak, winStreak, x1, x2, y);
     else
         PrintTwoStrings(gText_Prev, gText_ClearStreak, winStreak, x1, x2, y);
@@ -1115,8 +1115,8 @@ static void ShowDomeResultsWindow(u8 battleMode)
         StringExpandPlaceholders(gStringVar4, gText_DoubleBattleTourneyResults);
 
     PrintAligned(gStringVar4, 0);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_Lv502, 8, 33, TEXT_SPEED_FF, NULL);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_OpenLv, 8, 97, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_Lv502, 8, 33, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_OpenLv, 8, 97, TEXT_SPEED_FF, NULL);
     PrintHyphens(10);
     DomePrintPrevOrCurrentStreak(battleMode, FRONTIER_LVL_50, 64, 121, 33);
     PrintTwoStrings(gText_Record, gText_ClearStreak, gSaveBlock2Ptr->frontier.domeRecordWinStreaks[battleMode][FRONTIER_LVL_50], 64, 121, 49);
@@ -1131,12 +1131,12 @@ static void ShowDomeResultsWindow(u8 battleMode)
 // Battle Palace records.
 static void PalacePrintStreak(const u8 *str, u16 num, u8 x1, u8 x2, u8 y)
 {
-    AddTextPrinterParameterized(gRecordsWindowId, 1, str, x1, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, str, x1, y, TEXT_SPEED_FF, NULL);
     if (num > MAX_STREAK)
         num = MAX_STREAK;
     ConvertIntToDecimalStringN(gStringVar1, num, STR_CONV_MODE_RIGHT_ALIGN, 4);
     StringExpandPlaceholders(gStringVar4, gText_WinStreak);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
 }
 
 static void PalacePrintRecordStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2, u8 y)
@@ -1173,7 +1173,7 @@ static void PalacePrintPrevOrCurrentStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 
             isCurrent = IsWinStreakActive(STREAK_PALACE_DOUBLES_50);
     }
 
-    if (isCurrent == TRUE)
+    if (isCurrent)
         PalacePrintStreak(gText_Current, winStreak, x1, x2, y);
     else
         PalacePrintStreak(gText_Prev, winStreak, x1, x2, y);
@@ -1190,8 +1190,8 @@ static void ShowPalaceResultsWindow(u8 battleMode)
         StringExpandPlaceholders(gStringVar4, gText_DoubleBattleHallResults);
 
     PrintAligned(gStringVar4, 2);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_Lv502, 16, 49, TEXT_SPEED_FF, NULL);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_OpenLv, 16, 97, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_Lv502, 16, 49, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_OpenLv, 16, 97, TEXT_SPEED_FF, NULL);
     PrintHyphens(10);
     PalacePrintPrevOrCurrentStreak(battleMode, FRONTIER_LVL_50, 72, 131, 49);
     PalacePrintRecordStreak(battleMode, FRONTIER_LVL_50, 72, 131, 65);
@@ -1213,10 +1213,10 @@ static u16 PikeGetWinStreak(u8 lvlMode)
 
 static void PikePrintCleared(const u8 *str1, const u8 *str2, u16 num, u8 x1, u8 x2, u8 y)
 {
-    AddTextPrinterParameterized(gRecordsWindowId, 1, str1, x1, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, str1, x1, y, TEXT_SPEED_FF, NULL);
     ConvertIntToDecimalStringN(gStringVar1, num, STR_CONV_MODE_RIGHT_ALIGN, 4);
     StringExpandPlaceholders(gStringVar4, str2);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
 }
 
 static void PikePrintPrevOrCurrentStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
@@ -1229,7 +1229,7 @@ static void PikePrintPrevOrCurrentStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
     else
         isCurrent = IsWinStreakActive(STREAK_PIKE_50);
 
-    if (isCurrent == TRUE)
+    if (isCurrent)
         PrintTwoStrings(gText_Current, gText_RoomsCleared, winStreak, x1, x2, y);
     else
         PrintTwoStrings(gText_Prev, gText_RoomsCleared, winStreak, x1, x2, y);
@@ -1242,8 +1242,8 @@ static void ShowPikeResultsWindow(void)
     FillWindowPixelBuffer(gRecordsWindowId, PIXEL_FILL(1));
     StringExpandPlaceholders(gStringVar4, gText_BattleChoiceResults);
     PrintAligned(gStringVar4, 0);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_Lv502, 8, 33, TEXT_SPEED_FF, NULL);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_OpenLv, 8, 97, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_Lv502, 8, 33, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_OpenLv, 8, 97, TEXT_SPEED_FF, NULL);
     PrintHyphens(10);
     PikePrintPrevOrCurrentStreak(FRONTIER_LVL_50, 64, 114, 33);
     PikePrintCleared(gText_Record, gText_RoomsCleared, gSaveBlock2Ptr->frontier.pikeRecordStreaks[FRONTIER_LVL_50], 64, 114, 49);
@@ -1263,7 +1263,7 @@ static void ArenaPrintStreak(const u8 *str, u16 num, u8 x1, u8 x2, u8 y)
         num = MAX_STREAK;
     ConvertIntToDecimalStringN(gStringVar1, num, STR_CONV_MODE_RIGHT_ALIGN, 4);
     StringExpandPlaceholders(gStringVar4, gText_KOsInARow);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
 }
 
 static void ArenaPrintRecordStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
@@ -1291,7 +1291,7 @@ static void ArenaPrintPrevOrCurrentStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
     else
         isCurrent = IsWinStreakActive(STREAK_ARENA_50);
 
-    if (isCurrent == TRUE)
+    if (isCurrent)
         ArenaPrintStreak(gText_Current, winStreak, x1, x2, y);
     else
         ArenaPrintStreak(gText_Prev, winStreak, x1, x2, y);
@@ -1305,8 +1305,8 @@ static void ShowArenaResultsWindow(void)
     PrintHyphens(10);
     StringExpandPlaceholders(gStringVar4, gText_SetKOTourneyResults);
     PrintAligned(gStringVar4, 2);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_Lv502, 16, 49, TEXT_SPEED_FF, NULL);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_OpenLv, 16, 97, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_Lv502, 16, 49, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_OpenLv, 16, 97, TEXT_SPEED_FF, NULL);
     ArenaPrintPrevOrCurrentStreak(FRONTIER_LVL_50, 72, 126, 49);
     ArenaPrintRecordStreak(FRONTIER_LVL_50, 72, 126, 65);
     ArenaPrintPrevOrCurrentStreak(FRONTIER_LVL_OPEN, 72, 126, 97);
@@ -1318,16 +1318,16 @@ static void ShowArenaResultsWindow(void)
 // Battle Factory records.
 static void FactoryPrintStreak(const u8 *str, u16 num1, u16 num2, u8 x1, u8 x2, u8 x3, u8 y)
 {
-    AddTextPrinterParameterized(gRecordsWindowId, 1, str, x1, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, str, x1, y, TEXT_SPEED_FF, NULL);
     if (num1 > MAX_STREAK)
         num1 = MAX_STREAK;
     ConvertIntToDecimalStringN(gStringVar1, num1, STR_CONV_MODE_RIGHT_ALIGN, 4);
     StringExpandPlaceholders(gStringVar4, gText_WinStreak);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
 
     ConvertIntToDecimalStringN(gStringVar1, num2, STR_CONV_MODE_RIGHT_ALIGN, 4);
     StringExpandPlaceholders(gStringVar4, gText_TimesVar1);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, x3, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gStringVar4, x3, y, TEXT_SPEED_FF, NULL);
 }
 
 static void FactoryPrintRecordStreak(u8 battleMode, u8 lvlMode, u8 x1, u8 x2, u8 x3, u8 y)
@@ -1376,7 +1376,7 @@ static void FactoryPrintPrevOrCurrentStreak(u8 battleMode, u8 lvlMode, u8 x1, u8
         break;
     }
 
-    if (isCurrent == TRUE)
+    if (isCurrent)
         FactoryPrintStreak(gText_Current, winStreak, rents, x1, x2, x3, y);
     else
         FactoryPrintStreak(gText_Prev, winStreak, rents, x1, x2, x3, y);
@@ -1393,9 +1393,9 @@ static void ShowFactoryResultsWindow(u8 battleMode)
         StringExpandPlaceholders(gStringVar4, gText_BattleSwapDoubleResults);
 
     PrintAligned(gStringVar4, 0);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_Lv502, 8, 33, TEXT_SPEED_FF, NULL);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_RentalSwap, 152, 33, TEXT_SPEED_FF, NULL);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_OpenLv, 8, 97, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_Lv502, 8, 33, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_RentalSwap, 152, 33, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_OpenLv, 8, 97, TEXT_SPEED_FF, NULL);
     PrintHyphens(10);
     FactoryPrintPrevOrCurrentStreak(battleMode, FRONTIER_LVL_50, 8, 64, 158, 49);
     FactoryPrintRecordStreak(battleMode, FRONTIER_LVL_50, 8, 64, 158, 65);
@@ -1408,12 +1408,12 @@ static void ShowFactoryResultsWindow(u8 battleMode)
 // Battle Pyramid records.
 static void PyramidPrintStreak(const u8 *str, u16 num, u8 x1, u8 x2, u8 y)
 {
-    AddTextPrinterParameterized(gRecordsWindowId, 1, str, x1, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, str, x1, y, TEXT_SPEED_FF, NULL);
     if (num > MAX_STREAK)
         num = MAX_STREAK;
     ConvertIntToDecimalStringN(gStringVar1, num, STR_CONV_MODE_RIGHT_ALIGN, 4);
     StringExpandPlaceholders(gStringVar4, gText_FloorsCleared);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gStringVar4, x2, y, TEXT_SPEED_FF, NULL);
 }
 
 static void PyramidPrintRecordStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
@@ -1441,7 +1441,7 @@ static void PyramidPrintPrevOrCurrentStreak(u8 lvlMode, u8 x1, u8 x2, u8 y)
     else
         isCurrent = IsWinStreakActive(STREAK_PYRAMID_50);
 
-    if (isCurrent == TRUE)
+    if (isCurrent)
         PyramidPrintStreak(gText_Current, winStreak, x1, x2, y);
     else
         PyramidPrintStreak(gText_Prev, winStreak, x1, x2, y);
@@ -1454,8 +1454,8 @@ static void ShowPyramidResultsWindow(void)
     FillWindowPixelBuffer(gRecordsWindowId, PIXEL_FILL(1));
     StringExpandPlaceholders(gStringVar4, gText_BattleQuestResults);
     PrintAligned(gStringVar4, 2);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_Lv502, 8, 49, TEXT_SPEED_FF, NULL);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_OpenLv, 8, 97, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_Lv502, 8, 49, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_OpenLv, 8, 97, TEXT_SPEED_FF, NULL);
     PrintHyphens(10);
     PyramidPrintPrevOrCurrentStreak(FRONTIER_LVL_50, 64, 111, 49);
     PyramidPrintRecordStreak(FRONTIER_LVL_50, 64, 111, 65);
@@ -1503,9 +1503,9 @@ static void ShowLinkContestResultsWindow(void)
     AddTextPrinterParameterized(gRecordsWindowId, 1, gText_Smart, x, 89, TEXT_SPEED_FF, NULL);
     AddTextPrinterParameterized(gRecordsWindowId, 1, gText_Tough, x, 105, TEXT_SPEED_FF, NULL);
 
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < CONTEST_CATEGORIES_COUNT; i++)
     {
-        for (j = 0; j < 4; j++)
+        for (j = 0; j < CONTESTANT_COUNT; j++)
         {
             ConvertIntToDecimalStringN(gStringVar4, gSaveBlock2Ptr->contestLinkResults[i][j], STR_CONV_MODE_RIGHT_ALIGN, 4);
             AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, (j * 38) + 64, (i * 16) + 41, TEXT_SPEED_FF, NULL);
@@ -2010,9 +2010,6 @@ static void CheckPartyIneligibility(void)
 
     switch (battleMode)
     {
-    case FRONTIER_MODE_SINGLES:
-        toChoose = FRONTIER_PARTY_SIZE;
-        break;
     case FRONTIER_MODE_MULTIS:
     case FRONTIER_MODE_LINK_MULTIS:
         toChoose = FRONTIER_MULTI_PARTY_SIZE;
@@ -2021,6 +2018,7 @@ static void CheckPartyIneligibility(void)
         if (VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_TOWER)
             toChoose = FRONTIER_DOUBLES_PARTY_SIZE;
         else
+    case FRONTIER_MODE_SINGLES:
             toChoose = FRONTIER_PARTY_SIZE;
         break;
     }
@@ -2213,7 +2211,7 @@ static void Print1PRecord(s32 position, s32 x, s32 y, struct RankingHall1P *hall
     u8 text[32];
     u16 winStreak;
 
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_123Dot[position], x * 8, (8 * (y + 5 * position)) + 1, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_123Dot[position], x * 8, (8 * (y + 5 * position)) + 1, TEXT_SPEED_FF, NULL);
     hallRecord->name[PLAYER_NAME_LENGTH] = EOS;
     if (hallRecord->winStreak)
     {
@@ -2224,7 +2222,7 @@ static void Print1PRecord(s32 position, s32 x, s32 y, struct RankingHall1P *hall
             winStreak = MAX_STREAK;
         ConvertIntToDecimalStringN(gStringVar2, winStreak, STR_CONV_MODE_RIGHT_ALIGN, 4);
         StringExpandPlaceholders(gStringVar4, sHallFacilityToRecordsText[hallFacilityId]);
-        AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, GetStringRightAlignXOffset(1, sHallFacilityToRecordsText[hallFacilityId], 0xC8), (8 * (y + 5 * position)) + 1, TEXT_SPEED_FF, NULL);
+        AddTextPrinterParameterized(gRecordsWindowId, 2, gStringVar4, GetStringRightAlignXOffset(1, sHallFacilityToRecordsText[hallFacilityId], 0xC8), (8 * (y + 5 * position)) + 1, TEXT_SPEED_FF, NULL);
     }
 }
 
@@ -2233,25 +2231,25 @@ static void Print2PRecord(s32 position, s32 x, s32 y, struct RankingHall2P *hall
     u8 text[32];
     u16 winStreak;
 
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gText_123Dot[position], x * 8, (8 * (y + 5 * position)) + 1, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gText_123Dot[position], x * 8, (8 * (y + 5 * position)) + 1, TEXT_SPEED_FF, NULL);
     if (hallRecord->winStreak)
     {
         hallRecord->name1[PLAYER_NAME_LENGTH] = EOS;
         hallRecord->name2[PLAYER_NAME_LENGTH] = EOS;
         TVShowConvertInternationalString(text, hallRecord->name1, hallRecord->language);
-        AddTextPrinterParameterized(gRecordsWindowId, 1, text, (x + 2) * 8, (8 * (y + 5 * position - 1)) + 1, TEXT_SPEED_FF, NULL);
+        AddTextPrinterParameterized(gRecordsWindowId, 2, text, (x + 2) * 8, (8 * (y + 5 * position - 1)) + 1, TEXT_SPEED_FF, NULL);
         if (IsStringJapanese(hallRecord->name2))
             TVShowConvertInternationalString(text, hallRecord->name2, LANGUAGE_JAPANESE);
         else
             StringCopy(text, hallRecord->name2);
-        AddTextPrinterParameterized(gRecordsWindowId, 1, text, (x + 4) * 8, (8 * (y + 5 * position + 1)) + 1, TEXT_SPEED_FF, NULL);
+        AddTextPrinterParameterized(gRecordsWindowId, 2, text, (x + 4) * 8, (8 * (y + 5 * position + 1)) + 1, TEXT_SPEED_FF, NULL);
 
         winStreak = hallRecord->winStreak;
         if (winStreak > MAX_STREAK)
             winStreak = MAX_STREAK;
         ConvertIntToDecimalStringN(gStringVar2, winStreak, STR_CONV_MODE_RIGHT_ALIGN, 4);
         StringExpandPlaceholders(gStringVar4, sHallFacilityToRecordsText[RANKING_HALL_BATTLE_TOWER_LINK]);
-        AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, GetStringRightAlignXOffset(1, sHallFacilityToRecordsText[RANKING_HALL_BATTLE_TOWER_LINK], 0xC8), (8 * (y + 5 * position)) + 1, TEXT_SPEED_FF, NULL);
+        AddTextPrinterParameterized(gRecordsWindowId, 2, gStringVar4, GetStringRightAlignXOffset(1, sHallFacilityToRecordsText[RANKING_HALL_BATTLE_TOWER_LINK], 0xC8), (8 * (y + 5 * position)) + 1, TEXT_SPEED_FF, NULL);
     }
 }
 
@@ -2332,9 +2330,9 @@ static void PrintHallRecords(s32 hallFacilityId, s32 lvlMode)
 
     StringCopy(gStringVar1, sRecordsWindowChallengeTexts[hallFacilityId][0]);
     StringExpandPlaceholders(gStringVar4, sRecordsWindowChallengeTexts[hallFacilityId][1]);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, gStringVar4, 0, 1, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, gStringVar4, 0, 1, TEXT_SPEED_FF, NULL);
     x = GetStringRightAlignXOffset(1, sLevelModeText[lvlMode], 0xD0);
-    AddTextPrinterParameterized(gRecordsWindowId, 1, sLevelModeText[lvlMode], x, 1, TEXT_SPEED_FF, NULL);
+    AddTextPrinterParameterized(gRecordsWindowId, 2, sLevelModeText[lvlMode], x, 1, TEXT_SPEED_FF, NULL);
     if (hallFacilityId == RANKING_HALL_BATTLE_TOWER_LINK)
     {
         gSaveBlock2Ptr->frontier.opponentNames[0][PLAYER_NAME_LENGTH] = EOS;
@@ -2372,13 +2370,7 @@ void ClearRankingHallRecords(void)
 {
     s32 i, j, k;
 
-    // BUG: Passing 0 as a pointer instead of a pointer holding a value of 0.
-    #ifdef BUGFIX
     u8 zero = 0;
-    #define ZERO (&zero)
-    #else
-    #define ZERO 0
-    #endif
 
     for (i = 0; i < HALL_FACILITIES_COUNT; i++)
     {
@@ -2386,7 +2378,7 @@ void ClearRankingHallRecords(void)
         {
             for (k = 0; k < 3; k++)
             {
-                CopyTrainerId(gSaveBlock2Ptr->hallRecords1P[i][j][k].id, ZERO); 
+                CopyTrainerId(gSaveBlock2Ptr->hallRecords1P[i][j][k].id, &zero); 
                 gSaveBlock2Ptr->hallRecords1P[i][j][k].name[0] = EOS;
                 gSaveBlock2Ptr->hallRecords1P[i][j][k].winStreak = 0;
             }
@@ -2397,8 +2389,8 @@ void ClearRankingHallRecords(void)
     {
         for (k = 0; k < 3; k++)
         {
-            CopyTrainerId(gSaveBlock2Ptr->hallRecords2P[j][k].id1, ZERO);
-            CopyTrainerId(gSaveBlock2Ptr->hallRecords2P[j][k].id2, ZERO);
+            CopyTrainerId(gSaveBlock2Ptr->hallRecords2P[j][k].id1, &zero);
+            CopyTrainerId(gSaveBlock2Ptr->hallRecords2P[j][k].id2, &zero);
             gSaveBlock2Ptr->hallRecords2P[j][k].name1[0] = EOS;
             gSaveBlock2Ptr->hallRecords2P[j][k].name2[0] = EOS;
             gSaveBlock2Ptr->hallRecords2P[j][k].winStreak = 0;
@@ -2517,7 +2509,8 @@ void CreateFrontierBrainPokemon(void)
                   monLevel,
                   sFrontierBrainsMons[facility][symbol][i].fixedIV,
                   TRUE, j,
-                  OT_ID_PRESET, FRONTIER_BRAIN_OTID);
+                  OT_ID_PRESET, FRONTIER_BRAIN_OTID,
+                  0);
         SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
         for (j = 0; j < NUM_STATS; j++)
             SetMonData(&gEnemyParty[monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);

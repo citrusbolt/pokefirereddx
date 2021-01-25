@@ -116,63 +116,63 @@ static void sub_805CE38(void);
 
 static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
 {
-    PlayerHandleGetMonData,
-    PlayerHandleGetRawMonData,
-    PlayerHandleSetMonData,
-    PlayerHandleSetRawMonData,
-    PlayerHandleLoadMonSprite,
-    PlayerHandleSwitchInAnim,
-    PlayerHandleReturnMonToBall,
-    PlayerHandleDrawTrainerPic,
-    PlayerHandleTrainerSlide,
-    PlayerHandleTrainerSlideBack,
-    PlayerHandleFaintAnimation,
-    PlayerHandlePaletteFade,
-    PlayerHandleSuccessBallThrowAnim,
-    PlayerHandleBallThrowAnim,
-    PlayerEndExecution,
-    PlayerHandleMoveAnimation,
-    PlayerHandlePrintString,
-    PlayerHandlePrintSelectionString,
-    PlayerHandleChooseAction,
-    PlayerHandleUnknownYesNoBox,
-    PlayerHandleChooseMove,
-    PlayerHandleChooseItem,
-    PlayerHandleChoosePokemon,
-    PlayerHandleCmd23,
-    PlayerHandleHealthBarUpdate,
-    PlayerHandleExpUpdate,
-    PlayerHandleStatusIconUpdate,
-    PlayerHandleStatusAnimation,
-    PlayerHandleStatusXor,
-    PlayerEndExecution,
-    PlayerHandleDMA3Transfer,
-    PlayerHandlePlayBGM,
-    PlayerEndExecution,
-    PlayerHandleTwoReturnValues,
-    PlayerHandleChosenMonReturnValue,
-    PlayerHandleOneReturnValue,
-    PlayerHandleOneReturnValue,
-    PlayerEndExecution,
-    PlayerEndExecution,
-    PlayerEndExecution,
-    PlayerEndExecution,
-    PlayerHandleHitAnimation,
-    PlayerEndExecution,
-    PlayerHandlePlaySE,
-    PlayerHandlePlayFanfareOrBGM,
-    PlayerHandleFaintingCry,
-    PlayerHandleIntroSlide,
-    PlayerHandleIntroTrainerBallThrow,
-    PlayerHandleDrawPartyStatusSummary,
-    PlayerHandleHidePartyStatusSummary,
-    PlayerHandleEndBounceEffect,
-    PlayerHandleSpriteInvisibility,
-    PlayerHandleBattleAnimation,
-    PlayerHandleLinkStandbyMsg,
-    PlayerHandleResetActionMoveSelection,
-    PlayerHandleCmd55,
-    0
+    [CONTROLLER_GETMONDATA]               = PlayerHandleGetMonData,
+    [CONTROLLER_GETRAWMONDATA]            = PlayerHandleGetRawMonData,
+    [CONTROLLER_SETMONDATA]               = PlayerHandleSetMonData,
+    [CONTROLLER_SETRAWMONDATA]            = PlayerHandleSetRawMonData,
+    [CONTROLLER_LOADMONSPRITE]            = PlayerHandleLoadMonSprite,
+    [CONTROLLER_SWITCHINANIM]             = PlayerHandleSwitchInAnim,
+    [CONTROLLER_RETURNMONTOBALL]          = PlayerHandleReturnMonToBall,
+    [CONTROLLER_DRAWTRAINERPIC]           = PlayerHandleDrawTrainerPic,
+    [CONTROLLER_TRAINERSLIDE]             = PlayerHandleTrainerSlide,
+    [CONTROLLER_TRAINERSLIDEBACK]         = PlayerHandleTrainerSlideBack,
+    [CONTROLLER_FAINTANIMATION]           = PlayerHandleFaintAnimation,
+    [CONTROLLER_PALETTEFADE]              = PlayerHandlePaletteFade,
+    [CONTROLLER_SUCCESSBALLTHROWANIM]     = PlayerHandleSuccessBallThrowAnim,
+    [CONTROLLER_BALLTHROWANIM]            = PlayerHandleBallThrowAnim,
+    [CONTROLLER_PAUSE]                    = PlayerEndExecution,
+    [CONTROLLER_MOVEANIMATION]            = PlayerHandleMoveAnimation,
+    [CONTROLLER_PRINTSTRING]              = PlayerHandlePrintString,
+    [CONTROLLER_PRINTSTRINGPLAYERONLY]    = PlayerHandlePrintSelectionString,
+    [CONTROLLER_CHOOSEACTION]             = PlayerHandleChooseAction,
+    [CONTROLLER_UNKNOWNYESNOBOX]          = PlayerHandleUnknownYesNoBox,
+    [CONTROLLER_CHOOSEMOVE]               = PlayerHandleChooseMove,
+    [CONTROLLER_OPENBAG]                  = PlayerHandleChooseItem,
+    [CONTROLLER_CHOOSEPOKEMON]            = PlayerHandleChoosePokemon,
+    [CONTROLLER_23]                       = PlayerHandleCmd23,
+    [CONTROLLER_HEALTHBARUPDATE]          = PlayerHandleHealthBarUpdate,
+    [CONTROLLER_EXPUPDATE]                = PlayerHandleExpUpdate,
+    [CONTROLLER_STATUSICONUPDATE]         = PlayerHandleStatusIconUpdate,
+    [CONTROLLER_STATUSANIMATION]          = PlayerHandleStatusAnimation,
+    [CONTROLLER_STATUSXOR]                = PlayerHandleStatusXor,
+    [CONTROLLER_DATATRANSFER]             = PlayerEndExecution,
+    [CONTROLLER_DMA3TRANSFER]             = PlayerHandleDMA3Transfer,
+    [CONTROLLER_PLAYBGM]                  = PlayerHandlePlayBGM,
+    [CONTROLLER_32]                       = PlayerEndExecution,
+    [CONTROLLER_TWORETURNVALUES]          = PlayerHandleTwoReturnValues,
+    [CONTROLLER_CHOSENMONRETURNVALUE]     = PlayerHandleChosenMonReturnValue,
+    [CONTROLLER_ONERETURNVALUE]           = PlayerHandleOneReturnValue,
+    [CONTROLLER_ONERETURNVALUE_DUPLICATE] = PlayerHandleOneReturnValue,
+    [CONTROLLER_CLEARUNKVAR]              = PlayerEndExecution,
+    [CONTROLLER_SETUNKVAR]                = PlayerEndExecution,
+    [CONTROLLER_CLEARUNKFLAG]             = PlayerEndExecution,
+    [CONTROLLER_TOGGLEUNKFLAG]            = PlayerEndExecution,
+    [CONTROLLER_HITANIMATION]             = PlayerHandleHitAnimation,
+    [CONTROLLER_42]                       = PlayerEndExecution,
+    [CONTROLLER_PLAYSE]                   = PlayerHandlePlaySE,
+    [CONTROLLER_PLAYFANFAREORBGM]         = PlayerHandlePlayFanfareOrBGM,
+    [CONTROLLER_FAINTINGCRY]              = PlayerHandleFaintingCry,
+    [CONTROLLER_INTROSLIDE]               = PlayerHandleIntroSlide,
+    [CONTROLLER_INTROTRAINERBALLTHROW]    = PlayerHandleIntroTrainerBallThrow,
+    [CONTROLLER_DRAWPARTYSTATUSSUMMARY]   = PlayerHandleDrawPartyStatusSummary,
+    [CONTROLLER_HIDEPARTYSTATUSSUMMARY]   = PlayerHandleHidePartyStatusSummary,
+    [CONTROLLER_ENDBOUNCE]                = PlayerHandleEndBounceEffect,
+    [CONTROLLER_SPRITEINVISIBILITY]       = PlayerHandleSpriteInvisibility,
+    [CONTROLLER_BATTLEANIMATION]          = PlayerHandleBattleAnimation,
+    [CONTROLLER_LINKSTANDBYMSG]           = PlayerHandleLinkStandbyMsg,
+    [CONTROLLER_RESETACTIONMOVESELECTION] = PlayerHandleResetActionMoveSelection,
+    [CONTROLLER_55]                       = PlayerHandleCmd55,
+    [CONTROLLER_TERMINATOR_NOP]           = nullsub_21
 };
 
 static const u8 sTargetIdentities[] = {B_POSITION_PLAYER_LEFT, B_POSITION_PLAYER_RIGHT, B_POSITION_OPPONENT_RIGHT, B_POSITION_OPPONENT_LEFT};
@@ -304,7 +304,7 @@ static void HandleInputChooseAction(void)
             if (gBattleBufferA[gActiveBattler][1] == B_ACTION_USE_ITEM)
             {
                 // Add item to bag if it is a ball
-                if (IS_ITEM_BALL(itemId))
+                if (ItemId_GetPocket(itemId) == POCKET_POKE_BALLS)
                     AddBagItem(itemId, 1);
                 else
                     return;
@@ -1857,8 +1857,9 @@ static void SetPlayerMonData(u8 monId)
     case REQUEST_ALL_BATTLE:
         {
             u8 iv;
+            u16 species = battlePokemon->species;
 
-            SetMonData(&gPlayerParty[monId], MON_DATA_SPECIES, &battlePokemon->species);
+            SetMonData(&gPlayerParty[monId], MON_DATA_SPECIES, &species);
             SetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM, &battlePokemon->item);
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -2095,13 +2096,13 @@ static void PlayerHandleSwitchInAnim(void)
 
 static void sub_805B258(u8 battlerId, bool8 dontClearSubstituteBit)
 {
-    u16 species;
+    u16 species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerId]], MON_DATA_SPECIES);
+    u8 form = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerId]], MON_DATA_FORM);
 
     ClearTemporarySpeciesSpriteData(battlerId, dontClearSubstituteBit);
     gBattlerPartyIndexes[battlerId] = gBattleBufferA[battlerId][1];
-    species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerId]], MON_DATA_SPECIES);
     gUnknown_03005D7C[battlerId] = CreateInvisibleSpriteWithCallback(sub_805D714);
-    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battlerId));
+    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battlerId), form);
 
     gBattlerSpriteIds[battlerId] = CreateSprite(
       &gMultiuseSpriteTemplate,

@@ -182,6 +182,7 @@
 #define MON_DATA_SPEED2            86
 #define MON_DATA_SPATK2            87
 #define MON_DATA_SPDEF2            88
+#define MON_DATA_FORM              89
 
 #define MIN_LEVEL 1
 #define MAX_LEVEL 100
@@ -233,6 +234,9 @@
 #define STATUS_PRIMARY_POKERUS   6
 #define STATUS_PRIMARY_FAINTED   7
 
+#define MAX_PER_STAT_IVS 31
+#define MAX_IV_MASK 31
+#define USE_RANDOM_IVS (MAX_PER_STAT_IVS + 1)
 #define MAX_PER_STAT_EVS 255
 #define MAX_TOTAL_EVS 510
 #define EV_ITEM_RAISE_LIMIT 100

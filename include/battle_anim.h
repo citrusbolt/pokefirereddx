@@ -148,7 +148,7 @@ void PrepareAffineAnimInTaskData(struct Task *task, u8 spriteId, const union Aff
 bool8 RunAffineAnimFromTaskData(struct Task *task);
 void AnimThrowProjectile(struct Sprite *sprite);
 void sub_80A6BFC(struct BattleAnimBgData *unk, u8 unused);
-u8 sub_80A8394(u16 species, bool8 isBackpic, u8 a3, s16 x, s16 y, u8 subpriority, u32 personality, u32 trainerId, u32 battlerId, u32 a10);
+u8 sub_80A8394(u16 species, bool8 isBackpic, u8 a3, s16 x, s16 y, u8 subpriority, u32 personality, u32 trainerId, u32 battlerId, u8 form);
 void sub_80A749C(struct Sprite *sprite);
 void TradeMenuBouncePartySprites(struct Sprite *sprite);
 void DestroyAnimVisualTaskAndDisableBlend(u8 taskId);
@@ -209,7 +209,7 @@ void AnimTask_HorizontalShake(u8 taskId);
 
 // battle_anim_throw.c
 void TryShinyAnimation(u8 battler, struct Pokemon *mon);
-u8 BallIdToGfxId(u16 ballId);
+u8 ItemIdToBallId(u16 ballId);
 u8 AnimateBallOpenParticles(u8 x, u8 y, u8 priority, u8 subpriority, u8 ballId);
 u8 LaunchBallFadeMonTask(bool8 unFadeLater, u8 battlerId, u32 selectedPalettes, u8 ballId);
 bool8 IsCriticalCapture(void);

@@ -359,7 +359,7 @@ static void Task_BattleStart(u8 taskId)
         }
         break;
     case 1:
-        if (IsBattleTransitionDone() == TRUE)
+        if (IsBattleTransitionDone())
         {
             CleanupOverworldWindowsAndTilemaps();
             SetMainCallback2(CB2_InitBattle);
@@ -407,8 +407,10 @@ static void DoStandardWildBattle(bool32 isDouble)
     sub_808BCF4();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = 0;
+
     if (isDouble)
         gBattleTypeFlags |= BATTLE_TYPE_DOUBLE;
+
     if (InBattlePyramid())
     {
         VarSet(VAR_TEMP_E, 0);
@@ -482,7 +484,7 @@ static void sub_80B0828(void)
 // Initiates battle where Wally catches Ralts
 void StartWallyTutorialBattle(void)
 {
-    CreateMaleMon(&gEnemyParty[0], SPECIES_RALTS, 5);
+    CreateMaleMon(&gEnemyParty[0], SPECIES_RALTS, 5, 0);
     ScriptContext2_Enable();
     gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
     gBattleTypeFlags = BATTLE_TYPE_WALLY_TUTORIAL;
@@ -518,14 +520,14 @@ static void CB2_EndWildBattle(void)
     CpuFill16(0, (void*)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
 
-    if (IsPlayerDefeated(gBattleOutcome) == TRUE && !InBattlePyramid() && !InBattlePike())
+    if (IsPlayerDefeated(gBattleOutcome) && !InBattlePyramid() && !InBattlePike())
     {
         SetMainCallback2(CB2_WhiteOut);
     }
     else
     {
         SetMainCallback2(CB2_ReturnToField);
-        gFieldCallback = sub_80AF6F0;
+        gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
     }
 }
 
@@ -534,7 +536,7 @@ static void CB2_EndScriptedWildBattle(void)
     CpuFill16(0, (void*)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
 
-    if (IsPlayerDefeated(gBattleOutcome) == TRUE)
+    if (IsPlayerDefeated(gBattleOutcome))
     {
         if (InBattlePyramid())
             SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
@@ -570,13 +572,12 @@ u8 BattleSetup_GetTerrainId(void)
         break;
     case MAP_TYPE_UNDERGROUND:
         if (MetatileBehavior_IsIndoorEncounter(tileBehavior))
+    case MAP_TYPE_INDOOR:
+    case MAP_TYPE_SECRET_BASE:
             return BATTLE_TERRAIN_BUILDING;
         if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior))
             return BATTLE_TERRAIN_POND;
         return BATTLE_TERRAIN_CAVE;
-    case MAP_TYPE_INDOOR:
-    case MAP_TYPE_SECRET_BASE:
-        return BATTLE_TERRAIN_BUILDING;
     case MAP_TYPE_UNDERWATER:
         return BATTLE_TERRAIN_UNDERWATER;
     case MAP_TYPE_OCEAN_ROUTE:
@@ -594,7 +595,7 @@ u8 BattleSetup_GetTerrainId(void)
     {
         if (MetatileBehavior_GetBridgeType(tileBehavior))
             return BATTLE_TERRAIN_POND;
-        if (MetatileBehavior_IsBridge(tileBehavior) == TRUE)
+        if (MetatileBehavior_IsBridge(tileBehavior))
             return BATTLE_TERRAIN_WATER;
     }
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(ROUTE113) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(ROUTE113))
@@ -706,7 +707,9 @@ static u8 GetWildBattleTransition(void)
 
     switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL))
     {
-    case SPECIES_ARTICUNO ... SPECIES_MOLTRES:
+    case SPECIES_ARTICUNO:
+    case SPECIES_ZAPDOS:
+    case SPECIES_MOLTRES:
     case SPECIES_MEWTWO:
     case SPECIES_LUGIA:
     case SPECIES_HO_OH:
@@ -762,7 +765,7 @@ static u8 GetTrainerBattleTransition(void)
      || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_TEAM_ROCKET)
         return B_TRANSITION_MAGMA;
 
-    if (gTrainers[gTrainerBattleOpponent_A].doubleBattle == TRUE)
+    if (gTrainers[gTrainerBattleOpponent_A].doubleBattle)
         minPartyCount = 2; // double battles always at least have 2 pokemon.
     else
         minPartyCount = 1;
@@ -793,39 +796,23 @@ u8 GetSpecialBattleTransition(s32 id)
     u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
     u8 playerLevel = GetSumOfPlayerPartyLevel(1);
 
-    if (enemyLevel < playerLevel)
+    switch (id)
     {
-        switch (id)
-        {
-        case 3:
-            return sBattleTransitionTable_BattleDome[Random() % ARRAY_COUNT(sBattleTransitionTable_BattleDome)];
-        case 10:
-            return sBattleTransitionTable_BattlePyramid[Random() % ARRAY_COUNT(sBattleTransitionTable_BattlePyramid)];
-        case 12:
-        case 13:
+    case 3:
+        return sBattleTransitionTable_BattleDome[Random() % ARRAY_COUNT(sBattleTransitionTable_BattleDome)];
+    case 10:
+        return sBattleTransitionTable_BattlePyramid[Random() % ARRAY_COUNT(sBattleTransitionTable_BattlePyramid)];
+    case 11:
+    case 12:
+    case 13:
+        if (enemyLevel < playerLevel)
             return B_TRANSITION_POKEBALLS_TRAIL;
-        }
-
-        if (VarGet(VAR_FRONTIER_BATTLE_MODE) != FRONTIER_MODE_LINK_MULTIS)
-            return sBattleTransitionTable_BattleFrontier[Random() % ARRAY_COUNT(sBattleTransitionTable_BattleFrontier)];
-    }
-    else
-    {
-        switch (id)
-        {
-        case 3:
-            return sBattleTransitionTable_BattleDome[Random() % ARRAY_COUNT(sBattleTransitionTable_BattleDome)];
-        case 10:
-            return sBattleTransitionTable_BattlePyramid[Random() % ARRAY_COUNT(sBattleTransitionTable_BattlePyramid)];
-        case 11:
-        case 12:
-        case 13:
+        else
             return B_TRANSITION_BIG_POKEBALL;
-        }
-
-        if (VarGet(VAR_FRONTIER_BATTLE_MODE) != FRONTIER_MODE_LINK_MULTIS)
-            return sBattleTransitionTable_BattleFrontier[Random() % ARRAY_COUNT(sBattleTransitionTable_BattleFrontier)];
     }
+
+    if (VarGet(VAR_FRONTIER_BATTLE_MODE) != FRONTIER_MODE_LINK_MULTIS)
+        return sBattleTransitionTable_BattleFrontier[Random() % ARRAY_COUNT(sBattleTransitionTable_BattleFrontier)];
 
     var = gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum * 2 + 0]
         + gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum * 2 + 1];
@@ -842,10 +829,12 @@ void ChooseStarter(void)
 static void CB2_GiveStarter(void)
 {
     u16 starterMon;
+    u8 form;
 
     *GetVarPointer(VAR_STARTER_MON) = gSpecialVar_Result;
-    starterMon = GetStarterPokemon(gSpecialVar_Result);
-    ScriptGiveMon(starterMon, 5, ITEM_NONE, 0, 0, 0);
+    starterMon = GetStarterPokemon(gSpecialVar_Result, FALSE);
+    form = GetStarterPokemon(gSpecialVar_Result, TRUE); 
+    ScriptGiveMon(starterMon, 5, ITEM_NONE, form);
     ResetTasks();
     PlayBattleBGM();
     SetMainCallback2(CB2_StartFirstBattle);
@@ -857,7 +846,7 @@ static void CB2_StartFirstBattle(void)
     UpdatePaletteFade();
     RunTasks();
 
-    if (IsBattleTransitionDone() == TRUE)
+    if (IsBattleTransitionDone())
     {
         gBattleTypeFlags = BATTLE_TYPE_FIRST_BATTLE;
         gMain.savedCallback = CB2_EndFirstBattle;
@@ -1247,7 +1236,7 @@ static void CB2_EndTrainerBattle(void)
     {
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
     }
-    else if (IsPlayerDefeated(gBattleOutcome) == TRUE)
+    else if (IsPlayerDefeated(gBattleOutcome))
     {
         if (InBattlePyramid() || InTrainerHillChallenge())
             SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
@@ -1271,7 +1260,7 @@ static void CB2_EndRematchBattle(void)
     {
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
     }
-    else if (IsPlayerDefeated(gBattleOutcome) == TRUE)
+    else if (IsPlayerDefeated(gBattleOutcome))
     {
         SetMainCallback2(CB2_WhiteOut);
     }
@@ -1545,7 +1534,7 @@ static bool32 UpdateRandomTrainerRematches(const struct RematchTrainer *table, u
 
 void UpdateRematchIfDefeated(s32 rematchTableId)
 {
-    if (HasTrainerBeenFought(gRematchTable[rematchTableId].trainerIds[0]) == TRUE)
+    if (HasTrainerBeenFought(gRematchTable[rematchTableId].trainerIds[0]))
         SetRematchIdForTrainer(gRematchTable, rematchTableId);
 }
 
@@ -1694,7 +1683,7 @@ static bool32 HasAtLeastFiveBadges(void)
 
     for (count = 0, i = 0; i < ARRAY_COUNT(sBadgeFlags); i++)
     {
-        if (FlagGet(sBadgeFlags[i]) == TRUE)
+        if (FlagGet(sBadgeFlags[i]))
         {
             if (++count >= 5)
                 return TRUE;
@@ -1727,7 +1716,7 @@ static bool32 IsRematchStepCounterMaxed(void)
 
 void TryUpdateRandomTrainerRematches(u16 mapGroup, u16 mapNum)
 {
-    if (IsRematchStepCounterMaxed() && UpdateRandomTrainerRematches(gRematchTable, mapGroup, mapNum) == TRUE)
+    if (IsRematchStepCounterMaxed() && UpdateRandomTrainerRematches(gRematchTable, mapGroup, mapNum))
         gSaveBlock1Ptr->trainerRematchStepCounter = 0;
 }
 

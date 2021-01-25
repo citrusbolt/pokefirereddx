@@ -17,7 +17,29 @@
 #define ITEM_LUXURY_BALL 11
 #define ITEM_PREMIER_BALL 12
 
-#define LAST_BALL ITEM_PREMIER_BALL
+#define BALL_NONE 0
+#define BALL_MASTER 1
+#define BALL_ULTRA 2
+#define BALL_GREAT 3
+#define BALL_POKE 4
+#define BALL_SAFARI 5
+#define BALL_NET 6
+#define BALL_DIVE 7
+#define BALL_NEST 8
+#define BALL_REPEAT 9
+#define BALL_TIMER 10
+#define BALL_LUXURY 11
+#define BALL_PREMIER 12
+#define BALL_LEVEL 13
+#define BALL_LURE 14
+#define BALL_MOON 15
+#define BALL_FRIEND 16
+#define BALL_FAST 17
+#define BALL_HEAVY 18
+#define BALL_LOVE 19
+#define BALL_PARK 20
+
+#define POKEBALL_COUNT 21
 
 // Pokemon Items
 #define ITEM_POTION 13
@@ -145,6 +167,8 @@
 #define ITEM_FAB_MAIL 131
 #define ITEM_RETRO_MAIL 132
 
+#define FIRST_MAIL_INDEX ITEM_ORANGE_MAIL
+
 // Berries
 #define ITEM_CHERI_BERRY 133
 #define ITEM_CHESTO_BERRY 134
@@ -189,6 +213,10 @@
 #define ITEM_LANSAT_BERRY 173
 #define ITEM_STARF_BERRY 174
 #define ITEM_ENIGMA_BERRY 175
+
+#define FIRST_BERRY_INDEX ITEM_CHERI_BERRY
+#define LAST_BERRY_INDEX  ITEM_ENIGMA_BERRY
+
 #define ITEM_0B0 176
 #define ITEM_0B1 177
 #define ITEM_0B2 178
@@ -468,6 +496,8 @@
 #define ITEM_SHINY_CHARM 377
 #define ITEM_OVAL_CHARM 378
 
+#define NEW_BALL_START 378
+
 // Apricorn balls
 #define ITEM_LEVEL_BALL 379
 #define ITEM_LURE_BALL 380
@@ -480,9 +510,6 @@
 
 #define ITEMS_COUNT 387
 #define ITEM_FIELD_ARROW ITEMS_COUNT
-
-#define FIRST_BERRY_INDEX             ITEM_CHERI_BERRY
-#define LAST_BERRY_INDEX              ITEM_ENIGMA_BERRY
 
 // Range of berries given out by various NPCS
 #define FIRST_BERRY_MASTER_BERRY      ITEM_POMEG_BERRY
@@ -519,6 +546,21 @@
 #define OLD_ROD   0
 #define GOOD_ROD  1
 #define SUPER_ROD 2
+
+// Secondary IDs for bikes
+#define MACH_BIKE 0
+#define ACRO_BIKE 1
+
+// Item type IDs (used to determine the exit callback)
+#define ITEM_USE_MAIL        0
+#define ITEM_USE_PARTY_MENU  1
+#define ITEM_USE_FIELD       2
+#define ITEM_USE_PBLOCK_CASE 3
+#define ITEM_USE_BAG_MENU    4 // No exit callback, stays in bag menu
+
+// Item battle usage IDs (only checked to see if nonzero)
+#define ITEM_B_USE_MEDICINE 1
+#define ITEM_B_USE_OTHER    2
 
 // Check if the item is one that can be used on a Pokemon.
 #define ITEM_HAS_EFFECT(item) ((item) >= ITEM_POTION && (item) <= ITEM_0B2)

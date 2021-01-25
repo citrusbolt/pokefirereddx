@@ -87,63 +87,63 @@ static void sub_8062A2C(void);
 
 static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
 {
-    OpponentHandleGetMonData,
-    OpponentHandleGetRawMonData,
-    OpponentHandleSetMonData,
-    OpponentHandleSetRawMonData,
-    OpponentHandleLoadMonSprite,
-    OpponentHandleSwitchInAnim,
-    OpponentHandleReturnMonToBall,
-    OpponentHandleDrawTrainerPic,
-    OpponentHandleTrainerSlide,
-    OpponentHandleTrainerSlideBack,
-    OpponentHandleFaintAnimation,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentHandleMoveAnimation,
-    OpponentHandlePrintString,
-    OpponentEndExecution,
-    OpponentHandleChooseAction,
-    OpponentEndExecution,
-    OpponentHandleChooseMove,
-    OpponentHandleChooseItem,
-    OpponentHandleChoosePokemon,
-    OpponentEndExecution,
-    OpponentHandleHealthBarUpdate,
-    OpponentEndExecution,
-    OpponentHandleStatusIconUpdate,
-    OpponentHandleStatusAnimation,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentHandleHitAnimation,
-    OpponentEndExecution,
-    OpponentHandlePlaySE,
-    OpponentHandlePlayFanfareOrBGM,
-    OpponentHandleFaintingCry,
-    OpponentHandleIntroSlide,
-    OpponentHandleIntroTrainerBallThrow,
-    OpponentHandleDrawPartyStatusSummary,
-    OpponentHandleHidePartyStatusSummary,
-    OpponentEndExecution,
-    OpponentHandleSpriteInvisibility,
-    OpponentHandleBattleAnimation,
-    OpponentEndExecution,
-    OpponentEndExecution,
-    OpponentHandleCmd55,
-    nullsub_21
+    [CONTROLLER_GETMONDATA]               = OpponentHandleGetMonData,
+    [CONTROLLER_GETRAWMONDATA]            = OpponentHandleGetRawMonData,
+    [CONTROLLER_SETMONDATA]               = OpponentHandleSetMonData,
+    [CONTROLLER_SETRAWMONDATA]            = OpponentHandleSetRawMonData,
+    [CONTROLLER_LOADMONSPRITE]            = OpponentHandleLoadMonSprite,
+    [CONTROLLER_SWITCHINANIM]             = OpponentHandleSwitchInAnim,
+    [CONTROLLER_RETURNMONTOBALL]          = OpponentHandleReturnMonToBall,
+    [CONTROLLER_DRAWTRAINERPIC]           = OpponentHandleDrawTrainerPic,
+    [CONTROLLER_TRAINERSLIDE]             = OpponentHandleTrainerSlide,
+    [CONTROLLER_TRAINERSLIDEBACK]         = OpponentHandleTrainerSlideBack,
+    [CONTROLLER_FAINTANIMATION]           = OpponentHandleFaintAnimation,
+    [CONTROLLER_PALETTEFADE]              = OpponentEndExecution,
+    [CONTROLLER_SUCCESSBALLTHROWANIM]     = OpponentEndExecution,
+    [CONTROLLER_BALLTHROWANIM]            = OpponentEndExecution,
+    [CONTROLLER_PAUSE]                    = OpponentEndExecution,
+    [CONTROLLER_MOVEANIMATION]            = OpponentHandleMoveAnimation,
+    [CONTROLLER_PRINTSTRING]              = OpponentHandlePrintString,
+    [CONTROLLER_PRINTSTRINGPLAYERONLY]    = OpponentEndExecution,
+    [CONTROLLER_CHOOSEACTION]             = OpponentHandleChooseAction,
+    [CONTROLLER_UNKNOWNYESNOBOX]          = OpponentEndExecution,
+    [CONTROLLER_CHOOSEMOVE]               = OpponentHandleChooseMove,
+    [CONTROLLER_OPENBAG]                  = OpponentHandleChooseItem,
+    [CONTROLLER_CHOOSEPOKEMON]            = OpponentHandleChoosePokemon,
+    [CONTROLLER_23]                       = OpponentEndExecution,
+    [CONTROLLER_HEALTHBARUPDATE]          = OpponentHandleHealthBarUpdate,
+    [CONTROLLER_EXPUPDATE]                = OpponentEndExecution,
+    [CONTROLLER_STATUSICONUPDATE]         = OpponentHandleStatusIconUpdate,
+    [CONTROLLER_STATUSANIMATION]          = OpponentHandleStatusAnimation,
+    [CONTROLLER_STATUSXOR]                = OpponentEndExecution,
+    [CONTROLLER_DATATRANSFER]             = OpponentEndExecution,
+    [CONTROLLER_DMA3TRANSFER]             = OpponentEndExecution,
+    [CONTROLLER_PLAYBGM]                  = OpponentEndExecution,
+    [CONTROLLER_32]                       = OpponentEndExecution,
+    [CONTROLLER_TWORETURNVALUES]          = OpponentEndExecution,
+    [CONTROLLER_CHOSENMONRETURNVALUE]     = OpponentEndExecution,
+    [CONTROLLER_ONERETURNVALUE]           = OpponentEndExecution,
+    [CONTROLLER_ONERETURNVALUE_DUPLICATE] = OpponentEndExecution,
+    [CONTROLLER_CLEARUNKVAR]              = OpponentEndExecution,
+    [CONTROLLER_SETUNKVAR]                = OpponentEndExecution,
+    [CONTROLLER_CLEARUNKFLAG]             = OpponentEndExecution,
+    [CONTROLLER_TOGGLEUNKFLAG]            = OpponentEndExecution,
+    [CONTROLLER_HITANIMATION]             = OpponentHandleHitAnimation,
+    [CONTROLLER_42]                       = OpponentEndExecution,
+    [CONTROLLER_PLAYSE]                   = OpponentHandlePlaySE,
+    [CONTROLLER_PLAYFANFAREORBGM]         = OpponentHandlePlayFanfareOrBGM,
+    [CONTROLLER_FAINTINGCRY]              = OpponentHandleFaintingCry,
+    [CONTROLLER_INTROSLIDE]               = OpponentHandleIntroSlide,
+    [CONTROLLER_INTROTRAINERBALLTHROW]    = OpponentHandleIntroTrainerBallThrow,
+    [CONTROLLER_DRAWPARTYSTATUSSUMMARY]   = OpponentHandleDrawPartyStatusSummary,
+    [CONTROLLER_HIDEPARTYSTATUSSUMMARY]   = OpponentHandleHidePartyStatusSummary,
+    [CONTROLLER_ENDBOUNCE]                = OpponentEndExecution,
+    [CONTROLLER_SPRITEINVISIBILITY]       = OpponentHandleSpriteInvisibility,
+    [CONTROLLER_BATTLEANIMATION]          = OpponentHandleBattleAnimation,
+    [CONTROLLER_LINKSTANDBYMSG]           = OpponentEndExecution,
+    [CONTROLLER_RESETACTIONMOVESELECTION] = OpponentEndExecution,
+    [CONTROLLER_55]                       = OpponentHandleCmd55,
+    [CONTROLLER_TERMINATOR_NOP]           = nullsub_21
 };
 
 void SetControllerToOpponent(void)
@@ -879,8 +879,9 @@ static void SetOpponentMonData(u8 monId)
     case REQUEST_ALL_BATTLE:
         {
             u8 iv;
+            u16 species = battlePokemon->species;
 
-            SetMonData(&gEnemyParty[monId], MON_DATA_SPECIES, &battlePokemon->species);
+            SetMonData(&gEnemyParty[monId], MON_DATA_SPECIES, &species);
             SetMonData(&gEnemyParty[monId], MON_DATA_HELD_ITEM, &battlePokemon->item);
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -1098,9 +1099,10 @@ static void OpponentHandleSetRawMonData(void)
 static void OpponentHandleLoadMonSprite(void)
 {
     u16 species = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_SPECIES);
+    u8 form = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_FORM); 
 
     BattleLoadOpponentMonSpriteGfx(&gEnemyParty[gBattlerPartyIndexes[gActiveBattler]], gActiveBattler);
-    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(gActiveBattler));
+    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(gActiveBattler), form);
 
     gBattlerSpriteIds[gActiveBattler] = CreateSprite(&gMultiuseSpriteTemplate,
                                                GetBattlerSpriteCoord(gActiveBattler, 2),
@@ -1128,14 +1130,14 @@ static void OpponentHandleSwitchInAnim(void)
 
 static void sub_80613DC(u8 battlerId, bool8 dontClearSubstituteBit)
 {
-    u16 species;
+    u16 species = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerId]], MON_DATA_SPECIES);
+    u8 form = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerId]], MON_DATA_FORM);
 
     ClearTemporarySpeciesSpriteData(battlerId, dontClearSubstituteBit);
     gBattlerPartyIndexes[battlerId] = gBattleBufferA[battlerId][1];
-    species = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerId]], MON_DATA_SPECIES);
     gUnknown_03005D7C[battlerId] = CreateInvisibleSpriteWithCallback(sub_805D714);
     BattleLoadOpponentMonSpriteGfx(&gEnemyParty[gBattlerPartyIndexes[battlerId]], battlerId);
-    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battlerId));
+    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battlerId), form);
 
     gBattlerSpriteIds[battlerId] = CreateSprite(&gMultiuseSpriteTemplate,
                                         GetBattlerSpriteCoord(battlerId, 2),
@@ -1225,7 +1227,7 @@ static void OpponentHandleDrawTrainerPic(void)
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
     {
-        if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_x800000))
+        if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
         {
             if (gActiveBattler == 1)
                 trainerPicId = GetFrontierTrainerFrontSpriteId(gTrainerBattleOpponent_A);
@@ -1308,7 +1310,7 @@ static void OpponentHandleTrainerSlide(void)
     }
     else if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
     {
-        if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_x800000))
+        if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
         {
             if (gActiveBattler == 1)
                 trainerPicId = GetFrontierTrainerFrontSpriteId(gTrainerBattleOpponent_A);
@@ -1573,7 +1575,7 @@ static void OpponentHandleChoosePokemon(void)
                 battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
             }
 
-            if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_x800000))
+            if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TOWER_LINK_MULTI))
             {
                 if (gActiveBattler == 1)
                     firstId = 0, lastId = 3;
@@ -1715,7 +1717,6 @@ static void OpponentHandleIntroSlide(void)
 
 static void OpponentHandleIntroTrainerBallThrow(void)
 {
-    u8 paletteNum;
     u8 taskId;
 
     SetSpritePrimaryCoordsFromSecondaryCoords(&gSprites[gBattlerSpriteIds[gActiveBattler]]);

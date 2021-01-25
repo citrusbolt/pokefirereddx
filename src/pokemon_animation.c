@@ -7,6 +7,7 @@
 #include "task.h"
 #include "trig.h"
 #include "util.h"
+#include "data.h"
 #include "constants/battle_anim.h"
 #include "constants/rgb.h"
 
@@ -973,7 +974,7 @@ static void HandleStartAffineAnim(struct Sprite *sprite)
     sprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
     sprite->affineAnims = sSpriteAffineAnimTable_860AD68;
 
-    if (sUnknown_03001274 == TRUE)
+    if (sUnknown_03001274)
         InitSpriteAffineAnim(sprite);
 
     if (!sprite->data[1])
@@ -1031,7 +1032,7 @@ static void sub_817F77C(struct Sprite *sprite)
     sprite->oam.affineMode = ST_OAM_AFFINE_NORMAL;
     CalcCenterToCornerVec(sprite, sprite->oam.shape, sprite->oam.size, sprite->oam.affineMode);
 
-    if (sUnknown_03001274 == TRUE)
+    if (sUnknown_03001274)
     {
         if (!sprite->data[1])
             sprite->hFlip = 1;
@@ -1044,7 +1045,6 @@ static void sub_817F77C(struct Sprite *sprite)
     }
     else
     {
-        sprite->affineAnimPaused = FALSE;
         sprite->affineAnims = gUnknown_082FF694;
     }
 }

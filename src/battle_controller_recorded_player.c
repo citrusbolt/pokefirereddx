@@ -71,63 +71,63 @@ static void sub_818CDF4(void);
 
 static void (*const sRecordedPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(void) =
 {
-    RecordedPlayerHandleGetMonData,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleSetMonData,
-    RecordedPlayerHandleSetRawMonData,
-    RecordedPlayerHandleLoadMonSprite,
-    RecordedPlayerHandleSwitchInAnim,
-    RecordedPlayerHandleReturnMonToBall,
-    RecordedPlayerHandleDrawTrainerPic,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleTrainerSlideBack,
-    RecordedPlayerHandleFaintAnimation,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleMoveAnimation,
-    RecordedPlayerHandlePrintString,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleChooseAction,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleChooseMove,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleChoosePokemon,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleHealthBarUpdate,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleStatusIconUpdate,
-    RecordedPlayerHandleStatusAnimation,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleHitAnimation,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandlePlaySE,
-    RecordedPlayerHandlePlayFanfareOrBGM,
-    RecordedPlayerHandleFaintingCry,
-    RecordedPlayerHandleIntroSlide,
-    RecordedPlayerHandleIntroTrainerBallThrow,
-    RecordedPlayerHandleDrawPartyStatusSummary,
-    RecordedPlayerHandleHidePartyStatusSummary,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleSpriteInvisibility,
-    RecordedPlayerHandleBattleAnimation,
-    RecordedPlayerEndExecution,
-    RecordedPlayerEndExecution,
-    RecordedPlayerHandleCmd55,
-    nullsub_21
+    [CONTROLLER_GETMONDATA]               = RecordedPlayerHandleGetMonData,
+    [CONTROLLER_GETRAWMONDATA]            = RecordedPlayerEndExecution,
+    [CONTROLLER_SETMONDATA]               = RecordedPlayerHandleSetMonData,
+    [CONTROLLER_SETRAWMONDATA]            = RecordedPlayerHandleSetRawMonData,
+    [CONTROLLER_LOADMONSPRITE]            = RecordedPlayerHandleLoadMonSprite,
+    [CONTROLLER_SWITCHINANIM]             = RecordedPlayerHandleSwitchInAnim,
+    [CONTROLLER_RETURNMONTOBALL]          = RecordedPlayerHandleReturnMonToBall,
+    [CONTROLLER_DRAWTRAINERPIC]           = RecordedPlayerHandleDrawTrainerPic,
+    [CONTROLLER_TRAINERSLIDE]             = RecordedPlayerEndExecution,
+    [CONTROLLER_TRAINERSLIDEBACK]         = RecordedPlayerHandleTrainerSlideBack,
+    [CONTROLLER_FAINTANIMATION]           = RecordedPlayerHandleFaintAnimation,
+    [CONTROLLER_PALETTEFADE]              = RecordedPlayerEndExecution,
+    [CONTROLLER_SUCCESSBALLTHROWANIM]     = RecordedPlayerEndExecution,
+    [CONTROLLER_BALLTHROWANIM]            = RecordedPlayerEndExecution,
+    [CONTROLLER_PAUSE]                    = RecordedPlayerEndExecution,
+    [CONTROLLER_MOVEANIMATION]            = RecordedPlayerHandleMoveAnimation,
+    [CONTROLLER_PRINTSTRING]              = RecordedPlayerHandlePrintString,
+    [CONTROLLER_PRINTSTRINGPLAYERONLY]    = RecordedPlayerEndExecution,
+    [CONTROLLER_CHOOSEACTION]             = RecordedPlayerHandleChooseAction,
+    [CONTROLLER_UNKNOWNYESNOBOX]          = RecordedPlayerEndExecution,
+    [CONTROLLER_CHOOSEMOVE]               = RecordedPlayerHandleChooseMove,
+    [CONTROLLER_OPENBAG]                  = RecordedPlayerEndExecution,
+    [CONTROLLER_CHOOSEPOKEMON]            = RecordedPlayerHandleChoosePokemon,
+    [CONTROLLER_23]                       = RecordedPlayerEndExecution,
+    [CONTROLLER_HEALTHBARUPDATE]          = RecordedPlayerHandleHealthBarUpdate,
+    [CONTROLLER_EXPUPDATE]                = RecordedPlayerEndExecution,
+    [CONTROLLER_STATUSICONUPDATE]         = RecordedPlayerHandleStatusIconUpdate,
+    [CONTROLLER_STATUSANIMATION]          = RecordedPlayerHandleStatusAnimation,
+    [CONTROLLER_STATUSXOR]                = RecordedPlayerEndExecution,
+    [CONTROLLER_DATATRANSFER]             = RecordedPlayerEndExecution,
+    [CONTROLLER_DMA3TRANSFER]             = RecordedPlayerEndExecution,
+    [CONTROLLER_PLAYBGM]                  = RecordedPlayerEndExecution,
+    [CONTROLLER_32]                       = RecordedPlayerEndExecution,
+    [CONTROLLER_TWORETURNVALUES]          = RecordedPlayerEndExecution,
+    [CONTROLLER_CHOSENMONRETURNVALUE]     = RecordedPlayerEndExecution,
+    [CONTROLLER_ONERETURNVALUE]           = RecordedPlayerEndExecution,
+    [CONTROLLER_ONERETURNVALUE_DUPLICATE] = RecordedPlayerEndExecution,
+    [CONTROLLER_CLEARUNKVAR]              = RecordedPlayerEndExecution,
+    [CONTROLLER_SETUNKVAR]                = RecordedPlayerEndExecution,
+    [CONTROLLER_CLEARUNKFLAG]             = RecordedPlayerEndExecution,
+    [CONTROLLER_TOGGLEUNKFLAG]            = RecordedPlayerEndExecution,
+    [CONTROLLER_HITANIMATION]             = RecordedPlayerHandleHitAnimation,
+    [CONTROLLER_42]                       = RecordedPlayerEndExecution,
+    [CONTROLLER_PLAYSE]                   = RecordedPlayerHandlePlaySE,
+    [CONTROLLER_PLAYFANFAREORBGM]         = RecordedPlayerHandlePlayFanfareOrBGM,
+    [CONTROLLER_FAINTINGCRY]              = RecordedPlayerHandleFaintingCry,
+    [CONTROLLER_INTROSLIDE]               = RecordedPlayerHandleIntroSlide,
+    [CONTROLLER_INTROTRAINERBALLTHROW]    = RecordedPlayerHandleIntroTrainerBallThrow,
+    [CONTROLLER_DRAWPARTYSTATUSSUMMARY]   = RecordedPlayerHandleDrawPartyStatusSummary,
+    [CONTROLLER_HIDEPARTYSTATUSSUMMARY]   = RecordedPlayerHandleHidePartyStatusSummary,
+    [CONTROLLER_ENDBOUNCE]                = RecordedPlayerEndExecution,
+    [CONTROLLER_SPRITEINVISIBILITY]       = RecordedPlayerHandleSpriteInvisibility,
+    [CONTROLLER_BATTLEANIMATION]          = RecordedPlayerHandleBattleAnimation,
+    [CONTROLLER_LINKSTANDBYMSG]           = RecordedPlayerEndExecution,
+    [CONTROLLER_RESETACTIONMOVESELECTION] = RecordedPlayerEndExecution,
+    [CONTROLLER_55]                       = RecordedPlayerHandleCmd55,
+    [CONTROLLER_TERMINATOR_NOP]           = nullsub_21
 };
 
 void SetControllerToRecordedPlayer(void)
@@ -659,7 +659,7 @@ static u32 CopyRecordedPlayerMonData(u8 monId, u8 *dst)
         dst[0] = GetMonData(&gPlayerParty[monId], MON_DATA_HP_IV);
         size = 1;
         break;
-    case REQUEST_ATK_IV_BATTLE:
+    case REQUEST_ATK_IV_BATTLE:	
         dst[0] = GetMonData(&gPlayerParty[monId], MON_DATA_ATK_IV);
         size = 1;
         break;
@@ -834,8 +834,9 @@ static void SetRecordedPlayerMonData(u8 monId)
     case REQUEST_ALL_BATTLE:
         {
             u8 iv;
+            u16 species = battlePokemon->species;
 
-            SetMonData(&gPlayerParty[monId], MON_DATA_SPECIES, &battlePokemon->species);
+            SetMonData(&gPlayerParty[monId], MON_DATA_SPECIES, &species);
             SetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM, &battlePokemon->item);
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -1054,11 +1055,11 @@ static void RecordedPlayerHandleSetRawMonData(void)
 
 static void RecordedPlayerHandleLoadMonSprite(void)
 {
-    u16 species;
+    u16 species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_SPECIES);
+    u8 form = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_FORM);
 
     BattleLoadPlayerMonSpriteGfx(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]], gActiveBattler);
-    species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_SPECIES);
-    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(gActiveBattler));
+    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(gActiveBattler), form);
 
     gBattlerSpriteIds[gActiveBattler] = CreateSprite(&gMultiuseSpriteTemplate,
                                                GetBattlerSpriteCoord(gActiveBattler, 2),
@@ -1082,13 +1083,13 @@ static void RecordedPlayerHandleSwitchInAnim(void)
 
 static void sub_818BA6C(u8 battlerId, bool8 dontClearSubstituteBit)
 {
-    u16 species;
+    u16 species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerId]], MON_DATA_SPECIES);
+    u8 form = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerId]], MON_DATA_FORM);
 
     ClearTemporarySpeciesSpriteData(battlerId, dontClearSubstituteBit);
     gBattlerPartyIndexes[battlerId] = gBattleBufferA[battlerId][1];
-    species = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerId]], MON_DATA_SPECIES);
     gUnknown_03005D7C[battlerId] = CreateInvisibleSpriteWithCallback(sub_805D714);
-    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battlerId));
+    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battlerId), form);
 
     gBattlerSpriteIds[battlerId] = CreateSprite(
       &gMultiuseSpriteTemplate,
@@ -1153,12 +1154,12 @@ static void RecordedPlayerHandleDrawTrainerPic(void)
     s16 xPos, yPos;
     u32 trainerPicId;
 
-    if (gBattleTypeFlags & BATTLE_TYPE_x2000000)
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
             trainerPicId = GetActiveBattlerLinkPlayerGender();
         else
-            trainerPicId = gLinkPlayers[gUnknown_0203C7B4].gender;
+            trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender;
     }
     else
     {
@@ -1508,6 +1509,10 @@ static void RecordedPlayerHandleIntroTrainerBallThrow(void)
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[gActiveBattler]], 1);
 
     paletteNum = AllocSpritePalette(0xD70F);
+    if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+        trainerPicId = gLinkPlayers[GetBattlerMultiplayerId(gActiveBattler)].gender;
+    else
+        trainerPicId = gSaveBlock2Ptr->playerGender;
 
     LoadPalette(gTrainerBackPicPaletteTable[trainerPicId].data, 0x100 + paletteNum * 16, 32);
 

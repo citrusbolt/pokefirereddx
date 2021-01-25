@@ -3120,7 +3120,7 @@ static u8 CreateContestantSprite(u16 species, u32 otId, u32 personality, u32 ind
     HandleLoadSpecialPokePic(&gMonBackPicTable[species], gMonSpritesGfxPtr->sprites.ptr[0], species, personality);
 
     LoadPalette(GetMonSpritePalFromSpeciesAndPersonality(species, otId, personality), 0x120, 0x20);
-    SetMultiuseSpriteTemplateToPokemon(species, 0);
+    SetMultiuseSpriteTemplateToPokemon(species, 0, 0);
 
     spriteId = CreateSprite(&gMultiuseSpriteTemplate, 0x70, GetBattlerSpriteFinal_Y(2, species, FALSE), 30);
     gSprites[spriteId].oam.paletteNum = 2;
@@ -4409,7 +4409,6 @@ static void CalculateAppealMoveImpact(u8 contestant)
     u16 move;
     u8 effect;
     u8 rnd;
-    bool8 canUseTurn;
     s32 i;
 
     eContestantStatus[contestant].appeal = 0;

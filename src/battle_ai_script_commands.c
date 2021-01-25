@@ -293,7 +293,7 @@ void BattleAI_HandleItemUseBeforeAISetup(u8 defaultScoreMoves)
     if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER)
         && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_BATTLE_TOWER
                                | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_SECRET_BASE | BATTLE_TYPE_FRONTIER
-                               | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_x2000000)
+                               | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_RECORDED_LINK)
             )
        )
     {
@@ -450,16 +450,7 @@ static u8 ChooseMoveOrAction_Doubles(void)
 {
     s32 i;
     s32 j;
-#ifndef BUGFIX
     s32 scriptsToRun;
-#else
-    // the value assigned to this is a u32 (aiFlags)
-    // this becomes relevant because aiFlags can have bit 31 set
-    // and scriptsToRun is shifted
-    // this never happens in the vanilla game because bit 31 is
-    // only set when it's the first battle
-    u32 scriptsToRun;
-#endif
     s16 bestMovePointsForTarget[MAX_BATTLERS_COUNT];
     s8 mostViableTargetsArray[MAX_BATTLERS_COUNT];
     u8 actionOrMoveIndex[MAX_BATTLERS_COUNT];
@@ -1614,9 +1605,7 @@ static void Cmd_if_status_not_in_party(void)
         if (species != SPECIES_NONE && species != SPECIES_EGG && hp != 0 && status == statusToCompareTo)
         {
             gAIScriptPtr += 10;
-            #ifdef UBFIX
             return;
-            #endif
         }
     }
 

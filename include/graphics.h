@@ -2737,21 +2737,21 @@ extern const u32 gMenuPokeblock_Gfx[];
 extern const u32 gMenuPokeblock_Pal[];
 extern const u32 gMenuPokeblock_Tilemap[];
 extern const u32 gMenuPokeblockDevice_Gfx[];
-extern const u32 gMenuPokeblockDevice_Pal[];
-extern const u32 gPokeblockRed_Pal[];
-extern const u32 gPokeblockBlue_Pal[];
-extern const u32 gPokeblockPink_Pal[];
-extern const u32 gPokeblockGreen_Pal[];
-extern const u32 gPokeblockYellow_Pal[];
-extern const u32 gPokeblockPurple_Pal[];
-extern const u32 gPokeblockIndigo_Pal[];
-extern const u32 gPokeblockBrown_Pal[];
-extern const u32 gPokeblockLiteBlue_Pal[];
-extern const u32 gPokeblockOlive_Pal[];
-extern const u32 gPokeblockGray_Pal[];
-extern const u32 gPokeblockBlack_Pal[];
-extern const u32 gPokeblockWhite_Pal[];
-extern const u32 gPokeblockGold_Pal[];
+extern const u16 gMenuPokeblockDevice_Pal[];
+extern const u16 gPokeblockRed_Pal[];
+extern const u16 gPokeblockBlue_Pal[];
+extern const u16 gPokeblockPink_Pal[];
+extern const u16 gPokeblockGreen_Pal[];
+extern const u16 gPokeblockYellow_Pal[];
+extern const u16 gPokeblockPurple_Pal[];
+extern const u16 gPokeblockIndigo_Pal[];
+extern const u16 gPokeblockBrown_Pal[];
+extern const u16 gPokeblockLiteBlue_Pal[];
+extern const u16 gPokeblockOlive_Pal[];
+extern const u16 gPokeblockGray_Pal[];
+extern const u16 gPokeblockBlack_Pal[];
+extern const u16 gPokeblockWhite_Pal[];
+extern const u16 gPokeblockGold_Pal[];
 extern const u32 gPokeblock_Gfx[];
 
 extern const u32 gItemIcon_QuestionMark[];
@@ -3772,8 +3772,8 @@ extern const u32 gConfetti_Gfx[];
 extern const u32 gConfetti_Pal[];
 
 extern const u32 gUnknown_08C093F0[];
-extern const u32 gSubstituteDollTilemap[];
-extern const u32 gSubstituteDollGfx[];
+extern const u32 gSubstituteDollBackGfx[];
+extern const u32 gSubstituteDollFrontGfx[];
 extern const u32 gSubstituteDollPal[];
 extern const u32 gHealthboxSinglesPlayerGfx[];
 extern const u32 gHealthboxSinglesOpponentGfx[];
@@ -4702,6 +4702,11 @@ extern const u32 gPokenavMessageBox_Tilemap[];
 extern const u16 gPokenavMessageBox_Pal[];
 extern const u32 gPokenavOptions_Gfx[];
 extern const u16 gPokenavOptions_Pal[];
+
+// Battle Factory Screen
+extern const u8 gFrontierFactorySelectMenu_Gfx[];
+extern const u8 gFrontierFactorySelectMenu_Tilemap[];
+extern const u16 gFrontierFactorySelectMenu_Pal[];
 
 // Object event pals
 extern const u16 gObjectEventPal_Brendan[];

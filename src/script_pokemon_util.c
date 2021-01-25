@@ -59,14 +59,14 @@ void HealPlayerParty(void)
     }
 }
 
-u8 ScriptGiveMon(u16 species, u8 level, u16 item, u32 unused1, u32 unused2, u8 unused3)
+u8 ScriptGiveMon(u16 species, u8 level, u16 item, u8 form)
 {
     u16 nationalDexNum;
     int sentToPc;
     u8 heldItem[2];
     struct Pokemon mon;
 
-    CreateMon(&mon, species, level, 32, 0, 0, OT_ID_PLAYER_ID, 0);
+    CreateMon(&mon, species, level, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0, form);
     heldItem[0] = item;
     heldItem[1] = item >> 8;
     SetMonData(&mon, MON_DATA_HELD_ITEM, heldItem);
@@ -128,7 +128,7 @@ static bool8 CheckPartyMonHasHeldItem(u16 item)
 bool8 DoesPartyHaveEnigmaBerry(void)
 {
     bool8 hasItem = CheckPartyMonHasHeldItem(ITEM_ENIGMA_BERRY);
-    if (hasItem == TRUE)
+    if (hasItem)
         GetBerryNameByBerryType(ItemIdToBerryType(ITEM_ENIGMA_BERRY), gStringVar1);
 
     return hasItem;
@@ -139,7 +139,7 @@ void CreateScriptedWildMon(u16 species, u8 level, u16 item)
     u8 heldItem[2];
 
     ZeroEnemyPartyMons();
-    CreateMon(&gEnemyParty[0], species, level, 32, 0, 0, OT_ID_PLAYER_ID, 0);
+    CreateMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0, 0);
     if (item)
     {
         heldItem[0] = item;
@@ -148,26 +148,26 @@ void CreateScriptedWildMon(u16 species, u8 level, u16 item)
     }
 }
 
-void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species2, u8 level2, u16 item2)
+void CreateScriptedDoubleWildMon(u16 species, u8 level, u16 item, u16 species2, u8 level2, u16 item2)
 {
-    u8 heldItem1[2];
+    u8 heldItem[2];
     u8 heldItem2[2];
 
     ZeroEnemyPartyMons();
-    CreateMon(&gEnemyParty[0], species1, level1, 32, 0, 0, OT_ID_PLAYER_ID, 0);
-    if (item1)
+    CreateMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0, 0);
+    if (item)
     {
-        heldItem1[0] = item1;
-        heldItem1[1] = item1 >> 8;
-        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem1);
+        heldItem[0] = item;
+        heldItem[1] = item >> 8;
+        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
     }
 
-    CreateMon(&gEnemyParty[3], species2, level2, 32, 0, 0, OT_ID_PLAYER_ID, 0);
+    CreateMon(&gEnemyParty[3], species2, level2, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0, 0);
     if (item2)
     {
         heldItem2[0] = item2;
         heldItem2[1] = item2 >> 8;
-        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem2);
+        SetMonData(&gEnemyParty[3], MON_DATA_HELD_ITEM, heldItem2);
     }
 }
 
@@ -205,23 +205,8 @@ static void CB2_ReturnFromChooseHalfParty(void)
 
 void ChoosePartyForBattleFrontier(void)
 {
-    gMain.savedCallback = CB2_ReturnFromChooseBattleFrontierParty;
+    gMain.savedCallback = CB2_ReturnFromChooseHalfParty;
     InitChooseHalfPartyForBattle(gSpecialVar_0x8004 + 1);
-}
-
-static void CB2_ReturnFromChooseBattleFrontierParty(void)
-{
-    switch (gSelectedOrderFromParty[0])
-    {
-    case 0:
-        gSpecialVar_Result = FALSE;
-        break;
-    default:
-        gSpecialVar_Result = TRUE;
-        break;
-    }
-
-    SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }
 
 void ReducePlayerPartyToSelectedMons(void)
