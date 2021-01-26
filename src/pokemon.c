@@ -2828,8 +2828,10 @@ void CalculateMonStats(struct Pokemon *mon)
     SetMonData(mon, MON_DATA_HP, &currentHP);
 }
 
-void ChangeForm(u8 form)
+void ChangeForm(void)
 {
+	u8 form = GetMonData(&gPlayerParty[0], MON_DATA_FORM);
+	form = (form + 1) % 4;
     SetMonData(&gPlayerParty[0], MON_DATA_FORM, &form);
 }
 

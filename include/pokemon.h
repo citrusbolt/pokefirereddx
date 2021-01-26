@@ -296,7 +296,7 @@ void CreateObedientEnemyMon(void);
 void CalculateMonStats(struct Pokemon *mon);
 u16 GetFormSpeciesId(u16 species, u8 form);
 u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId);
-void ChangeForm(u8 form);
+void ChangeForm(void);
 void BoxMonToMon(const struct BoxPokemon *src, struct Pokemon *dest);
 u8 GetLevelFromMonExp(struct Pokemon *mon);
 u8 GetLevelFromBoxMonExp(struct BoxPokemon *boxMon);

@@ -4018,9 +4018,9 @@ static void PlayMonCry(void)
     if (!summary->isEgg)
     {
         if (ShouldPlayNormalMonCry(&sMonSummaryScreen->currentMon))
-            PlayCry3(summary->species2, 0, 0);
+            PlayCry3(GetFormSpeciesId(summary->species, sMonSummaryScreen->form), 0, 0);
         else
-            PlayCry3(summary->species2, 0, 11);
+            PlayCry3(GetFormSpeciesId(summary->species, sMonSummaryScreen->form), 0, 11);
     }
 }
 
