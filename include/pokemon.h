@@ -65,15 +65,15 @@ struct PokemonSubstruct3
  /* 0x0A */ u32 victoryRibbon:1;
  /* 0x0A */ u32 artistRibbon:1;
  /* 0x0A */ u32 effortRibbon:1;
- /* 0x0A */ u32 giftRibbon1:1;
- /* 0x0A */ u32 giftRibbon2:1;
- /* 0x0A */ u32 giftRibbon3:1;
- /* 0x0A */ u32 giftRibbon4:1;
- /* 0x0B */ u32 giftRibbon5:1;
- /* 0x0B */ u32 giftRibbon6:1;
- /* 0x0B */ u32 giftRibbon7:1;
- /* 0x0B */ u32 fatefulEncounter:4;
- /* 0x0B */ u32 obedient:1;
+ /* 0x0A */ u32 marineRibbon:1; // never distributed
+ /* 0x0A */ u32 landRibbon:1; // never distributed
+ /* 0x0A */ u32 skyRibbon:1; // never distributed
+ /* 0x0A */ u32 countryRibbon:1; // distributed during Pokémon Festa '04 and '05 to tournament winners
+ /* 0x0B */ u32 nationalRibbon:1;
+ /* 0x0B */ u32 earthRibbon:1;
+ /* 0x0B */ u32 worldRibbon:1; // distributed during Pokémon Festa '04 and '05 to tournament winners
+ /* 0x0B */ u32 unusedRibbons:4; // discarded in Gen 4
+ /* 0x0B */ u32 eventLegal:1; // controls Mew & Deoxys obedience; if set, Pokémon is a fateful encounter in Gen 4+; set for in-game event island legendaries, some distributed events, and Pokémon from XD: Gale of Darkness.
 };
 
 union PokemonSubstruct
@@ -95,7 +95,7 @@ struct BoxPokemon
     u8 hasSpecies:1;
     u8 isEgg:1;
     u8 altBall:3;
-    u8 unused:2;
+    u8 form:2;
     u8 otName[PLAYER_NAME_LENGTH];
     u8 markings;
     u16 checksum;
@@ -158,7 +158,8 @@ struct BattlePokemon
     /*0x20*/ u8 ability;
     /*0x21*/ u8 type1;
     /*0x22*/ u8 type2;
-    /*0x23*/ u8 form;
+    /*0x23*/ u8 form:2;
+    /*0x23*/ u8 unknown:6;
     /*0x24*/ u8 pp[MAX_MON_MOVES];
     /*0x28*/ u16 hp;
     /*0x2A*/ u8 level;
@@ -267,7 +268,7 @@ extern const u8 gPPUpSetMask[];
 extern const u8 gPPUpAddMask[];
 extern const u8 gStatStageRatios[MAX_STAT_STAGE + 1][2];
 extern const u16 gLinkPlayerFacilityClasses[];
-extern const struct SpriteTemplate gUnknown_08329D98[];
+extern const struct SpriteTemplate gBattlerSpriteTemplates[];
 extern const s8 gNatureStatTable[][5];
 
 void ZeroBoxMonData(struct BoxPokemon *boxMon);
@@ -287,16 +288,11 @@ void CreateBattleTowerMon2(struct Pokemon *mon, struct BattleTowerPokemon *src, 
 void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 monId);
 void CreateMonWithEVSpreadNatureOTID(struct Pokemon *mon, u16 species, u8 level, u8 nature, u8 fixedIV, u8 evSpread, u32 otId, u8 form);
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest);
-void CreateObedientMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 fixedOtId, u8 form);
-bool8 sub_80688F8(u8 caseId, u8 battlerId);
-void SetDeoxysStats(void);
+void CreateEventLegalMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 fixedOtId, u8 form);
 u16 GetUnionRoomTrainerPic(void);
 u16 GetUnionRoomTrainerClass(void);
-void CreateObedientEnemyMon(void);
+void CreateEventLegalEnemyMon(void);
 void CalculateMonStats(struct Pokemon *mon);
-u16 GetFormSpeciesId(u16 species, u8 form);
-u8 GetFormIdFromFormSpeciesId(u16 formSpeciesId);
-void ChangeForm(u8 form);
 void BoxMonToMon(const struct BoxPokemon *src, struct Pokemon *dest);
 u8 GetLevelFromMonExp(struct Pokemon *mon);
 u8 GetLevelFromBoxMonExp(struct BoxPokemon *boxMon);
@@ -411,6 +407,9 @@ void MonRestorePP(struct Pokemon *mon);
 void BoxMonRestorePP(struct BoxPokemon *boxMon);
 void SetMonPreventsSwitchingString(void);
 void SetWildMonHeldItem(void);
+u16 GetFormSpecies(u16 species, u8 form);
+u8 GetFormFromFormSpecies(u16 formSpecies);
+void ChangeForm(void);
 bool8 IsMonShiny(struct Pokemon *mon);
 bool8 IsShinyOtIdPersonality(u32 otId, u32 personality);
 const u8 *GetTrainerPartnerName(void);

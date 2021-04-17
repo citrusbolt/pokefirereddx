@@ -188,7 +188,7 @@ u16 CreatePicSprite2(u16 species, u32 otId, u32 personality, u8 flags, s16 x, s1
     u8 i;
     u8 spriteId;
     u8 flags2;
-    u16 formSpecies = GetFormSpeciesId(species, form);
+    u16 formSpecies = GetFormSpecies(species, form);
 
     for (i = 0; i < PICS_COUNT; i ++)
     {
@@ -236,12 +236,12 @@ u16 CreatePicSprite2(u16 species, u32 otId, u32 personality, u8 flags, s16 x, s1
     sCreatingSpriteTemplate.images = images;
     if (flags2 == 0x01)
     {
-        sCreatingSpriteTemplate.affineAnims = gUnknown_082FF694;
+        sCreatingSpriteTemplate.affineAnims = gAffineAnims_BattleSpriteOpponentSide;
         sCreatingSpriteTemplate.oam = &gUnknown_0860B06C;
     }
     else if (flags2 == 0x00)
     {
-        sCreatingSpriteTemplate.affineAnims = gUnknown_082FF618;
+        sCreatingSpriteTemplate.affineAnims = gAffineAnims_BattleSpritePlayerSide;
         sCreatingSpriteTemplate.oam = &gUnknown_0860B06C;
     }
     else

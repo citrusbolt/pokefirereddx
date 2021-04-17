@@ -587,11 +587,11 @@ static bool8 TransitionToPokeblockFeedScene(void)
         gMain.state++;
         break;
     case 12:
-        BlendPalettes(-1, 0x10, 0);
+        BlendPalettes(PALETTES_ALL, 0x10, 0);
         gMain.state++;
         break;
     case 13:
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 0x10, 0, RGB_BLACK);
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
         gPaletteFade.bufferTransferDisabled = 0;
         gMain.state++;
         break;
@@ -647,7 +647,7 @@ static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
     case 0:
         species = GetMonData(mon, MON_DATA_SPECIES2);
 	    form = GetMonData(mon, MON_DATA_FORM);
-        formSpecies = GetFormSpeciesId(species, form);
+        formSpecies = GetFormSpecies(species, form);
         personality = GetMonData(mon, MON_DATA_PERSONALITY);
         HandleLoadSpecialPokePic(&gMonFrontPicTable[formSpecies], gMonSpritesGfxPtr->sprites.ptr[1], formSpecies, personality);
         sPokeblockFeed->loadGfxState++;
@@ -655,7 +655,7 @@ static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
     case 1:
         species = GetMonData(mon, MON_DATA_SPECIES2);
 	    form = GetMonData(mon, MON_DATA_FORM);
-        formSpecies = GetFormSpeciesId(species, form);
+        formSpecies = GetFormSpecies(species, form);
         personality = GetMonData(mon, MON_DATA_PERSONALITY);
         trainerId = GetMonData(mon, MON_DATA_OT_ID);
         palette = GetMonSpritePalStructFromOtIdPersonality(formSpecies, trainerId, personality);
@@ -811,7 +811,7 @@ static void Task_ReturnAfterPaletteFade(u8 taskId)
 
 static void Task_PaletteFadeToReturn(u8 taskId)
 {
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 0x10, RGB_BLACK);
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 0x10, RGB_BLACK);
     gTasks[taskId].func = Task_ReturnAfterPaletteFade;
 }
 

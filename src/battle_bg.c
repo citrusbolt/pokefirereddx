@@ -34,7 +34,6 @@ struct BattleBackground
 };
 
 // .rodata
-static const u16 sUnrefArray[] = {0x0300, 0x0000}; //OamData?
 
 static const struct OamData sVsLetter_V_OamData =
 {
@@ -100,7 +99,7 @@ static const struct SpriteTemplate sVsLetter_V_SpriteTemplate =
     .anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = sVsLetterAffineAnimTable,
-    .callback = nullsub_17
+    .callback = SpriteCB_VsLetterDummy
 };
 
 static const struct SpriteTemplate sVsLetter_S_SpriteTemplate =
@@ -111,7 +110,7 @@ static const struct SpriteTemplate sVsLetter_S_SpriteTemplate =
     .anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = sVsLetterAffineAnimTable,
-    .callback = nullsub_17
+    .callback = SpriteCB_VsLetterDummy
 };
 
 static const struct CompressedSpriteSheet sVsLettersSpriteSheet =
@@ -165,7 +164,7 @@ const struct WindowTemplate gStandardBattleWindowTemplates[] =
         .bg = 0,
         .tilemapLeft = 1,
         .tilemapTop = 15,
-        .width = 26,
+        .width = 28,
         .height = 4,
         .paletteNum = 0,
         .baseBlock = 0x0090,
@@ -463,25 +462,6 @@ static const struct BattleBackground gBattleTerrainTable[] =
         .palette = gBattleTerrainPalette_Plain,
     },
 };
-
-static void sub_8035648(void);
-
-// Unused
-static void sub_8035608(void)
-{
-    u8 spriteId;
-
-    ResetSpriteData();
-    spriteId = CreateSprite(&gUnknown_0831AC88, 0, 0, 0);
-    gSprites[spriteId].invisible = TRUE;
-    SetMainCallback2(sub_8035648);
-}
-
-static void sub_8035648(void)
-{
-    AnimateSprites();
-    BuildOamBuffer();
-}
 
 void BattleInitBgsAndWindows(void)
 {
@@ -839,7 +819,7 @@ void DrawBattleEntryBackground(void)
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
     {
         LZDecompressVram(gUnknown_08D778F0, (void*)(BG_CHAR_ADDR(1)));
-        LZDecompressVram(gVsLettersGfx, (void*)(VRAM + 0x10000));
+        LZDecompressVram(gVsLettersGfx, (void*)OBJ_VRAM0);
         LoadCompressedPalette(gUnknown_08D77AE4, 0x60, 0x20);
         SetBgAttribute(1, BG_ATTR_SCREENSIZE, 1);
         SetGpuReg(REG_OFFSET_BG1CNT, 0x5C04);

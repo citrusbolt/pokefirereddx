@@ -164,16 +164,18 @@ static EWRAM_DATA struct PokemonSummaryScreenData
     u8 secondMoveIndex;
     bool8 lockMovesFlag; // This is used to prevent the player from changing position of moves in a battle or when trading.
     u8 bgDisplayOrder; // Determines the order page backgrounds are loaded while scrolling between them
-    u8 obedience; // Used to differentiate between Colosseum or XD when reading Orre metLocation IDs
+    u8 eventLegal:1; // Used to differentiate between Colosseum or XD when reading Orre metLocation IDs
+    u8 form:2;
+    u8 filler40CA:5;
     u8 windowIds[8];
     u8 spriteIds[SPRITE_ARR_ID_COUNT];
     bool8 unk40EF;
     s16 switchCounter; // Used for various switch statement cases that decompress/load graphics or pokemon data
-    u8 form:6;
+    u8 unk_filler4[6];
 } *sMonSummaryScreen = NULL;
 EWRAM_DATA u8 gLastViewedMonIndex = 0;
 static EWRAM_DATA u8 sMoveSlotToReplace = 0;
-ALIGNED(4) static EWRAM_DATA u8 sUnknownTaskId = 0;
+ALIGNED(4) static EWRAM_DATA u8 sAnimDelayTaskId = 0;
 
 // forward declarations
 static bool8 LoadGraphics(void);
@@ -245,7 +247,7 @@ static void PrintMonTrainerMemo(void);
 static void BufferNatureString(void);
 static void GetMetLevelString(u8 *a);
 static bool8 DoesMonOTMatchOwner(void);
-static bool8 DidMonComeFromGBAGames(void);
+static bool8 DidMonComeFromRS(void);
 static bool8 IsInGamePartnerMon(void);
 static void PrintEggOTName(void);
 static void PrintEggOTID(void);
@@ -268,7 +270,6 @@ static void Task_PrintContestMoves(u8 taskId);
 static void PrintContestMoveDescription(u8 a);
 static void PrintMoveDetails(u16 a);
 static void PrintNewMoveDetailsOrCancelText(void);
-static void AddAndFillMoveNamesWindow(void);
 static void SwapMovesNamesPP(u8 moveIndex1, u8 moveIndex2);
 static void PrintHMMovesCantBeForgotten(void);
 static void ResetSpriteIds(void);
@@ -294,6 +295,7 @@ static void SpriteCb_MoveSelector(struct Sprite *sprite);
 static void DestroyMoveSelectorSprites(u8 firstArrayId);
 static void SetMainMoveSelectorColor(u8 whichColor);
 static void KeepMoveSelectorVisible(u8 firstSpriteId);
+static void SummaryScreen_DestroyAnimDelayTask(void);
 
 // const rom data
 #include "data/text/move_descriptions.h"
@@ -687,7 +689,7 @@ static void (*const sTextPrinterTasks[])(u8 taskId) =
 };
 
 static const u8 sMemoNatureTextColor[] = _("{COLOR LIGHT_RED}{SHADOW GREEN}");
-static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GREY}"); // This is also affected by palettes, apparently
+static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // This is also affected by palettes, apparently
 static const u8 sStatsLeftColumnLayout[] = _("{DYNAMIC 0}/{DYNAMIC 1}\n{DYNAMIC 2}\n{DYNAMIC 3}");
 static const u8 sStatsRightColumnLayout[] = _("{DYNAMIC 0}\n{DYNAMIC 1}\n{DYNAMIC 2}");
 static const u8 sMovesPPLayout[] = _("{PP}{DYNAMIC 0}/{DYNAMIC 1}");
@@ -1054,7 +1056,7 @@ void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, 
     }
 
     sMonSummaryScreen->currPageIndex = sMonSummaryScreen->minPageIndex;
-    SummaryScreen_SetUnknownTaskId(0xFF);
+    SummaryScreen_SetAnimDelayTaskId(TASK_NONE);
 
     if (gMonSpritesGfxPtr == NULL)
         sub_806F2AC(0, 0);
@@ -1176,7 +1178,7 @@ static bool8 LoadGraphics(void)
         break;
     case 17:
         sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON] = LoadMonGfxAndSprite(&sMonSummaryScreen->currentMon, &sMonSummaryScreen->switchCounter);
-        if (sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON] != 0xFF)
+        if (sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON] != SPRITE_NONE)
         {
             sMonSummaryScreen->switchCounter = 0;
             gMain.state++;
@@ -1206,11 +1208,11 @@ static bool8 LoadGraphics(void)
         gMain.state++;
         break;
     case 23:
-        BlendPalettes(0xFFFFFFFF, 16, 0);
+        BlendPalettes(PALETTES_ALL, 16, 0);
         gMain.state++;
         break;
     case 24:
-        BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, RGB_BLACK);
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
         gPaletteFade.bufferTransferDisabled = 0;
         gMain.state++;
         break;
@@ -1323,14 +1325,12 @@ static void CopyMonToSummaryStruct(struct Pokemon *mon)
 static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
 {
     u32 i;
-    u8 form;
     struct PokeSummary *sum = &sMonSummaryScreen->summary;
     // Spread the data extraction over multiple frames.
     switch (sMonSummaryScreen->switchCounter)
     {
     case 0:
         sum->species = GetMonData(mon, MON_DATA_SPECIES);
-        sMonSummaryScreen->form = GetMonData(mon, MON_DATA_FORM, NULL);
         sum->species2 = GetMonData(mon, MON_DATA_SPECIES2);
         sum->exp = GetMonData(mon, MON_DATA_EXP);
         sum->level = GetMonData(mon, MON_DATA_LEVEL);
@@ -1338,7 +1338,8 @@ static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
         sum->item = GetMonData(mon, MON_DATA_HELD_ITEM);
         sum->pid = GetMonData(mon, MON_DATA_PERSONALITY);
         sum->sanity = GetMonData(mon, MON_DATA_SANITY_IS_BAD_EGG);
-        sMonSummaryScreen->obedience = GetMonData(mon, MON_DATA_OBEDIENCE);
+        sMonSummaryScreen->eventLegal = GetMonData(mon, MON_DATA_EVENT_LEGAL);
+        sMonSummaryScreen->form = GetMonData(mon, MON_DATA_FORM);
 
         if (sum->sanity)
             sum->isEgg = TRUE;
@@ -1431,7 +1432,7 @@ static void FreeSummaryScreen(void)
 
 static void BeginCloseSummaryScreen(u8 taskId)
 {
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, RGB_BLACK);
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = CloseSummaryScreen;
 }
 
@@ -1441,7 +1442,7 @@ static void CloseSummaryScreen(u8 taskId)
     {
         SetMainCallback2(sMonSummaryScreen->callback);
         gLastViewedMonIndex = sMonSummaryScreen->curMonIndex;
-        SummaryScreen_DestroyUnknownTask();
+        SummaryScreen_DestroyAnimDelayTask();
         ResetSpriteData();
         FreeAllSpritePalettes();
         StopCryAndClearCrySongs();
@@ -1559,7 +1560,7 @@ static void Task_ChangeSummaryMon(u8 taskId)
         StopCryAndClearCrySongs();
         break;
     case 1:
-        SummaryScreen_DestroyUnknownTask();
+        SummaryScreen_DestroyAnimDelayTask();
         DestroySpriteAndFreeResources(&gSprites[sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON]]);
         break;
     case 2:
@@ -1587,7 +1588,7 @@ static void Task_ChangeSummaryMon(u8 taskId)
         break;
     case 8:
         sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON] = LoadMonGfxAndSprite(&sMonSummaryScreen->currentMon, &data[1]);
-        if (sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON] == 0xFF)
+        if (sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON] == SPRITE_NONE)
             return;
         gSprites[sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_MON]].data[2] = 1;
         TryDrawExperienceProgressBar();
@@ -1950,7 +1951,6 @@ static void CloseMoveSelectMode(u8 taskId)
     PrintMoveDetails(0);
     TilemapFiveMovesDisplay(sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_BATTLE_MOVES][0], 3, TRUE);
     TilemapFiveMovesDisplay(sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_CONTEST_MOVES][0], 1, TRUE);
-//    AddAndFillMoveNamesWindow(); // This function seems to have no effect.
     if (sMonSummaryScreen->firstMoveIndex != MAX_MON_MOVES)
     {
         ClearWindowTilemap(PSS_LABEL_WINDOW_MOVES_POWER_ACC);
@@ -2362,7 +2362,7 @@ static void HandlePowerAccTilemap(u16 a, s16 b)
     else
     {
         u8 taskId = FindTaskIdByFunc(Task_ShowPowerAccWindow);
-        if (taskId == 0xFF)
+        if (taskId == TASK_NONE)
             taskId = CreateTask(Task_ShowPowerAccWindow, 8);
         gTasks[taskId].data[0] = b;
         gTasks[taskId].data[1] = a;
@@ -2414,7 +2414,7 @@ static void HandleAppealJamTilemap(u16 a, s16 b, u16 move)
     else
     {
         u8 taskId = FindTaskIdByFunc(Task_ShowAppealJamWindow);
-        if (taskId == 0xFF)
+        if (taskId == TASK_NONE)
             taskId = CreateTask(Task_ShowAppealJamWindow, 8);
         gTasks[taskId].data[0] = b;
         gTasks[taskId].data[1] = a;
@@ -2554,7 +2554,7 @@ static void DrawExperienceProgressBar(struct Pokemon *unused)
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
     u16 *dst;
     u8 i;
-    u16 formSpecies = GetFormSpeciesId(summary->species, sMonSummaryScreen->form);
+    u16 formSpecies = GetFormSpecies(summary->species, sMonSummaryScreen->form);
 
     if (summary->level < MAX_LEVEL)
     {
@@ -2642,7 +2642,7 @@ static void ResetWindows(void)
     for (i = 0; i < PSS_LABEL_WINDOW_END; i++)
         FillWindowPixelBuffer(i, PIXEL_FILL(0));
     for (i = 0; i < ARRAY_COUNT(sMonSummaryScreen->windowIds); i++)
-        sMonSummaryScreen->windowIds[i] = 0xFF;
+        sMonSummaryScreen->windowIds[i] = WINDOW_NONE;
 }
 
 static void PrintTextOnWindow(u8 windowId, const u8 *string, u8 x, u8 y, u8 lineSpacing, u8 colorId)
@@ -2655,10 +2655,10 @@ static void PrintMonInfo(void)
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, PIXEL_FILL(0));
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, PIXEL_FILL(0));
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, PIXEL_FILL(0));
-    if (!sMonSummaryScreen->summary.isEgg)
-        PrintNotEggInfo();
-    else
+    if (sMonSummaryScreen->summary.isEgg)
         PrintEggInfo();
+    else
+        PrintNotEggInfo();
     ScheduleBgCopyTilemapToVram(0);
 }
 
@@ -2901,7 +2901,7 @@ static void ClearPageWindowTilemaps(u8 page)
 static u8 AddWindowFromTemplateList(const struct WindowTemplate *template, u8 templateId)
 {
     u8 *windowIdPtr = &sMonSummaryScreen->windowIds[templateId];
-    if (*windowIdPtr == 0xFF)
+    if (*windowIdPtr == WINDOW_NONE)
     {
         *windowIdPtr = AddWindow(&template[templateId]);
         FillWindowPixelBuffer(*windowIdPtr, PIXEL_FILL(0));
@@ -2912,11 +2912,11 @@ static u8 AddWindowFromTemplateList(const struct WindowTemplate *template, u8 te
 static void RemoveWindowByIndex(u8 windowIndex)
 {
     u8 *windowIdPtr = &sMonSummaryScreen->windowIds[windowIndex];
-    if (*windowIdPtr != 0xFF)
+    if (*windowIdPtr != WINDOW_NONE)
     {
         ClearWindowTilemap(*windowIdPtr);
         RemoveWindow(*windowIdPtr);
-        *windowIdPtr = 0xFF;
+        *windowIdPtr = WINDOW_NONE;
     }
 }
 
@@ -2925,7 +2925,7 @@ static void PrintPageSpecificText(u8 pageIndex)
     u16 i;
     for (i = 0; i < ARRAY_COUNT(sMonSummaryScreen->windowIds); i++)
     {
-        if (sMonSummaryScreen->windowIds[i] != 0xFF)
+        if (sMonSummaryScreen->windowIds[i] != WINDOW_NONE)
             FillWindowPixelBuffer(sMonSummaryScreen->windowIds[i], PIXEL_FILL(0));
     }
     sTextPrinterFunctions[pageIndex]();
@@ -2994,10 +2994,10 @@ static void PrintMonOTName(void)
         windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_ORIGINAL_TRAINER);
         PrintTextOnWindow(windowId, gText_OTSlash, 0, 1, 0, 1);
         x = GetStringWidth(1, gText_OTSlash, 0);
-        if (sMonSummaryScreen->summary.OTGender == 0)
-            PrintTextOnWindow(windowId, sMonSummaryScreen->summary.OTName, x, 1, 0, 5);
-        else
+        if (sMonSummaryScreen->summary.OTGender)
             PrintTextOnWindow(windowId, sMonSummaryScreen->summary.OTName, x, 1, 0, 6);
+        else
+            PrintTextOnWindow(windowId, sMonSummaryScreen->summary.OTName, x, 1, 0, 5);
     }
 }
 
@@ -3036,43 +3036,44 @@ static void BufferMonTrainerMemo(void)
 
     if (InBattleFactory() || InSlateportBattleTent() || IsInGamePartnerMon())
     {
-        DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, gText_XNature);
+        DynamicPlaceholderTex2tUtil_ExpandPlaceholders(gStringVar4, gText_XNature);
     }
     else
     {
-        u16 mapsecShift = MAPSEC_LITTLEROOT_TOWN;
-        u16 maxMapsec = MAPSEC_NONE;
+        u16 mapsecShift = MAPSEC_LITTLEROOT_TOWN; // Region mapsections are a u8 and changing to a u16 would break compatibility,
+        if (sum->metGame == VERSION_CRYSTAL_DUST) // so we need to do a workaround for CrystalDust (Or other games)
+                                                  // which may replace IDs with their own.
+        {                                         // TODO: Look into Orange GBA compatiblity.
+            if (sum->metLocation < KANTO_MAPSEC_START)
+                mapsecShift += JOHTO_MAPSEC_START;
+        }
+        u16 maxMapsec = MAPSEC_NONE + mapsecShift; // Add the value of mapsecShift to get the end of non-vanilla mapsec IDs. 
         u8 *metLevelString = Alloc(32);
         u8 *metLocationString = Alloc(32);
         GetMetLevelString(metLevelString);
-
-        if (sum->metGame == VERSION_CRYSTAL_DUST)
-        {
-            mapsecShift = JOHTO_MAPSEC_START;
-            maxMapsec = JOHTO_MAPSEC_END - JOHTO_MAPSEC_START;
-        }
 
         if (sum->metLocation < maxMapsec)
         {
             GetMapNameGeneric(metLocationString, sum->metLocation + mapsecShift);
             DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, metLocationString);
         }
-
-        if (sum->metLocation == MAPSEC_AQUA_HIDEOUT_OLD)
+        // This map isn't in Emerald and both Team Aqua and Magma got their own maps with their own mapsec IDs.
+        if (sum->metLocation == MAPSEC_AQUA_HIDEOUT_OLD && !sum->metGame == VERSION_EMERALD)
         {
-            if (sum->metGame == VERSION_SAPPHIRE)
-		        DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, gText_AquaHideout);
-            else if (sum->metGame == VERSION_RUBY)
-		        DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, gText_MagmaHideout);
-            else
-                DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, metLocationString);
+		    GetMapNameGeneric(metLocationString, MAPSEC_SECRET_AREA + sum->metGame); // Do a bit of adding to get the correct metLocationString for Ruby and Sapphire.
+        }
+        if (sum->metLocation == MAPSEC_ROUTE_130 && sum->metLevel
+         && (sum->species == SPECIES_MEWTWO // Heliodor has Mewtwo at this location
+         || sum->species == SPECIES_WOBBUFFET
+         || sum->species == SPECIES_WYNAUT)) // Check for Wynaut and Wobbuffet to get the Mirage Island metLocationString at Route 130
+        {
+            GetMapNameGeneric(metLocationString, MAPSEC_MIRAGE_ISLAND);
         }
 
-        if (sum->metLocation == MAPSEC_BATTLE_FRONTIER)
+        if (sum->metLocation == MAPSEC_BATTLE_FRONTIER) // Battle Tower in RS
         {
-            if (sum->metGame == VERSION_SAPPHIRE
-             || sum->metGame == VERSION_RUBY)
-		        DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, gText_BattleTower);
+            if (DidMonComeFromRS())
+                DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, gText_BattleTower);
             else
                 DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, metLocationString);
         }
@@ -3088,12 +3089,12 @@ static void BufferMonTrainerMemo(void)
         {
             text = gText_XNatureFatefulEncounter;
         }
-        else if (sum->metLocation != METLOC_IN_GAME_TRADE && DidMonComeFromGBAGames())
+        else if (sum->metLocation != METLOC_IN_GAME_TRADE)
         {
             text = (sum->metLocation >= maxMapsec) ? gText_XNatureObtainedInTrade : gText_XNatureProbablyMetAt;
         }
 
-        // Pokémon from XD have the obedience bit set, we can use this to differentiate between that and Colosseum.
+        // Pokémon from XD have the eventLegal bit set, we can use this to differentiate between that and Colosseum.
         else if (sum->metGame == VERSION_GAMECUBE)
         {
             text = (sum->metLocation >= maxMapsec) ? gText_XNatureMetDistantLand : gText_XNatureProbablyMetAt; // Generic distant land text
@@ -3104,7 +3105,7 @@ static void BufferMonTrainerMemo(void)
             case 0:
                 text = gText_ObtainedFromDad;
                 DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, sum->OTName);
-            break;
+                break;
             // Outskirt Stand
             case 1: case 164:
                 DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, gText_OutskirtStand);
@@ -3123,7 +3124,7 @@ static void BufferMonTrainerMemo(void)
                 break;
             // Colosseum: RealgamTwr Dome; XD: Pyrite Town
             case 15: case 109: case 110: case 111: case 116: case 119:
-                if (sMonSummaryScreen->obedience)
+                if (sMonSummaryScreen->eventLegal)
                     DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, gText_PyriteTown);
                 else
             // Do these three display as Realgam Tower instead in game?
@@ -3161,7 +3162,7 @@ static void BufferMonTrainerMemo(void)
                 break;
             // Colosseum: Laboratory; XD: Cipher Key Lair
             case 67: case 68: case 69:
-                if (sMonSummaryScreen->obedience)
+                if (sMonSummaryScreen->eventLegal)
                     DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, gText_Laboratory);
                 else
             // Cipher Key Lair
@@ -3170,7 +3171,7 @@ static void BufferMonTrainerMemo(void)
                 break;
             // Colosseum: Mt. Battle; XD: Citadark Isle
             case 73: case 74: case 75: case 76: case 77: case 80: case 81: case 84: case 85: case 87: case 88:
-                if (sMonSummaryScreen->obedience)
+                if (sMonSummaryScreen->eventLegal)
                     DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, gText_CitadarkIsle);
                 else
             // Mt. Battle
@@ -3211,11 +3212,8 @@ static void BufferMonTrainerMemo(void)
                 break;
             // Colosseum Starter Espeon and Umbreon and Duking's Plusle
             case METLOC_IN_GAME_TRADE:
-            DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, sum->OTName);
-                if (sum->species == SPECIES_PLUSLE)
-                    text = gText_Receivedfrom;
-                else
-                    text = gText_OldFriend;
+                DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, sum->OTName);
+                text = (sum->species == SPECIES_PLUSLE) ? gText_Receivedfrom : gText_OldFriend;
             default:
                 break;
             }
@@ -3278,10 +3276,10 @@ static bool8 DoesMonOTMatchOwner(void)
         return TRUE;
 }
 
-static bool8 DidMonComeFromGBAGames(void)
+bool8 DidMonComeFromRS(void)
 {
     struct PokeSummary *sum = &sMonSummaryScreen->summary;
-    return sum->metGame > 0 && sum->metGame <= VERSION_CRYSTAL_DUST;
+    return sum->metGame > 0 && sum->metGame < VERSION_EMERALD;
 }
 
 bool8 DidMonComeFromRSE(void)
@@ -3345,7 +3343,7 @@ static void PrintEggMemo(void)
     {
         if (sum->metLocation == METLOC_FATEFUL_ENCOUNTER)
             text = gText_PeculiarEggNicePlace;
-        else if (!DidMonComeFromGBAGames() || !DoesMonOTMatchOwner())
+        else if (!DoesMonOTMatchOwner())
             text = gText_PeculiarEggTrade;
         else if (sum->metLocation == METLOC_SPECIAL_EGG)
         {
@@ -3353,23 +3351,15 @@ static void PrintEggMemo(void)
             {
                 text = gText_EggFromElm;
             }
-            else if (DidMonComeFromRSE())
-            {
-                text = gText_EggFromHotSprings;
-            }
             else
             {
-                text = gText_EggFromTraveler;
+                text = (DidMonComeFromRSE()) ? gText_EggFromHotSprings : gText_EggFromTraveler;
             }
-        }
-        else if (sum->metLocation == JOHTO_MAPSEC_GOLDENROD_CITY && sum->metGame == VERSION_CRYSTAL_DUST)
-        {
-            text = gText_EggFromPokecomCenter;
         }
     }
     else
     {
-        text = gText_OddEggFoundByCouple;
+        text = (sum->metLocation == MAPSEC_RUSTBORO_CITY) ? gText_EggFromPokecomCenter : gText_OddEggFoundByCouple;
     }
 
     PrintTextOnWindow(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_MEMO), text, 0, 1, 0, 0);
@@ -3525,7 +3515,7 @@ static void PrintExpPointsNextLevel(void)
     PrintTextOnWindow(windowId, gStringVar1, x, 1, 0, 0);
 
     if (sum->level < MAX_LEVEL)
-        expToNextLevel = gExperienceTables[gBaseStats[GetFormSpeciesId(sum->species, sMonSummaryScreen->form)].growthRate][sum->level + 1] - sum->exp;
+        expToNextLevel = gExperienceTables[gBaseStats[GetFormSpecies(sum->species, sMonSummaryScreen->form)].growthRate][sum->level + 1] - sum->exp;
     else
         expToNextLevel = 0;
 
@@ -3787,13 +3777,6 @@ static void PrintNewMoveDetailsOrCancelText(void)
     }
 }
 
-static void AddAndFillMoveNamesWindow(void)
-{
-    u8 windowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_NAMES);
-    FillWindowPixelRect(windowId, PIXEL_FILL(0), 0, 66, 72, 16);
-    CopyWindowToVram(windowId, 2);
-}
-
 static void SwapMovesNamesPP(u8 moveIndex1, u8 moveIndex2)
 {
     u8 windowId1 = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_NAMES);
@@ -3821,15 +3804,15 @@ static void ResetSpriteIds(void)
     u8 i;
 
     for (i = 0; i < ARRAY_COUNT(sMonSummaryScreen->spriteIds); i++)
-        sMonSummaryScreen->spriteIds[i] = 0xFF;
+        sMonSummaryScreen->spriteIds[i] = SPRITE_NONE;
 }
 
 static void DestroySpriteInArray(u8 spriteArrayId)
 {
-    if (sMonSummaryScreen->spriteIds[spriteArrayId] != 0xFF)
+    if (sMonSummaryScreen->spriteIds[spriteArrayId] != SPRITE_NONE)
     {
         DestroySprite(&gSprites[sMonSummaryScreen->spriteIds[spriteArrayId]]);
-        sMonSummaryScreen->spriteIds[spriteArrayId] = 0xFF;
+        sMonSummaryScreen->spriteIds[spriteArrayId] = SPRITE_NONE;
     }
 }
 
@@ -3845,7 +3828,7 @@ static void HidePageSpecificSprites(void)
 
     for (i = SPRITE_ARR_ID_TYPE; i < ARRAY_COUNT(sMonSummaryScreen->spriteIds); i++)
     {
-        if (sMonSummaryScreen->spriteIds[i] != 0xFF)
+        if (sMonSummaryScreen->spriteIds[i] != SPRITE_NONE)
             SetSpriteInvisibility(i, TRUE);
     }
 }
@@ -3874,7 +3857,7 @@ static void CreateMoveTypeIcons(void)
 
     for (i = SPRITE_ARR_ID_TYPE; i < SPRITE_ARR_ID_TYPE + 5; i++)
     {
-        if (sMonSummaryScreen->spriteIds[i] == 0xFF)
+        if (sMonSummaryScreen->spriteIds[i] == SPRITE_NONE)
             sMonSummaryScreen->spriteIds[i] = CreateSprite(&sSpriteTemplate_MoveTypes, 0, 0, 2);
 
         SetSpriteInvisibility(i, TRUE);
@@ -3894,7 +3877,7 @@ static void SetTypeSpritePosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
 static void SetMonTypeIcons(void)
 {
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
-    u16 formSpecies = GetFormSpeciesId(summary->species, sMonSummaryScreen->form);
+    u16 formSpecies = GetFormSpecies(summary->species, sMonSummaryScreen->form);
     if (summary->isEgg)
     {
         SetTypeSpritePosAndPal(TYPE_MYSTERY, 120, 48, SPRITE_ARR_ID_TYPE);
@@ -3943,16 +3926,16 @@ static void SetContestMoveTypeIcons(void)
 
 static void SetNewMoveTypeIcon(void)
 {
-    if (sMonSummaryScreen->newMove == MOVE_NONE)
-    {
-        SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 4, TRUE);
-    }
-    else
+    if (sMonSummaryScreen->newMove)
     {
         if (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES)
             SetTypeSpritePosAndPal(gBattleMoves[sMonSummaryScreen->newMove].type, 85, 96, SPRITE_ARR_ID_TYPE + 4);
         else
             SetTypeSpritePosAndPal(NUMBER_OF_MON_TYPES + gContestMoves[sMonSummaryScreen->newMove].contestCategory, 85, 96, SPRITE_ARR_ID_TYPE + 4);
+    }
+    else
+    {
+        SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 4, TRUE);
     }
 }
 
@@ -3979,7 +3962,7 @@ static u8 LoadMonGfxAndSprite(struct Pokemon *mon, s16 *state)
 {
     const struct SpritePalette *pal;
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
-    u16 formSpecies = GetFormSpeciesId(summary->species2, sMonSummaryScreen->form);
+    u16 formSpecies = GetFormSpecies(summary->species2, sMonSummaryScreen->form);
 
     switch (*state)
     {
@@ -4017,10 +4000,11 @@ static void PlayMonCry(void)
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
     if (!summary->isEgg)
     {
+        //Change these to what's commented out to support cries for forms.
         if (ShouldPlayNormalMonCry(&sMonSummaryScreen->currentMon))
-            PlayCry3(summary->species2, 0, 0);
+            PlayCry3(summary->species2, 0, 0); //PlayCry3(GetFormSpecies(summary->species2, sMonSummaryScreen->form), 0, 0);
         else
-            PlayCry3(summary->species2, 0, 11);
+            PlayCry3(summary->species2, 0, 11); //PlayCry3(GetFormSpecies(summary->species2, sMonSummaryScreen->form), 0, 11);
     }
 }
 
@@ -4028,7 +4012,7 @@ static u8 CreateMonSprite(struct Pokemon *unused)
 {
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
     u8 spriteId = CreateSprite(&gMultiuseSpriteTemplate, 40, 64, 5);
-    u16 formSpecies = GetFormSpeciesId(summary->species2, sMonSummaryScreen->form);
+    u16 formSpecies = GetFormSpecies(summary->species2, sMonSummaryScreen->form);
 
     FreeSpriteOamMatrix(&gSprites[spriteId]);
     gSprites[spriteId].data[0] = formSpecies;
@@ -4036,10 +4020,10 @@ static u8 CreateMonSprite(struct Pokemon *unused)
     gSprites[spriteId].callback = SpriteCB_Pokemon;
     gSprites[spriteId].oam.priority = 0;
 
-    if (!IsMonSpriteNotFlipped(formSpecies))
-        gSprites[spriteId].hFlip = TRUE;
-    else
+    if (IsMonSpriteNotFlipped(formSpecies))
         gSprites[spriteId].hFlip = FALSE;
+    else
+        gSprites[spriteId].hFlip = TRUE;
 
     return spriteId;
 }
@@ -4056,17 +4040,19 @@ static void SpriteCB_Pokemon(struct Sprite *sprite)
     }
 }
 
-void SummaryScreen_SetUnknownTaskId(u8 taskId)
+// Track and then destroy Task_PokemonSummaryAnimateAfterDelay
+// Normally destroys itself but it can be interrupted before the animation starts
+void SummaryScreen_SetAnimDelayTaskId(u8 taskId)
 {
-    sUnknownTaskId = taskId;
+    sAnimDelayTaskId = taskId;
 }
 
-void SummaryScreen_DestroyUnknownTask(void)
+static void SummaryScreen_DestroyAnimDelayTask(void)
 {
-    if (sUnknownTaskId != 0xFF)
+    if (sAnimDelayTaskId != TASK_NONE)
     {
-        DestroyTask(sUnknownTaskId);
-        sUnknownTaskId = 0xFF;
+        DestroyTask(sAnimDelayTaskId);
+        sAnimDelayTaskId = TASK_NONE;
     }
 }
 
@@ -4090,7 +4076,7 @@ static void StopPokemonAnimations(void)  // A subtle effect, this function stops
 
 static void CreateMonMarkingsSprite(struct Pokemon *mon)
 {
-    struct Sprite *sprite = CreateMonMarkingsSpriteWithPal(TAG_MON_MARKINGS, TAG_MON_MARKINGS, sSummaryMarkingsPalette);
+    struct Sprite *sprite = CreateMonMarkingAllCombosSprite(TAG_MON_MARKINGS, TAG_MON_MARKINGS, sSummaryMarkingsPalette);
 
     sMonSummaryScreen->markingsSprite = sprite;
     if (sprite != NULL)
@@ -4124,7 +4110,7 @@ static void CreateSetStatusSprite(void)
     u8 *spriteId = &sMonSummaryScreen->spriteIds[SPRITE_ARR_ID_STATUS];
     u8 statusAnim;
 
-    if (*spriteId == 0xFF)
+    if (*spriteId == SPRITE_NONE)
         *spriteId = CreateSprite(&sSpriteTemplate_StatusCondition, 64, 152, 0);
 
     statusAnim = GetMonAilment(&sMonSummaryScreen->currentMon);
