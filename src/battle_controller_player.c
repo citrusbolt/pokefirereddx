@@ -1517,7 +1517,7 @@ static u32 CopyPlayerMonData(u8 monId, u8 *dst)
     switch (gBattleBufferA[gActiveBattler][1])
     {
     case REQUEST_ALL_BATTLE:
-        battleMon.species = GetFormSpeciesId(GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES), GetMonData(&gPlayerParty[monId], MON_DATA_FORM));
+        battleMon.species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
         battleMon.item = GetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM);
         for (size = 0; size < MAX_MON_MOVES; size++)
         {
@@ -1554,7 +1554,7 @@ static u32 CopyPlayerMonData(u8 monId, u8 *dst)
             dst[size] = src[size];
         break;
     case REQUEST_SPECIES_BATTLE:
-        data16 = GetFormSpeciesId(GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES), GetMonData(&gPlayerParty[monId], MON_DATA_FORM));
+        data16 = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES);
         dst[0] = data16;
         dst[1] = data16 >> 8;
         size = 2;
