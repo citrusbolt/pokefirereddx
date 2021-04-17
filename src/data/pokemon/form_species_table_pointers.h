@@ -1,4 +1,4 @@
-const u16 *const gFormSpeciesIdTables[NUM_SPECIES + 1] =
+const u16 *const gFormSpeciesIdTables[NUM_SPECIES] =
 {
     [SPECIES_SCEPTILE] = sSceptileFormSpeciesIdTable,
 };
