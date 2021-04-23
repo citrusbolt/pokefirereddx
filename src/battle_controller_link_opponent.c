@@ -1206,7 +1206,7 @@ static void LinkOpponentHandleDrawTrainerPic(void)
         else
         {
             if ((gLinkPlayers[GetBattlerMultiplayerId(gActiveBattler)].version & 0xFF) == VERSION_SAPPHIRE
-            || (gLinkPlayers[GetBattlerMultiplayerId(gActiveBattler)].version & 0xFF) == VERSION_RUBY)
+             || (gLinkPlayers[GetBattlerMultiplayerId(gActiveBattler)].version & 0xFF) == VERSION_RUBY)
             {
                 if (gLinkPlayers[GetBattlerMultiplayerId(gActiveBattler)].gender != MALE)
                     trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_RS_MAY];
@@ -1219,6 +1219,13 @@ static void LinkOpponentHandleDrawTrainerPic(void)
                     trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_E_MAY];
                 else
                     trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_E_BRENDAN];
+            }
+            else if ((gLinkPlayers[GetBattlerMultiplayerId(gActiveBattler)].version & 0xFF) == VERSION_CRYSTAL_DUST)
+            {
+                if (gLinkPlayers[GetBattlerMultiplayerId(gActiveBattler)].gender != MALE)
+                    trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_KRIS];
+                else
+                    trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_GOLD];
             }
             else
             {
@@ -1235,7 +1242,7 @@ static void LinkOpponentHandleDrawTrainerPic(void)
             trainerPicId = GetUnionRoomTrainerPic();
         }
         else if ((gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].version & 0xFF) == VERSION_SAPPHIRE
-                 || (gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].version & 0xFF) == VERSION_RUBY)
+         || (gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].version & 0xFF) == VERSION_RUBY)
         {
             if (gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].gender != MALE)
                 trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_RS_MAY];
@@ -1248,6 +1255,13 @@ static void LinkOpponentHandleDrawTrainerPic(void)
                 trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_E_MAY];
             else
                 trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_E_BRENDAN];
+        }
+        else if ((gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].version & 0xFF) == VERSION_CRYSTAL_DUST)
+        {
+            if (gLinkPlayers[GetMultiplayerId() ^ BIT_SIDE].gender != MALE)
+                trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_KRIS];
+            else
+                trainerPicId = gFacilityClassToPicIndex[FACILITY_CLASS_GOLD];
         }
         else
         {
@@ -1481,10 +1495,10 @@ static void LinkOpponentHandlePlaySE(void)
 {
     s8 pan;
 
-    if (GetBattlerSide(gActiveBattler) == B_SIDE_PLAYER)
-        pan = SOUND_PAN_ATTACKER;
-    else
+    if (GetBattlerSide(gActiveBattler))
         pan = SOUND_PAN_TARGET;
+    else
+        pan = SOUND_PAN_ATTACKER;
 
     PlaySE12WithPanning(gBattleBufferA[gActiveBattler][1] | (gBattleBufferA[gActiveBattler][2] << 8), pan);
     LinkOpponentBufferExecCompleted();
@@ -1576,7 +1590,7 @@ static void SpriteCB_FreeOpponentSprite(struct Sprite *sprite)
 
 static void LinkOpponentHandleDrawPartyStatusSummary(void)
 {
-    if (gBattleBufferA[gActiveBattler][1] != 0 && GetBattlerSide(gActiveBattler) == B_SIDE_PLAYER)
+    if (gBattleBufferA[gActiveBattler][1] && !GetBattlerSide(gActiveBattler))
     {
         LinkOpponentBufferExecCompleted();
     }
@@ -1584,7 +1598,7 @@ static void LinkOpponentHandleDrawPartyStatusSummary(void)
     {
         gBattleSpritesDataPtr->healthBoxesData[gActiveBattler].partyStatusSummaryShown = 1;
 
-        if (gBattleBufferA[gActiveBattler][2] != 0)
+        if (gBattleBufferA[gActiveBattler][2])
         {
             if (gBattleSpritesDataPtr->healthBoxesData[gActiveBattler].field_1_x1E < 2)
             {
@@ -1600,7 +1614,7 @@ static void LinkOpponentHandleDrawPartyStatusSummary(void)
         gBattlerStatusSummaryTaskId[gActiveBattler] = CreatePartyStatusSummarySprites(gActiveBattler, (struct HpAndStatus *)&gBattleBufferA[gActiveBattler][4], gBattleBufferA[gActiveBattler][1], gBattleBufferA[gActiveBattler][2]);
         gBattleSpritesDataPtr->healthBoxesData[gActiveBattler].partyStatusDelayTimer = 0;
 
-        if (gBattleBufferA[gActiveBattler][2] != 0)
+        if (gBattleBufferA[gActiveBattler][2])
             gBattleSpritesDataPtr->healthBoxesData[gActiveBattler].partyStatusDelayTimer = 93;
 
         gBattlerControllerFuncs[gActiveBattler] = EndDrawPartyStatusSummary;

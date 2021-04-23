@@ -49,8 +49,6 @@ gFieldEffectScriptPointers:: @ 82DB9D4
 	.4byte gFieldEffectScript_UseDive                   @ FLDEFF_USE_DIVE
 	.4byte gFieldEffectScript_Pokeball                  @ FLDEFF_POKEBALL
 	.4byte gFieldEffectScript_HeartIcon                 @ FLDEFF_HEART_ICON
-	.4byte gFieldEffectScript_Nop47                     @ FLDEFF_NOP_47
-	.4byte gFieldEffectScript_Nop48                     @ FLDEFF_NOP_48
 	.4byte gFieldEffectScript_AshPuff                   @ FLDEFF_ASH_PUFF
 	.4byte gFieldEffectScript_AshLaunch                 @ FLDEFF_ASH_LAUNCH
 	.4byte gFieldEffectScript_SweetScent                @ FLDEFF_SWEET_SCENT
@@ -71,7 +69,7 @@ gFieldEffectScriptPointers:: @ 82DB9D4
 	.4byte gFieldEffectScript_MoveDeoxysRock            @ FLDEFF_MOVE_DEOXYS_ROCK
 
 gFieldEffectScript_ExclamationMarkIcon1:: @ 82DBAE0
-	field_eff_callnative FldEff_ExclamationMarkIcon
+	field_eff_loadfadedpalnotint_callnative gSpritePalette_ArrowEmotionsFieldEffect, FldEff_ExclamationMarkIcon
 	field_eff_end
 
 gFieldEffectScript_UseCutOnTallGrass:: @ 82DBAE6
@@ -192,7 +190,7 @@ gFieldEffectScript_FlyIn:: @ 82DBBE9
 	field_eff_end
 
 gFieldEffectScript_QuestionMarkIcon:: @ 82DBBEF
-	field_eff_callnative FldEff_QuestionMarkIcon
+	field_eff_loadfadedpalnotint_callnative gSpritePalette_ArrowEmotionsFieldEffect, FldEff_QuestionMarkIcon
 	field_eff_end
 
 gFieldEffectScript_FeetInFlowingWater:: @ 82DBBF5
@@ -240,20 +238,12 @@ gFieldEffectScript_UseDive:: @ 82DBC45
 	field_eff_end
 
 gFieldEffectScript_Pokeball:: @ 82DBC4B
-	field_eff_loadpal gSpritePalette_Pokeball
+	field_eff_loadpalnotint gSpritePalette_Pokeball
 	field_eff_callnative FldEff_Pokeball
 	field_eff_end
 
 gFieldEffectScript_HeartIcon:: @ 82DBC56
 	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect0, FldEff_HeartIcon
-	field_eff_end
-
-gFieldEffectScript_Nop47:: @ 82DBC60
-	field_eff_callnative FldEff_Nop47
-	field_eff_end
-
-gFieldEffectScript_Nop48:: @ 82DBC66
-	field_eff_callnative FldEff_Nop48
 	field_eff_end
 
 gFieldEffectScript_AshPuff:: @ 82DBC6C
