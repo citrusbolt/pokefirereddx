@@ -3339,13 +3339,13 @@ u8 GetGenderFromSpeciesAndPersonality(u16 formSpecies, u32 personality)
         return MON_MALE;
 }
 
-void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition, u8 form)
+void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition)
 {
-    u16 formSpeciesTag;
-    if (speciesTag > SPECIES_SHINY_TAG)
-        formSpeciesTag = GetFormSpecies(speciesTag - SPECIES_SHINY_TAG, form);
-    else
-        formSpeciesTag = GetFormSpecies(speciesTag, form);
+    //u16 formSpeciesTag;
+    //if (speciesTag > SPECIES_SHINY_TAG)
+    //    formSpeciesTag = GetFormSpecies(speciesTag - SPECIES_SHINY_TAG, form);
+    //else
+    //    formSpeciesTag = GetFormSpecies(speciesTag, form);
     if (gMonSpritesGfxPtr)
         gMultiuseSpriteTemplate = gMonSpritesGfxPtr->templates[battlerPosition];
     else if (gUnknown_020249B4[0])
@@ -3358,7 +3358,7 @@ void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition, u8 f
     gMultiuseSpriteTemplate.paletteTag = speciesTag;
     if (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_PLAYER_RIGHT)
         gMultiuseSpriteTemplate.anims = gUnknown_082FF70C;
-    gMultiuseSpriteTemplate.anims = gMonFrontAnimsPtrTable[formSpeciesTag];
+    gMultiuseSpriteTemplate.anims = gMonFrontAnimsPtrTable[speciesTag];
 }
 
 void SetMultiuseSpriteTemplateToTrainerBack(u16 trainerSpriteId, u8 battlerPosition)

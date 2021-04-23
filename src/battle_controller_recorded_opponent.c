@@ -1078,8 +1078,9 @@ static void RecordedOpponentHandleLoadMonSprite(void)
     u16 species = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_SPECIES);
     u8 form = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_FORM);
 
+	species = GetFormSpecies(species, form);
     BattleLoadOpponentMonSpriteGfx(&gEnemyParty[gBattlerPartyIndexes[gActiveBattler]], gActiveBattler);
-    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(gActiveBattler), form);
+    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(gActiveBattler));
 
     gBattlerSpriteIds[gActiveBattler] = CreateSprite(&gMultiuseSpriteTemplate,
                                                GetBattlerSpriteCoord(gActiveBattler, 2),
@@ -1108,11 +1109,12 @@ static void StartSendOutAnim(u8 battlerId, bool8 dontClearSubstituteBit)
     u16 species = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerId]], MON_DATA_SPECIES);
     u8 form = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerId]], MON_DATA_FORM);
 
+	species = GetFormSpecies(species, form);
     ClearTemporarySpeciesSpriteData(battlerId, dontClearSubstituteBit);
     gBattlerPartyIndexes[battlerId] = gBattleBufferA[battlerId][1];
     gBattleControllerData[battlerId] = CreateInvisibleSpriteWithCallback(SpriteCB_WaitForBattlerBallReleaseAnim);
     BattleLoadOpponentMonSpriteGfx(&gEnemyParty[gBattlerPartyIndexes[battlerId]], battlerId);
-    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battlerId), form);
+    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battlerId));
 
     gBattlerSpriteIds[battlerId] = CreateSprite(&gMultiuseSpriteTemplate,
                                         GetBattlerSpriteCoord(battlerId, 2),

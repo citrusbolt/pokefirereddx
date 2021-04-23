@@ -661,7 +661,7 @@ static bool8 LoadMonAndSceneGfx(struct Pokemon *mon)
         palette = GetMonSpritePalStructFromOtIdPersonality(formSpecies, trainerId, personality);
 
         LoadSpritePalette(palette);
-        SetMultiuseSpriteTemplateToPokemon(palette->tag, 1, form);
+        SetMultiuseSpriteTemplateToPokemon(palette->tag, 1);
         sPokeblockFeed->loadGfxState++;
         break;
     case 2:

@@ -317,7 +317,7 @@ u8 GetDefaultMoveTarget(u8 battlerId);
 u8 GetMonGender(struct Pokemon *mon);
 u8 GetBoxMonGender(struct BoxPokemon *boxMon);
 u8 GetGenderFromSpeciesAndPersonality(u16 formSpecies, u32 personality);
-void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition, u8 form);
+void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition);
 void SetMultiuseSpriteTemplateToTrainerBack(u16 trainerSpriteId, u8 battlerPosition);
 void SetMultiuseSpriteTemplateToTrainerFront(u16 arg0, u8 battlerPosition);
 

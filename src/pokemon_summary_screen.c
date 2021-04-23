@@ -3989,7 +3989,7 @@ static u8 LoadMonGfxAndSprite(struct Pokemon *mon, s16 *state)
     case 1:
         pal = GetMonSpritePalStructFromOtIdPersonality(formSpecies, summary->OTID, summary->pid);
         LoadSpritePalette(pal);
-        SetMultiuseSpriteTemplateToPokemon(pal->tag, 1, sMonSummaryScreen->form);
+        SetMultiuseSpriteTemplateToPokemon(pal->tag, 1);
         (*state)++;
         return 0xFF;
     }

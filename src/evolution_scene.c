@@ -270,7 +270,7 @@ void EvolutionScene(struct Pokemon* mon, u16 postEvoSpecies, bool8 canStopEvo, u
     pokePal = GetMonSpritePalStructFromOtIdPersonality(currFormSpecies, trainerId, personality);
     LoadPalette(pokePal->data, 0x110, 0x20);
 
-    SetMultiuseSpriteTemplateToPokemon(currSpecies, 1, currForm);
+    SetMultiuseSpriteTemplateToPokemon(currFormSpecies, 1);
     gMultiuseSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
     sEvoStructPtr->preEvoSpriteId = Id = CreateSprite(&gMultiuseSpriteTemplate, 120, 64, 30);
 
@@ -286,7 +286,7 @@ void EvolutionScene(struct Pokemon* mon, u16 postEvoSpecies, bool8 canStopEvo, u
     pokePal = GetMonSpritePalStructFromOtIdPersonality(postEvoForm, trainerId, personality);
     LoadPalette(pokePal->data, 0x120, 0x20);
 
-    SetMultiuseSpriteTemplateToPokemon(postEvoSpecies, 3, postEvoForm);
+    SetMultiuseSpriteTemplateToPokemon(postEvoFormSpecies, 3);
     gMultiuseSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
     sEvoStructPtr->postEvoSpriteId = Id = CreateSprite(&gMultiuseSpriteTemplate, 120, 64, 30);
     gSprites[Id].oam.paletteNum = 2;
@@ -369,7 +369,7 @@ static void CB2_EvolutionSceneLoadGraphics(void)
 
     LoadPalette(pokePal->data, 0x120, 0x20);
 
-    SetMultiuseSpriteTemplateToPokemon(postEvoSpecies, 3, postEvoForm);
+    SetMultiuseSpriteTemplateToPokemon(postEvoFormSpecies, 3);
     gMultiuseSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
     sEvoStructPtr->postEvoSpriteId = Id = CreateSprite(&gMultiuseSpriteTemplate, 120, 64, 30);
 
@@ -448,7 +448,7 @@ static void CB2_TradeEvolutionSceneLoadGraphics(void)
         {
             u8 Id;
 
-            SetMultiuseSpriteTemplateToPokemon(postEvoSpecies, 1, postEvoForm);
+            SetMultiuseSpriteTemplateToPokemon(postEvoFormSpecies, 1);
             gMultiuseSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
             sEvoStructPtr->postEvoSpriteId = Id = CreateSprite(&gMultiuseSpriteTemplate, 120, 64, 30);
 
@@ -509,7 +509,7 @@ void TradeEvolutionScene(struct Pokemon* mon, u16 postEvoSpecies, u8 preEvoSprit
     pokePal = GetMonSpritePalStructFromOtIdPersonality(postEvoFormSpecies, trainerId, personality);
     LoadPalette(pokePal->data, 0x120, 0x20);
 
-    SetMultiuseSpriteTemplateToPokemon(postEvoSpecies, 1, postEvoForm);
+    SetMultiuseSpriteTemplateToPokemon(postEvoFormSpecies, 1);
     gMultiuseSpriteTemplate.affineAnims = gDummySpriteAffineAnimTable;
     sEvoStructPtr->postEvoSpriteId = Id = CreateSprite(&gMultiuseSpriteTemplate, 120, 64, 30);
 
