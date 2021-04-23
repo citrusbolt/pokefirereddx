@@ -412,7 +412,7 @@ static u8 EggHatchCreateMonSprite(u8 a0, u8 switchID, u8 pokeID, u16* speciesLoc
     u8 r5 = 0;
     u8 spriteID = 0;
     struct Pokemon* mon = NULL;
-	u16 species;
+    u8 form;
 
     if (a0 == 0)
     {
@@ -424,12 +424,12 @@ static u8 EggHatchCreateMonSprite(u8 a0, u8 switchID, u8 pokeID, u16* speciesLoc
         mon = &gPlayerParty[pokeID];
         r5 = 3;
     }
-	species = GetFormSpecies(GetMonData(mon, MON_DATA_SPECIES), 
-                                        GetMonData(mon, MON_DATA_FORM));
     switch (switchID)
     {
     case 0:
         {
+            u16 species = GetFormSpecies(GetMonData(mon, MON_DATA_SPECIES), 
+                                        GetMonData(mon, MON_DATA_FORM));
             u32 pid = GetMonData(mon, MON_DATA_PERSONALITY);
             HandleLoadSpecialPokePic(&gMonFrontPicTable[species],
                                                       gMonSpritesGfxPtr->sprites.ptr[(a0 * 2) + 1],
@@ -439,7 +439,8 @@ static u8 EggHatchCreateMonSprite(u8 a0, u8 switchID, u8 pokeID, u16* speciesLoc
         }
         break;
     case 1:
-        SetMultiuseSpriteTemplateToPokemon(GetMonSpritePalStruct(mon)->tag, r5);
+        form = GetMonData(mon, MON_DATA_FORM);
+        SetMultiuseSpriteTemplateToPokemon(GetMonSpritePalStruct(mon)->tag, r5, form);
         spriteID = CreateSprite(&gMultiuseSpriteTemplate, 120, 75, 6);
         gSprites[spriteID].invisible = TRUE;
         gSprites[spriteID].callback = SpriteCallbackDummy;

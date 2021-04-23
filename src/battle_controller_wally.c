@@ -1446,7 +1446,7 @@ static void StartSendOutAnim(u8 battlerId)
     gBattleSpritesDataPtr->battlerData[battlerId].transformSpecies = 0;
     gBattlerPartyIndexes[battlerId] = gBattleBufferA[battlerId][1];
     gBattleControllerData[battlerId] = CreateInvisibleSpriteWithCallback(SpriteCB_WaitForBattlerBallReleaseAnim);
-    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battlerId));
+    SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battlerId), 0);
     gBattlerSpriteIds[battlerId] = CreateSprite(&gMultiuseSpriteTemplate,
                                         GetBattlerSpriteCoord(battlerId, 2),
                                         GetBattlerSpriteDefault_Y(battlerId),
