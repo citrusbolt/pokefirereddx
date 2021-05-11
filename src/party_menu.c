@@ -1992,9 +1992,9 @@ static void InitPartyMenuWindows(u8 layout)
     for (i = 0; i < PARTY_SIZE; i++)
         FillWindowPixelBuffer(i, PIXEL_FILL(0));
     LoadUserWindowBorderGfx(0, 0x4F, 0xD0);
-    SetStdFrame(0, 0x58, 0xF0);
-    LoadPalette(GetOverworldTextboxPalettePtr(), 0xC0, 0x20);
-    LoadPalette(gUnknown_0860F074, 0xE0, 0x20);
+    LoadThinWindowBorderGfx(0, 0x58, 0xF0);
+    LoadPalette(GetTextWindowPalette(2), 0xC0, 0x20);
+    LoadPalette(GetTextWindowPalette(0), 0xE0, 0x20);
 }
 
 static void CreateCancelConfirmWindows(bool8 chooseHalf)
@@ -2979,7 +2979,7 @@ static void CB2_SelectBagItemToGive(void)
     if (InBattlePyramid() == FALSE)
         GoToBagMenu(ITEMMENULOCATION_PARTY, POCKETS_COUNT, CB2_GiveHoldItem);
     else
-        GoToBattlePyramidBagMenu(2, CB2_GiveHoldItem);
+        GoToBattlePyramidBagMenu(PYRAMIDBAG_LOC_PARTY, CB2_GiveHoldItem);
 }
 
 static void CB2_GiveHoldItem(void)
@@ -4080,7 +4080,7 @@ static void CB2_ReturnToBagMenu(void)
     if (InBattlePyramid() == FALSE)
         GoToBagMenu(ITEMMENULOCATION_LAST, POCKETS_COUNT, NULL);
     else
-        GoToBattlePyramidBagMenu(4, gPyramidBagCursorData.callback);
+        GoToBattlePyramidBagMenu(PYRAMIDBAG_LOC_PREV, gPyramidBagMenuState.callback);
 }
 
 static void Task_SetSacredAshCB(u8 taskId)

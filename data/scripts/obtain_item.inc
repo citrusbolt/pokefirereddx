@@ -57,10 +57,10 @@ EventScript_BufferBerriesPocket:: @ 8271B85
 
 EventScript_ObtainedItem:: @ 8271B95
     compare VAR_0x8001, 1
-    goto_if_eq EventScript_ObtainedItemMessage
-    buffernumberstring 0, VAR_0x8001
+	goto_if_eq EventScript_ObtainedItemMessage
+	buffernumberstring 0, VAR_0x8001
 	message gText_ObtainedTheItems
-    goto_if_eq EventScript_ContinueObtainedItem
+	goto_if_eq EventScript_ContinueObtainedItem
 EventScript_ObtainedItemMessage:
 	message gText_ObtainedTheItem
 EventScript_ContinueObtainedItem:
@@ -87,32 +87,6 @@ EventScript_PlayFanfareObtainedTMHM:: @ 8271BB3
 
 EventScript_PlayFanfareObtainedBerry:: @ 8271BB3
 	playfanfare MUS_OBTAIN_BERRY
-	return
-
-Std_ObtainDecoration:: @ 8271BB7
-	adddecoration VAR_0x8000
-	copyvar VAR_0x8007, VAR_RESULT
-	call EventScript_ObtainDecorationMessage
-	return
-
-EventScript_ObtainDecorationMessage:: @ 8271BC5
-	bufferdecorationname 1, VAR_0x8000
-	compare VAR_0x8007, 1
-	call_if_eq EventScript_ObtainedDecor
-	compare VAR_0x8007, 0
-	call_if_eq EventScript_NoRoomForDecor
-	return
-
-EventScript_ObtainedDecor:: @ 8271BE0
-	playfanfare MUS_OBTAIN_ITEM
-	message gText_ObtainedTheItem
-	waitfanfare
-	msgbox gText_TheDecorWasTransferredToThePC, MSGBOX_DEFAULT
-	setvar VAR_RESULT, 1
-	return
-
-EventScript_NoRoomForDecor:: @ 8271BF7
-	setvar VAR_RESULT, 0
 	return
 
 Std_FindItem:: @ 8271BFD

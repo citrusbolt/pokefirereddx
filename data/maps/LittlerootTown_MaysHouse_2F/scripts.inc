@@ -2,7 +2,6 @@
 
 LittlerootTown_MaysHouse_2F_MapScripts:: @ 81F9296
 	map_script MAP_SCRIPT_ON_TRANSITION, LittlerootTown_MaysHouse_2F_OnTransition
-	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, LittlerootTown_MaysHouse_2F_OnWarp
 	.byte 0
 
 LittlerootTown_MaysHouse_2F_OnTransition: @ 81F92A1
@@ -12,8 +11,6 @@ LittlerootTown_MaysHouse_2F_OnTransition: @ 81F92A1
 	call_if_ge LittlerootTown_MaysHouse_2F_EventScript_CheckShouldUpdateMayPos
 	compare VAR_LITTLEROOT_INTRO_STATE, 4
 	call_if_eq PlayersHouse_2F_EventScript_BlockStairsUntilClockIsSet
-	call SecretBase_EventScript_SetDecorationFlags
-	setvar VAR_SECRET_BASE_INITIALIZED, 0
 	end
 
 LittlerootTown_MaysHouse_2F_EventScript_CheckShouldUpdateMayPos:: @ 81F92CD
@@ -44,16 +41,6 @@ LittlerootTown_MaysHouse_2F_EventScript_CheckSetReadyToMeetMay:: @ 81F930A
 LittlerootTown_MaysHouse_2F_EventScript_SetReadyToMeetMay:: @ 81F9317
 	setvar VAR_LITTLEROOT_RIVAL_STATE, 2
 	return
-
-LittlerootTown_MaysHouse_2F_OnWarp: @ 81F931D
-	map_script_2 VAR_SECRET_BASE_INITIALIZED, 0, LittlerootTown_MaysHouse_2F_EventScript_CheckInitDecor
-	.2byte 0
-
-LittlerootTown_MaysHouse_2F_EventScript_CheckInitDecor:: @ 81F9327
-	checkplayergender
-	compare VAR_RESULT, FEMALE
-	goto_if_eq SecretBase_EventScript_InitDecorations
-	end
 
 LittlerootTown_MaysHouse_2F_EventScript_RivalsPokeBall:: @ 81F9334
 	lockall
@@ -334,24 +321,24 @@ RivalsHouse_2F_Text_MayWhoAreYou: @ 81F959C
 	.string "Who… Who are you?\p"
 	.string "… … … … … … … …\n"
 	.string "… … … … … … … …\p"
-	.string "Oh, you're {PLAYER}{KUN}.\n"
+	.string "Oh, you're {PLAYER}.\n"
 	.string "So your move was today.\p"
 	.string "Um… I'm MAY.\n"
 	.string "Glad to meet you!\p"
 	.string "I…\n"
 	.string "I have this dream of becoming friends\l"
 	.string "with POKéMON all over the world.\p"
-	.string "I… I heard about you, {PLAYER}{KUN}, from\n"
+	.string "I… I heard about you, {PLAYER}, from\n"
 	.string "my dad, PROF. BIRCH.\p"
 	.string "I was hoping that you would be nice,\n"
-	.string "{PLAYER}{KUN}, and that we could be friends.\p"
+	.string "{PLAYER}, and that we could be friends.\p"
 	.string "Oh, this is silly, isn't it?\n"
-	.string "I… I've just met you, {PLAYER}{KUN}.\p"
+	.string "I… I've just met you, {PLAYER}.\p"
 	.string "Eheheh…\p"
 	.string "Oh, no! I forgot!\p"
 	.string "I was supposed to go help Dad catch\n"
 	.string "some wild POKéMON!\p"
-	.string "{PLAYER}{KUN}, I'll catch you later!$"
+	.string "{PLAYER}, I'll catch you later!$"
 
 RivalsHouse_2F_Text_MayGettingReady: @ 81F978A
 	.string "POKéMON fully restored!\n"
@@ -386,7 +373,7 @@ RivalsHouse_2F_Text_ItsRivalsPokeBall: @ 81F9991
 	.string "Better leave it right where it is.$"
 
 RivalsHouse_2F_Text_MayJustCheckingMyPokedex: @ 81F99C9
-	.string "MAY: {PLAYER}{KUN}!\p"
+	.string "MAY: {PLAYER}!\p"
 	.string "I was just checking my POKéDEX.\p"
 	.string "There's still a lot of POKéMON that\n"
 	.string "I've seen but haven't caught.\p"
@@ -399,7 +386,7 @@ RivalsHouse_2F_Text_MayWhereShouldIGoNext: @ 81F9A9E
 	.string "MAY: I wonder where I should go catch\n"
 	.string "some POKéMON next?\p"
 	.string "Wouldn't it be funny if we ran into each\n"
-	.string "other, {PLAYER}{KUN}?$"
+	.string "other, {PLAYER}?$"
 
 RivalsHouse_2F_Text_BrendanJustCheckingMyPokedex: @ 81F9B0D
 	.string "BRENDAN: Hey, it's {PLAYER}.\p"

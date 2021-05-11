@@ -5,7 +5,6 @@
 #include "text.h"
 #include "event_data.h"
 #include "malloc.h"
-#include "secret_base.h"
 #include "item_menu.h"
 #include "strings.h"
 #include "load_save.h"
@@ -15,7 +14,6 @@
 #include "pokeball.h"
 #include "constants/items.h"
 #include "constants/hold_effects.h"
-#include "constants/tv.h"
 
 extern u16 gUnknown_0203CF30[];
 
@@ -97,8 +95,8 @@ void CopyItemNameHandlePlural(u16 itemId, u8 *dst, u32 quantity)
         u8 *end;
         end = dst;
         // loop so end points to the last character
-        while (*end != EOS && // account for empty string
-            *(end + 1) != EOS)
+        while (*end != EOS // account for empty string
+         && *(end + 1) != EOS)
         end++;
     
     if (*end == CHAR_Y)
@@ -232,8 +230,7 @@ bool8 CheckBagHasSpace(u16 itemId, u16 count)
                 }
                 else
                 {
-                    count = 0; //should be return TRUE, but that doesn't match
-                    break;
+                    return TRUE;
                 }
             }
         }
@@ -387,12 +384,6 @@ bool8 RemoveBagItem(u16 itemId, u16 count)
 
         if (totalQuantity < count)
             return FALSE;   // We don't have enough of the item
-
-        if (CurMapIsSecretBase() == TRUE)
-        {
-            VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_BAG);
-            VarSet(VAR_SECRET_BASE_LAST_ITEM_USED, itemId);
-        }
 
         var = GetItemListPosition(pocket);
         if (itemPocket->capacity > var
@@ -822,7 +813,7 @@ bool8 RemovePyramidBagItem(u16 itemId, u16 count)
     u16 *items = gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode];
     u8 *quantities = gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode];
 
-    i = gPyramidBagCursorData.cursorPosition + gPyramidBagCursorData.scrollPosition;
+    i = gPyramidBagMenuState.cursorPosition + gPyramidBagMenuState.scrollPosition;
     if (items[i] == itemId && quantities[i] >= count)
     {
         quantities[i] -= count;

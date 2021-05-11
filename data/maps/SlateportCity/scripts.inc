@@ -216,23 +216,8 @@ SlateportCity_EventScript_OldWomanSternInterview:: @ 81DCE7A
 	release
 	end
 
-SlateportCity_EventScript_Girl:: @ 81DCE84
-	lock
-	faceplayer
-	compare VAR_SLATEPORT_CITY_STATE, 1
-	call_if_eq SlateportCity_EventScript_GirlSternInterview
-	goto_if_set FLAG_RECEIVED_SECRET_POWER, SlateportCity_EventScript_GirlSecretBase
-	msgbox SlateportCity_Text_SlateportWonderfulPlace, MSGBOX_DEFAULT
-	release
-	end
-
 SlateportCity_EventScript_GirlSternInterview:: @ 81DCEA4
 	msgbox SlateportCity_Text_InterviewerSoCool, MSGBOX_DEFAULT
-	release
-	end
-
-SlateportCity_EventScript_GirlSecretBase:: @ 81DCEAE
-	msgbox SlateportCity_Text_BuyBricksSoDecorWontGetDirty, MSGBOX_DEFAULT
 	release
 	end
 
@@ -505,78 +490,6 @@ SlateportCity_EventScript_AquaGrunt11:: @ 81DD153
 	closemessage
 	applymovement LOCALID_GRUNT_11, Common_Movement_FaceOriginalDirection
 	waitmovement 0
-	release
-	end
-
-SlateportCity_EventScript_DollClerk:: @ 81DD16A
-	lock
-	faceplayer
-	message gText_HowMayIServeYou
-	waitmessage
-	pokemartdecoration SlateportCity_PokemartDecor_Dolls
-	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
-	release
-	end
-
-	.align 2
-SlateportCity_PokemartDecor_Dolls: @ 81DD184
-	.2byte DECOR_AZURILL_DOLL
-	.2byte DECOR_MARILL_DOLL
-	.2byte DECOR_SKITTY_DOLL
-	.2byte DECOR_NONE
-	release
-	end
-
-SlateportCity_EventScript_ComeBackWithSecretPower:: @ 81DD18E
-	msgbox gText_ComeBackWithSecretPower, MSGBOX_DEFAULT
-	release
-	end
-
-SlateportCity_EventScript_DecorClerk:: @ 81DD198
-	lock
-	faceplayer
-	goto_if_unset FLAG_RECEIVED_SECRET_POWER, SlateportCity_EventScript_ComeBackWithSecretPower
-	message gText_HowMayIServeYou
-	waitmessage
-	pokemartdecoration SlateportCity_PokemartDecor
-	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
-	release
-	end
-
-SlateportCity_PokemartDecor: @ 81DD1B8
-	.2byte DECOR_RED_BRICK
-	.2byte DECOR_BLUE_BRICK
-	.2byte DECOR_YELLOW_BRICK
-	.2byte DECOR_RED_BALLOON
-	.2byte DECOR_BLUE_BALLOON
-	.2byte DECOR_YELLOW_BALLOON
-	.2byte DECOR_C_LOW_NOTE_MAT
-	.2byte DECOR_D_NOTE_MAT
-	.2byte DECOR_E_NOTE_MAT
-	.2byte DECOR_F_NOTE_MAT
-	.2byte DECOR_G_NOTE_MAT
-	.2byte DECOR_A_NOTE_MAT
-	.2byte DECOR_B_NOTE_MAT
-	.2byte DECOR_C_HIGH_NOTE_MAT
-	.2byte DECOR_NONE
-	release
-	end
-
-SlateportCity_EventScript_PowerTMClerk:: @ 81DD1D8
-	lock
-	faceplayer
-	message gText_HowMayIServeYou
-	waitmessage
-	pokemart SlateportCity_Pokemart_PowerTMs
-	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
-	release
-	end
-
-	.align 2
-SlateportCity_Pokemart_PowerTMs: @ 81DD1F0
-	.2byte ITEM_TM10  @ Hidden Power
-	.2byte ITEM_TM43  @ Secret Power
-	.2byte ITEM_NONE
 	release
 	end
 
@@ -1017,13 +930,6 @@ SlateportCity_Text_SlateportWonderfulPlace: @ 81DD93D
 	.string "scent of the ocean…\p"
 	.string "SLATEPORT is such a wonderful place!$"
 
-SlateportCity_Text_BuyBricksSoDecorWontGetDirty: @ 81DD999
-	.string "If you put DOLLS or CUSHIONS on\n"
-	.string "the floor, they'll get dirty.\p"
-	.string "I'm going to buy some BRICKS so my\n"
-	.string "DOLLS and CUSHIONS won't get dirty\l"
-	.string "when I leave them out.$"
-
 SlateportCity_Text_GoingToCompeteInBattleTent: @ 81DDA34
 	.string "Wroooar! I'm going to compete in\n"
 	.string "the BATTLE TENT, too!\p"
@@ -1206,7 +1112,7 @@ SlateportCity_Text_SternWhewFirstInterview: @ 81DE5F7
 	.string "TV. That was nerve-wracking.$"
 
 SlateportCity_Text_OhPlayerWeMadeDiscovery: @ 81DE64F
-	.string "Oh! {PLAYER}{KUN}!\n"
+	.string "Oh! {PLAYER}!\n"
 	.string "You're looking great!\p"
 	.string "We made a huge discovery on our last\n"
 	.string "seafloor exploration.\p"
@@ -1238,7 +1144,7 @@ SlateportCity_Text_FromHarborTryingToTakeSub: @ 81DE860
 	.string "They're trying to take it!$"
 
 SlateportCity_Text_PleaseComeWithMe: @ 81DE8A0
-	.string "{PLAYER}{KUN}!\n"
+	.string "{PLAYER}!\n"
 	.string "Please, come with me!$"
 
 SlateportCity_Text_BattleTentSign: @ 81DE8BC
@@ -1384,12 +1290,12 @@ SlateportCity_Text_KeepEyeOnTrainersBeSeeingYou: @ 81DF1D3
 	.string "on the talents of other people, too.\p"
 	.string "So, I'll be off to roam other towns\n"
 	.string "a bit more.\p"
-	.string "Be seeing you, {PLAYER}{KUN}!$"
+	.string "Be seeing you, {PLAYER}!$"
 
 SlateportCity_Text_TakingBattleTentChallenge: @ 81DF28C
 	.string "SCOTT: Oh, hey!\n"
-	.string "If it isn't {PLAYER}{KUN}!\p"
-	.string "{PLAYER}{KUN}, let me guess--you're going\n"
+	.string "If it isn't {PLAYER}!\p"
+	.string "{PLAYER}, let me guess--you're going\n"
 	.string "to take the BATTLE TENT challenge?\p"
 	.string "Yeah! That's a good idea!\n"
 	.string "That's a really great idea!\p"

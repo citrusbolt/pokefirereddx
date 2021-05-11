@@ -104,9 +104,9 @@ BattleFrontier_ScottsHouse_EventScript_CheckGiveSilverShield:: @ 826381B
 
 BattleFrontier_ScottsHouse_EventScript_GiveSilverShield:: @ 826387A
 	msgbox BattleFrontier_ScottsHouse_Text_Beat50TrainersInARow, MSGBOX_DEFAULT
-	givedecoration DECOR_SILVER_SHIELD
+	giveitem ITEM_LANSAT_BERRY
 	compare VAR_RESULT, FALSE
-	goto_if_eq BattleFrontier_ScottsHouse_EventScript_NoRoomForShield
+	goto_if_eq BattleFrontier_ScottsHouse_EventScript_BerryPocketFull
 	setflag FLAG_RECEIVED_SILVER_SHIELD
 	setflag FLAG_TEMP_3
 	goto BattleFrontier_ScottsHouse_EventScript_GivenShield
@@ -137,9 +137,9 @@ BattleFrontier_ScottsHouse_EventScript_CheckGiveGoldShield:: @ 82638B4
 
 BattleFrontier_ScottsHouse_EventScript_GiveGoldShield:: @ 8263913
 	msgbox BattleFrontier_ScottsHouse_Text_Beat100TrainersInARow, MSGBOX_DEFAULT
-	givedecoration DECOR_GOLD_SHIELD
+	giveitem ITEM_LANSAT_BERRY
 	compare VAR_RESULT, FALSE
-	goto_if_eq BattleFrontier_ScottsHouse_EventScript_NoRoomForShield
+	goto_if_eq BattleFrontier_ScottsHouse_EventScript_BerryPocketFull
 	setflag FLAG_RECEIVED_GOLD_SHIELD
 	setflag FLAG_TEMP_3
 	goto BattleFrontier_ScottsHouse_EventScript_GivenShield
@@ -231,7 +231,7 @@ BattleFrontier_ScottsHouse_EventScript_ScottFaceAwayWest:: @ 8263A34
 BattleFrontier_ScottsHouse_Text_WelcomeToBattleFrontier: @ 8263A3F
 	.string "SCOTT: Well, hello and welcome!\n"
 	.string "Heheh… Sorry about the cramped space.\p"
-	.string "Anyway, {PLAYER}{KUN}, let me formally\n"
+	.string "Anyway, {PLAYER}, let me formally\n"
 	.string "welcome you to the BATTLE FRONTIER.\p"
 	.string "This is my dream come true.\n"
 	.string "It took me years and years, but I've\l"
@@ -250,7 +250,7 @@ BattleFrontier_ScottsHouse_Text_HaveThisAsMementoOfOurPathsCrossing: @ 8263BD4
 	.string "No point dwelling on that!\p"
 	.string "All I want for you is to enjoy battling\n"
 	.string "to your heart's content here.\p"
-	.string "{PLAYER}{KUN}, I want you to have this\n"
+	.string "{PLAYER}, I want you to have this\n"
 	.string "as a memento for all the time our\l"
 	.string "paths crossed on our journeys.$"
 

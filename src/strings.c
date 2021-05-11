@@ -1,19 +1,9 @@
 #include "global.h"
 #include "strings.h"
+#include "battle_pyramid_bag.h"
 
 ALIGNED(4)
 const u8 gText_ExpandedPlaceholder_Empty[] = _("");
-const u8 gText_ExpandedPlaceholder_Kun[] = _("");
-const u8 gText_ExpandedPlaceholder_Chan[] = _("");
-const u8 gText_ExpandedPlaceholder_Sapphire[] = _("SAPPHIRE");
-const u8 gText_ExpandedPlaceholder_Ruby[] = _("RUBY");
-const u8 gText_ExpandedPlaceholder_Emerald[] = _("EMERALD");
-const u8 gText_ExpandedPlaceholder_Aqua[] = _("AQUA");
-const u8 gText_ExpandedPlaceholder_Magma[] = _("MAGMA");
-const u8 gText_ExpandedPlaceholder_Archie[] = _("ARCHIE");
-const u8 gText_ExpandedPlaceholder_Maxie[] = _("MAXIE");
-const u8 gText_ExpandedPlaceholder_Kyogre[] = _("KYOGRE");
-const u8 gText_ExpandedPlaceholder_Groudon[] = _("GROUDON");
 const u8 gText_ExpandedPlaceholder_Brendan[] = _("BRENDAN");
 const u8 gText_ExpandedPlaceholder_May[] = _("MAY");
 const u8 gText_EggNickname[] = _("EGG");
@@ -254,7 +244,7 @@ const u8 gText_ThePokemonList[] = _("the POKéMON LIST");
 const u8 gText_TheShop[] = _("the shop");
 const u8 gText_ThePC[] = _("the PC");
 
-const u8 *const gReturnToXStringsTable[] =
+const u8 *const gBagMenu_ReturnToStrings[] =
 {
     gText_TheField,
     gText_TheBattle,
@@ -270,12 +260,12 @@ const u8 *const gReturnToXStringsTable[] =
     gText_ThePC
 };
 
-const u8 *const gReturnToXStringsTable2[] =
+const u8 *const gPyramidBagMenu_ReturnToStrings[] =
 {
-    gText_TheField,
-    gText_TheBattle,
-    gText_ThePokemonList,
-    gText_TheField
+    [PYRAMIDBAG_LOC_FIELD]       = gText_TheField,
+    [PYRAMIDBAG_LOC_BATTLE]      = gText_TheBattle,
+    [PYRAMIDBAG_LOC_PARTY]       = gText_ThePokemonList,
+    [PYRAMIDBAG_LOC_CHOOSE_TOSS] = gText_TheField
 };
 
 const u8 gText_ReturnToVar1[] = _("Return to\n{STR_VAR_1}.");
@@ -512,19 +502,20 @@ const u8 gText_EggAboutToHatch[] = _("It's making sounds.\nIt's about to hatch!"
 const u8 gText_EggWillHatchSoon[] = _("It moves occasionally.\nIt should hatch soon.");
 const u8 gText_EggWillTakeSomeTime[] = _("What will hatch from this?\nIt will take some time.");
 const u8 gText_EggWillTakeALongTime[] = _("It looks like this EGG will\ntake a long time to hatch.");
+const u8 gText_XNature[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature");
+const u8 gText_EventLegal[] = _("event legal, ");
 const u8 gText_HMMovesCantBeForgotten2[] = _("HM moves can't be\nforgotten now.");
 const u8 gText_XNatureMetAtYZ[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\n{DYNAMIC 5}met at {LV_2}{DYNAMIC 0}{DYNAMIC 3}{DYNAMIC 1},\n{DYNAMIC 0}{DYNAMIC 4}{DYNAMIC 1}.");
+const u8 gText_XNatureMetSomewhereAt[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\n{DYNAMIC 5}met somewhere at {LV_2}{DYNAMIC 0}{DYNAMIC 3}{DYNAMIC 1}.");
 const u8 gText_XNatureHatchedAtYZ[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\n{DYNAMIC 5}hatched at {LV_2}{DYNAMIC 0}{DYNAMIC 3}{DYNAMIC 1},\n{DYNAMIC 0}{DYNAMIC 4}{DYNAMIC 1}.");
-const u8 gText_SomewhereAt[] = _("somewhere");
-const u8 gText_EventLegal[] = _("event legal, ");
+const u8 gText_XNatureHatchedSomewhereAt[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\n{DYNAMIC 5}hatched somewhere at {LV_2}{DYNAMIC 0}{DYNAMIC 3}{DYNAMIC 1}.");
 const u8 gText_XNatureFatefulEncounter[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\nobtained in a fateful\nencounter at {LV_2}{DYNAMIC 0}{DYNAMIC 3}{DYNAMIC 1}.");
 const u8 gText_XNatureMetDistantLand[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\n{DYNAMIC 5}met in a distant land.");
-const u8 gText_XNatureObtainedInTrade[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature{DYNAMIC 5},\nobtained in a trade.");
-const u8 gText_XNatureProbablyMetAt[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature{DYNAMIC 5},\nprobably met at {LV_2}{DYNAMIC 0}{DYNAMIC 3}{DYNAMIC 1},\n{DYNAMIC 0}{DYNAMIC 4}{DYNAMIC 1}.");
+const u8 gText_XNatureObtainedInTrade[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\n{DYNAMIC 5}obtained in a trade.");
+const u8 gText_XNatureProbablyMetAt[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\n{DYNAMIC 5}probably met at {LV_2}{DYNAMIC 0}{DYNAMIC 3}{DYNAMIC 1},\n{DYNAMIC 0}{DYNAMIC 4}{DYNAMIC 1}.");
 const u8 gText_ObtainedFromDad[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\n{DYNAMIC 5}given to {DYNAMIC 4} by\nhis dad.");
 const u8 gText_Receivedfrom[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\n{DYNAMIC 5}received from {DYNAMIC 4}.");
 const u8 gText_OldFriend[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature,\n{DYNAMIC 5}{DYNAMIC 4}'s old friend.");
-const u8 gText_XNature[] = _("{DYNAMIC 0}{DYNAMIC 2}{DYNAMIC 1} nature");
 const u8 gText_EggFromElm[] = _("A POKéMON EGG obtained\nfrom PROF. ELM.");
 const u8 gText_EggFromHotSprings[] = _("A POKéMON EGG obtained\nat the hot springs.");
 #if UK
@@ -534,58 +525,24 @@ const u8 gText_EggFromTraveler[] = _("An odd POKéMON EGG\nobtained from a trave
 #endif
 const u8 gText_PeculiarEggNicePlace[] = _("A peculiar POKéMON EGG\nobtained at the nice place.");
 const u8 gText_PeculiarEggTrade[] = _("A peculiar POKéMON EGG\nobtained in a trade.");
-const u8 gText_OddEggFoundByCouple[] = _("An odd POKéMON EGG found\nby the DAY CARE couple.");
 #if UK
 const u8 gText_EggFromPokecomCenter[] = _("An odd POKéMON EGG\nobtained at the POKéCOM\nCENTRE in GOLDENROD CITY.");
 #else
 const u8 gText_EggFromPokecomCenter[] = _("An odd POKéMON EGG\nobtained at the POKéCOM\nCENTER in GOLDENROD CITY.");
 #endif
+const u8 gText_OddEggFoundByCouple[] = _("An odd POKéMON EGG found\nby the DAY CARE couple.");
 const u8 gText_ApostropheSBase[] = _("'s BASE");
 const u8 gText_OkayToDeleteFromRegistry[] = _("Is it okay to delete {STR_VAR_1}\nfrom the REGISTRY?");
 const u8 gText_RegisteredDataDeleted[] = _("The registered data was deleted.{PAUSE_UNTIL_PRESS}");
 const u8 gText_NoRegistry[] = _("There is no REGISTRY.{PAUSE_UNTIL_PRESS}");
 const u8 gText_DelRegist[] = _("DEL REGIST.");
 const u8 gText_Var3Var1SlashVar2[] = _("{STR_VAR_3}{STR_VAR_1}/{STR_VAR_2}"); // Unused
-const u8 gText_Decorate[] = _("DECORATE");
-const u8 gText_PutAway[] = _("PUT AWAY");
-const u8 gText_Toss2[] = _("TOSS");
 const u8 gText_Color161Shadow161[] = _("{COLOR 161}{SHADOW 161}");
-const u8 gText_PutOutSelectedDecorItem[] = _("Put out the selected decoration item.");
-const u8 gText_StoreChosenDecorInPC[] = _("Store the chosen decoration in the PC.");
-const u8 gText_ThrowAwayUnwantedDecors[] = _("Throw away unwanted decorations.");
-const u8 gText_NoDecorations[] = _("There are no decorations.{PAUSE_UNTIL_PRESS}");
-const u8 gText_Desk[] = _("DESK");
-const u8 gText_Chair[] = _("CHAIR");
-const u8 gText_Plant[] = _("PLANT");
-const u8 gText_Ornament[] = _("ORNAMENT");
-const u8 gText_Mat[] = _("MAT");
-const u8 gText_Poster[] = _("POSTER");
-const u8 gText_Doll[] = _("DOLL");
-const u8 gText_Cushion[] = _("CUSHION");
-const u8 gText_Gold[] = _("GOLD");
-const u8 gText_Silver[] = _("SILVER");
-const u8 gText_PlaceItHere[] = _("Place it here?");
-const u8 gText_CantBePlacedHere[] = _("It can't be placed here.");
-const u8 gText_CancelDecorating[] = _("Cancel decorating?");
-const u8 gText_InUseAlready[] = _("This is in use already.");
-const u8 gText_NoMoreDecorations[] = _("No more decorations can be placed.\nThe most that can be placed are {STR_VAR_1}.");
-const u8 gText_NoMoreDecorations2[] = _("No more decorations can be placed.\nThe most that can be placed are {STR_VAR_1}.");
-const u8 gText_MustBePlacedOnDesk[] = _("This can't be placed here.\nIt must be on a DESK, etc."); // Unused
-const u8 gText_CantPlaceInRoom[] = _("This decoration can't be placed in\nyour own room.");
-const u8 gText_CantThrowAwayInUse[] = _("This decoration is in use.\nIt can't be thrown away.");
-const u8 gText_DecorationWillBeDiscarded[] = _("This {STR_VAR_1} will be discarded.\nIs that okay?");
-const u8 gText_DecorationThrownAway[] = _("The decoration item was thrown away.");
-const u8 gText_StopPuttingAwayDecorations[] = _("Stop putting away decorations?");
-const u8 gText_NoDecorationHere[] = _("There is no decoration item here.");
-const u8 gText_ReturnDecorationToPC[] = _("Return this decoration to the PC?");
-const u8 gText_DecorationReturnedToPC[] = _("The decoration was returned to the PC.");
-const u8 gText_NoDecorationsInUse[] = _("There are no decorations in use.{PAUSE_UNTIL_PRESS}");
 const u8 gText_Tristan[] = _("TRISTAN");
 const u8 gText_Philip[] = _("PHILIP");
 const u8 gText_Dennis[] = _("DENNIS");
 const u8 gText_Roberto[] = _("ROBERTO");
 const u8 gText_TurnOff[] = _("TURN OFF");
-const u8 gText_Decoration[] = _("DECORATION");
 const u8 gText_ItemStorage[] = _("ITEM STORAGE");
 const u8 gText_Mailbox[] = _("MAILBOX");
 const u8 gText_DepositItem[] = _("DEPOSIT ITEM");
@@ -630,8 +587,6 @@ const u8 gText_BeautyContest[] = _("BEAUTY CONTEST");
 const u8 gText_CutenessContest[] = _("CUTENESS CONTEST");
 const u8 gText_SmartnessContest[] = _("SMARTNESS CONTEST");
 const u8 gText_ToughnessContest[] = _("TOUGHNESS CONTEST");
-const u8 gText_Decoration2[] = _("DECORATION");
-const u8 gText_PackUp[] = _("PACK UP");
 const u8 gText_Count[] = _("COUNT"); //unused
 const u8 gText_Registry[] = _("REGISTRY");
 const u8 gText_Information[] = _("INFORMATION");
@@ -676,11 +631,6 @@ const u8 gText_YellowFlute2[] = _("YELLOW FLUTE");
 const u8 gText_RedFlute2[] = _("RED FLUTE");
 const u8 gText_WhiteFlute2[] = _("WHITE FLUTE");
 const u8 gText_BlackFlute2[] = _("BLACK FLUTE");
-const u8 gText_GlassChair[] = _("GLASS CHAIR");
-const u8 gText_GlassDesk[] = _("GLASS DESK");
-const u8 gText_TreeckoDollAndPrice[] = _("TREECKO DOLL 1,000 COINS");
-const u8 gText_TorchicDollAndPrice[] = _("TORCHIC DOLL 1,000 COINS");
-const u8 gText_MudkipDollAndPrice[] = _("MUDKIP DOLL   1,000 COINS");
 const u8 gText_50CoinsAndPrice[] = _("  50 COINS    ¥1,000");
 const u8 gText_500CoinsAndPrice[] = _("500 COINS  ¥10,000");
 const u8 gText_Excellent2[] = _("Excellent");
@@ -1142,21 +1092,6 @@ const u8 gText_80Pts[] = _("80 pts");
 const u8 gText_90Pts[] = _("90 pts");
 const u8 gText_100Pts[] = _("100 pts");
 const u8 gText_QuestionMark[] = _("?");
-const u8 gText_KissPoster16BP[] = _("KISS POSTER{CLEAR_TO 0x5E}16BP");
-const u8 gText_KissCushion32BP[] = _("KISS CUSHION{CLEAR_TO 0x5E}32BP");
-const u8 gText_SmoochumDoll32BP[] = _("SMOOCHUM DOLL{CLEAR_TO 0x5E}32BP");
-const u8 gText_TogepiDoll48BP[] = _("TOGEPI DOLL{CLEAR_TO 0x5E}48BP");
-const u8 gText_MeowthDoll48BP[] = _("MEOWTH DOLL{CLEAR_TO 0x5E}48BP");
-const u8 gText_ClefairyDoll48BP[] = _("CLEFAIRY DOLL{CLEAR_TO 0x5E}48BP");
-const u8 gText_DittoDoll48BP[] = _("DITTO DOLL{CLEAR_TO 0x5E}48BP");
-const u8 gText_CyndaquilDoll80BP[] = _("CYNDAQUIL DOLL{CLEAR_TO 0x5E}80BP");
-const u8 gText_ChikoritaDoll80BP[] = _("CHIKORITA DOLL{CLEAR_TO 0x5E}80BP");
-const u8 gText_TotodileDoll80BP[] = _("TOTODILE DOLL{CLEAR_TO 0x5E}80BP");
-const u8 gText_LaprasDoll128BP[] = _("LAPRAS DOLL{CLEAR_TO 0x58}128BP");
-const u8 gText_SnorlaxDoll128BP[] = _("SNORLAX DOLL{CLEAR_TO 0x58}128BP");
-const u8 gText_VenusaurDoll256BP[] = _("VENUSAUR DOLL{CLEAR_TO 0x58}256BP");
-const u8 gText_CharizardDoll256BP[] = _("CHARIZARD DOLL{CLEAR_TO 0x58}256BP");
-const u8 gText_BlastoiseDoll256BP[] = _("BLASTOISE DOLL{CLEAR_TO 0x58}256BP");
 const u8 gText_Protein1BP[] = _("PROTEIN{CLEAR_TO 0x64}1BP");
 const u8 gText_Calcium1BP[] = _("CALCIUM{CLEAR_TO 0x64}1BP");
 const u8 gText_Iron1BP[] = _("IRON{CLEAR_TO 0x64}1BP");

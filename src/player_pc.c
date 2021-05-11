@@ -1,7 +1,6 @@
 #include "global.h"
 #include "constants/songs.h"
 #include "bg.h"
-#include "decoration.h"
 #include "event_scripts.h"
 #include "event_object_movement.h"
 #include "field_screen_effect.h"
@@ -57,7 +56,6 @@ static void Mailbox_MailOptionsProcessInput(u8 taskId);
 
 static void PlayerPC_ItemStorage(u8 taskId);
 static void PlayerPC_Mailbox(u8 taskId);
-static void PlayerPC_Decoration(u8 var);
 static void PlayerPC_TurnOff(u8 taskId);
 
 static void Mailbox_DoMailMoveToBag(u8 taskId);
@@ -140,16 +138,7 @@ static const struct MenuAction sPlayerPCMenuActions[] =
 {
     { gText_ItemStorage, PlayerPC_ItemStorage },
     { gText_Mailbox, PlayerPC_Mailbox },
-    { gText_Decoration, PlayerPC_Decoration },
     { gText_TurnOff, PlayerPC_TurnOff }
-};
-
-static const u8 gBedroomPC_OptionOrder[] =
-{
-    PLAYERPC_MENU_ITEMSTORAGE,
-    PLAYERPC_MENU_MAILBOX,
-    PLAYERPC_MENU_DECORATION,
-    PLAYERPC_MENU_TURNOFF
 };
 
 static const u8 gPlayerPC_OptionOrder[] =
@@ -313,15 +302,15 @@ void NewGameInitPCItems(void)
 
 void BedroomPC(void)
 {
-    gPcItemMenuOptionOrder = gBedroomPC_OptionOrder;
-    gPcItemMenuOptionsNum = 4;
+    gPcItemMenuOptionOrder = gPlayerPC_OptionOrder;
+    gPcItemMenuOptionsNum = ARRAY_COUNT(gPlayerPC_OptionOrder);
     DisplayItemMessageOnField(CreateTask(TaskDummy, 0), gText_WhatWouldYouLike, InitPlayerPCMenu);
 }
 
 void PlayerPC(void)
 {
     gPcItemMenuOptionOrder = gPlayerPC_OptionOrder;
-    gPcItemMenuOptionsNum = 3;
+    gPcItemMenuOptionsNum = ARRAY_COUNT(gPlayerPC_OptionOrder);;
     DisplayItemMessageOnField(CreateTask(TaskDummy, 0), gText_WhatWouldYouLike, InitPlayerPCMenu);
 }
 
@@ -333,8 +322,8 @@ static void InitPlayerPCMenu(u8 taskId)
     data = gTasks[taskId].data;
     if (gPcItemMenuOptionsNum == 3)
         windowTemplate = gUnknown_085DFF24[0];
-    else
-        windowTemplate = gUnknown_085DFF24[1];
+//    else
+//        windowTemplate = gUnknown_085DFF24[1];
     windowTemplate.width = sub_81DB3D8(sPlayerPCMenuActions, gPcItemMenuOptionOrder, gPcItemMenuOptionsNum);
     data[4] = AddWindow(&windowTemplate);
     SetStandardWindowBorderStyle(data[4], 0);
@@ -357,8 +346,6 @@ static void PlayerPCProcessMenuInput(u8 taskId)
 
     switch (inputOptionId)
     {
-        case MENU_NOTHING_CHOSEN:
-            break;
         case MENU_B_PRESSED:
             PlaySE(SE_SELECT);
             ClearStdWindowAndFrameToTransparent(data[4], FALSE);
@@ -366,6 +353,7 @@ static void PlayerPCProcessMenuInput(u8 taskId)
             RemoveWindow(data[4]);
             ScheduleBgCopyTilemapToVram(0);
             gTasks[taskId].func = PlayerPC_TurnOff;
+        case MENU_NOTHING_CHOSEN:
             break;
         default:
             ClearStdWindowAndFrameToTransparent(data[4], FALSE);
@@ -412,19 +400,14 @@ static void PlayerPC_Mailbox(u8 taskId)
     }
 }
 
-static void PlayerPC_Decoration(u8 taskId)
-{
-    DoPlayerRoomDecorationMenu(taskId);
-}
-
 static void PlayerPC_TurnOff(u8 taskId)
 {
     if (gPcItemMenuOptionsNum == 4) // if the option count is 4, we are at the bedroom PC, so do gender specific handling.
     {
-        if (gSaveBlock2Ptr->playerGender == MALE)
-            ScriptContext1_SetupScript(LittlerootTown_BrendansHouse_2F_EventScript_TurnOffPlayerPC);
-        else
+        if (gSaveBlock2Ptr->playerGender)
             ScriptContext1_SetupScript(LittlerootTown_MaysHouse_2F_EventScript_TurnOffPlayerPC);
+        else
+            ScriptContext1_SetupScript(LittlerootTown_BrendansHouse_2F_EventScript_TurnOffPlayerPC);
     }
     else
     {

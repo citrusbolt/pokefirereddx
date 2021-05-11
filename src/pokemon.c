@@ -3369,7 +3369,7 @@ void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition, u8 f
 
     gMultiuseSpriteTemplate.paletteTag = speciesTag;
     if (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_PLAYER_RIGHT)
-        gMultiuseSpriteTemplate.anims = gUnknown_082FF70C;
+        gMultiuseSpriteTemplate.anims = gAnims_MonPic;
     else if (speciesTag > SPECIES_SHINY_TAG)
         gMultiuseSpriteTemplate.anims = gMonFrontAnimsPtrTable[GetFormSpecies(speciesTag - SPECIES_SHINY_TAG, form)];
     else
@@ -6455,12 +6455,11 @@ static s32 GetWildMonTableIdInAlteringCave(u16 species)
 
 void SetWildMonHeldItem(void)
 {
-    u16 count, i;
+    u16 i;
 
     if (!(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PYRAMID | BATTLE_TYPE_PIKE)))
     {
-        count = (WILD_DOUBLE_BATTLE) ? 2 : 1;
-        for (i = 0; i < count; i++)
+        for (i = 0; i < (WILD_DOUBLE_BATTLE) ? 2 : 1; i++)
         {
             u16 rnd = Random() % 100;
             u16 species = GetFormSpecies(GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, 0),
@@ -6818,7 +6817,7 @@ static void sub_806F1FC(struct Unknown_806F160_Struct* structPtr)
             structPtr->frameImages[i * structPtr->field_0_0 + j].data = &structPtr->byteArrays[i][j * 0x800];
         }
         structPtr->templates[i].images = &structPtr->frameImages[i * structPtr->field_0_0];
-        structPtr->templates[i].anims = gUnknown_082FF70C;
+        structPtr->templates[i].anims = gAnims_MonPic;
         structPtr->templates[i].paletteTag = i;
     }
 }
@@ -6832,7 +6831,7 @@ struct Unknown_806F160_Struct *sub_806F2AC(u8 id, u8 arg1)
     flags = 0;
     id %= 2;
     structPtr = AllocZeroed(sizeof(*structPtr));
-    if (structPtr == NULL)
+    if (!structPtr)
         return NULL;
 
     switch (arg1)
@@ -6855,7 +6854,7 @@ struct Unknown_806F160_Struct *sub_806F2AC(u8 id, u8 arg1)
 
     structPtr->bytes = AllocZeroed(structPtr->field_3_0 * 0x800 * 4 * structPtr->field_0_0);
     structPtr->byteArrays = AllocZeroed(structPtr->field_0_0 * 32);
-    if (structPtr->bytes == NULL || structPtr->byteArrays == NULL)
+    if (!structPtr->bytes || !structPtr->byteArrays)
     {
         flags |= 1;
     }
@@ -6867,7 +6866,7 @@ struct Unknown_806F160_Struct *sub_806F2AC(u8 id, u8 arg1)
 
     structPtr->templates = AllocZeroed(sizeof(struct SpriteTemplate) * structPtr->field_0_0);
     structPtr->frameImages = AllocZeroed(sizeof(struct SpriteFrameImage) * structPtr->field_0_0 * structPtr->field_1);
-    if (structPtr->templates == NULL || structPtr->frameImages == NULL)
+    if (!structPtr->templates || !structPtr->frameImages)
     {
         flags |= 2;
     }

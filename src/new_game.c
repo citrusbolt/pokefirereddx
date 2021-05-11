@@ -7,7 +7,6 @@
 #include "script.h"
 #include "lottery_corner.h"
 #include "play_time.h"
-#include "mauville_old_man.h"
 #include "match_call.h"
 #include "lilycove_lady.h"
 #include "load_save.h"
@@ -38,8 +37,6 @@
 #include "item_menu.h"
 #include "pokemon_storage_system.h"
 #include "pokemon_jump.h"
-#include "decoration_inventory.h"
-#include "secret_base.h"
 #include "player_pc.h"
 #include "field_specials.h"
 #include "berry_powder.h"
@@ -48,23 +45,19 @@
 
 extern const u8 EventScript_ResetAllMapFlags[];
 
-// this file's functions
 static void ClearFrontierRecord(void);
 static void WarpToTruck(void);
 static void ResetMiniGamesRecords(void);
 
-// EWRAM vars
 EWRAM_DATA bool8 gDifferentSaveFile = FALSE;
 EWRAM_DATA bool8 gEnableContestDebugging = FALSE;
 
-// const rom data
 static const struct ContestWinner sContestWinnerPicDummy =
 {
     .monName = _(""),
     .trainerName = _("")
 };
 
-// code
 void SetTrainerId(u32 trainerId, u8 *dst)
 {
     dst[0] = trainerId;
@@ -114,7 +107,9 @@ void ClearAllContestWinnerPics(void)
     s32 i;
 
     ClearContestWinnerPicsInContestHall();
-    for (i = 8; i < 13; i++)
+
+    // Clear Museum paintings
+    for (i = MUSEUM_CONTEST_WINNERS_START; i < NUM_CONTEST_WINNERS; i++)
         gSaveBlock1Ptr->contestWinners[i] = sContestWinnerPicDummy;
 }
 
@@ -169,7 +164,6 @@ void NewGameInitData(void)
     InitEventData();
     ClearTVShowData();
     ResetGabbyAndTy();
-    ClearSecretBases();
     ClearBerryTrees();
     SetMoney(&gSaveBlock1Ptr->money, 3000);
     SetCoins(0);
@@ -188,9 +182,7 @@ void NewGameInitData(void)
     ClearBag();
     NewGameInitPCItems();
     ClearPokeblocks();
-    ClearDecorationInventories();
     InitEasyChatPhrases();
-    SetMauvilleOldMan();
     InitDewfordTrend();
     ResetFanClub();
     ResetLotteryCorner();
