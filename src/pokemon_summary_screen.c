@@ -3096,6 +3096,10 @@ static void BufferMonTrainerMemo(void)
         }
         if (sum->metGame == VERSION_GAMECUBE)
         {
+			if (var == ORRE_MAPSEC_DISTANT_LAND)
+			{
+				text = gText_XNatureMetDistantLand;
+			}
             if (sum->metLocation == 0 && sMonSummaryScreen->eventLegal)
             {
                 DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, sum->OTName);
