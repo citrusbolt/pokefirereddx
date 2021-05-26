@@ -17,6 +17,7 @@
 #include "sprite.h"
 #include "task.h"
 #include "constants/battle_anim.h"
+#include "constants/moves.h"
 
 #define ANIM_SPRITE_INDEX_COUNT 8
 
@@ -34,8 +35,7 @@ static void ScriptCmd_createsprite(void);
 static void ScriptCmd_createvisualtask(void);
 static void ScriptCmd_delay(void);
 static void ScriptCmd_waitforvisualfinish(void);
-static void ScriptCmd_hang1(void);
-static void ScriptCmd_hang2(void);
+static void ScriptCmd_hang(void);
 static void ScriptCmd_end(void);
 static void ScriptCmd_playse(void);
 static void ScriptCmd_monbg(void);
@@ -1133,133 +1133,54 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_Sword, 0x0400, ANIM_TAG_SWORD},
     {gBattleAnimSpriteGfx_Seed, 0x0180, ANIM_TAG_SEED},
     {gBattleAnimSpriteGfx_Explosion6, 0x0800, ANIM_TAG_EXPLOSION_6},
-    {gBattleAnimSpriteGfx_PinkOrb, 0x0020, ANIM_TAG_PINK_ORB},
     {gBattleAnimSpriteGfx_Gust, 0x0400, ANIM_TAG_GUST},
     {gBattleAnimSpriteGfx_IceCube, 0x1200, ANIM_TAG_ICE_CUBE},
     {gBattleAnimSpriteGfx_Spark2, 0x0180, ANIM_TAG_SPARK_2},
-    {gBattleAnimSpriteGfx_Orange, 0x0080, ANIM_TAG_ORANGE},
     {gBattleAnimSpriteGfx_YellowBall, 0x0080, ANIM_TAG_YELLOW_BALL},
     {gBattleAnimSpriteGfx_LockOn, 0x0280, ANIM_TAG_LOCK_ON},
     {gBattleAnimSpriteGfx_TiedBag, 0x0080, ANIM_TAG_TIED_BAG},
     {gBattleAnimSpriteGfx_BlackSmoke, 0x0100, ANIM_TAG_BLACK_SMOKE},
     {gBattleAnimSpriteGfx_BlackBall, 0x0020, ANIM_TAG_BLACK_BALL},
     {gBattleAnimSpriteGfx_Conversion, 0x0080, ANIM_TAG_CONVERSION},
-    {gBattleAnimSpriteGfx_Glass, 0x0400, ANIM_TAG_GLASS},
     {gBattleAnimSpriteGfx_HornHit, 0x0200, ANIM_TAG_HORN_HIT},
     {gBattleAnimSpriteGfx_Hit, 0x0A00, ANIM_TAG_HIT},
     {gBattleAnimSpriteGfx_Hit, 0x0A00, ANIM_TAG_HIT_2},
-    {gBattleAnimSpriteGfx_BlueShards, 0x0380, ANIM_TAG_BLUE_SHARDS},
-    {gBattleAnimSpriteGfx_ClosingEye, 0x0300, ANIM_TAG_CLOSING_EYE},
-    {gBattleAnimSpriteGfx_WavingHand, 0x0A00, ANIM_TAG_WAVING_HAND},
-    {gBattleAnimSpriteGfx_HitDuplicate, 0x0A00, ANIM_TAG_HIT_DUPLICATE},
     {gBattleAnimSpriteGfx_Leer, 0x0A00, ANIM_TAG_LEER},
-    {gBattleAnimSpriteGfx_BlueBurst, 0x0A00, ANIM_TAG_BLUE_BURST},
     {gBattleAnimSpriteGfx_SmallEmber, 0x0A00, ANIM_TAG_SMALL_EMBER},
     {gBattleAnimSpriteGfx_GraySmoke, 0x0A00, ANIM_TAG_GRAY_SMOKE},
     {gBattleAnimSpriteGfx_BlueStar, 0x0E00, ANIM_TAG_BLUE_STAR},
     {gBattleAnimSpriteGfx_BubbleBurst, 0x0380, ANIM_TAG_BUBBLE_BURST},
     {gBattleAnimSpriteGfx_Fire, 0x1000, ANIM_TAG_FIRE},
-    {gBattleAnimSpriteGfx_SpinningFire, 0x0800, ANIM_TAG_SPINNING_FIRE},
     {gBattleAnimSpriteGfx_FirePlume, 0x0A00, ANIM_TAG_FIRE_PLUME},
-    {gBattleAnimSpriteGfx_Lightning2, 0x0800, ANIM_TAG_LIGHTNING_2},
     {gBattleAnimSpriteGfx_Lightning, 0x0A00, ANIM_TAG_LIGHTNING},
-    {gBattleAnimSpriteGfx_ClawSlash2, 0x0A00, ANIM_TAG_CLAW_SLASH_2},
     {gBattleAnimSpriteGfx_ClawSlash, 0x0A00, ANIM_TAG_CLAW_SLASH},
-    {gBattleAnimSpriteGfx_Scratch3, 0x0A00, ANIM_TAG_SCRATCH_3},
-    {gBattleAnimSpriteGfx_Scratch2, 0x0A00, ANIM_TAG_SCRATCH_2},
-    {gBattleAnimSpriteGfx_BubbleBurst2, 0x0A00, ANIM_TAG_BUBBLE_BURST_2},
     {gBattleAnimSpriteGfx_IceChunk, 0x0A00, ANIM_TAG_ICE_CHUNK},
-    {gBattleAnimSpriteGfx_Glass2, 0x0A00, ANIM_TAG_GLASS_2},
-    {gBattleAnimSpriteGfx_PinkHeart2, 0x0A00, ANIM_TAG_PINK_HEART_2},
-    {gBattleAnimSpriteGfx_SapDrip, 0x1000, ANIM_TAG_SAP_DRIP},
-    {gBattleAnimSpriteGfx_SapDrip, 0x1000, ANIM_TAG_SAP_DRIP_2},
     {gBattleAnimSpriteGfx_Sparkle1, 0x1000, ANIM_TAG_SPARKLE_1},
     {gBattleAnimSpriteGfx_Sparkle1, 0x1000, ANIM_TAG_SPARKLE_2},
     {gBattleAnimSpriteGfx_HumanoidFoot, 0x0200, ANIM_TAG_HUMANOID_FOOT},
     {gBattleAnimSpriteGfx_MonsterFoot, 0x0200, ANIM_TAG_MONSTER_FOOT},
-    {gBattleAnimSpriteGfx_HumanoidHand, 0x0200, ANIM_TAG_HUMANOID_HAND},
     {gBattleAnimSpriteGfx_NoiseLine, 0x0800, ANIM_TAG_NOISE_LINE},
-    {gBattleAnimSpriteGfx_YellowUnk, 0x0080, ANIM_TAG_YELLOW_UNK},
-    {gBattleAnimSpriteGfx_RedFist, 0x0200, ANIM_TAG_RED_FIST},
     {gBattleAnimSpriteGfx_SlamHit, 0x1000, ANIM_TAG_SLAM_HIT},
-    {gBattleAnimSpriteGfx_Ring, 0x0180, ANIM_TAG_RING},
     {gBattleAnimSpriteGfx_Rocks, 0x0C00, ANIM_TAG_ROCKS},
-    {gBattleAnimSpriteGfx_Z, 0x0100, ANIM_TAG_Z},
-    {gBattleAnimSpriteGfx_YellowUnk2, 0x0040, ANIM_TAG_YELLOW_UNK_2},
-    {gBattleAnimSpriteGfx_AirSlash, 0x0180, ANIM_TAG_AIR_SLASH},
-    {gBattleAnimSpriteGfx_SpinningGreenOrbs, 0x0800, ANIM_TAG_SPINNING_GREEN_ORBS},
     {gBattleAnimSpriteGfx_Leaf, 0x0480, ANIM_TAG_LEAF},
     {gBattleAnimSpriteGfx_Finger, 0x0200, ANIM_TAG_FINGER},
     {gBattleAnimSpriteGfx_PoisonPowder, 0x0200, ANIM_TAG_POISON_POWDER},
-    {gBattleAnimSpriteGfx_BrownTriangle, 0x0100, ANIM_TAG_BROWN_TRIANGLE},
     {gBattleAnimSpriteGfx_PoisonPowder, 0x0200, ANIM_TAG_SLEEP_POWDER},
     {gBattleAnimSpriteGfx_PoisonPowder, 0x0200, ANIM_TAG_STUN_SPORE},
-    {gBattleAnimSpriteGfx_PoisonPowder, 0x0200, ANIM_TAG_POWDER},
     {gBattleAnimSpriteGfx_Sparkle3, 0x0200, ANIM_TAG_SPARKLE_3},
     {gBattleAnimSpriteGfx_Sparkle4, 0x0A00, ANIM_TAG_SPARKLE_4},
     {gBattleAnimSpriteGfx_MusicNotes, 0x0300, ANIM_TAG_MUSIC_NOTES},
     {gBattleAnimSpriteGfx_Duck, 0x0180, ANIM_TAG_DUCK},
     {gBattleAnimSpriteGfx_MudSand, 0x00A0, ANIM_TAG_MUD_SAND},
     {gBattleAnimSpriteGfx_Alert, 0x0700, ANIM_TAG_ALERT},
-    {gBattleAnimSpriteGfx_BlueFlames, 0x0400, ANIM_TAG_BLUE_FLAMES},
-    {gBattleAnimSpriteGfx_BlueFlames2, 0x0200, ANIM_TAG_BLUE_FLAMES_2},
-    {gBattleAnimSpriteGfx_Shock4, 0x0300, ANIM_TAG_SHOCK_4},
     {gBattleAnimSpriteGfx_Shock, 0x0C00, ANIM_TAG_SHOCK},
-    {gBattleAnimSpriteGfx_Bell2, 0x0A00, ANIM_TAG_BELL_2},
-    {gBattleAnimSpriteGfx_PinkGlove, 0x0080, ANIM_TAG_PINK_GLOVE},
-    {gBattleAnimSpriteGfx_BlueLines, 0x0040, ANIM_TAG_BLUE_LINES},
-    {gBattleAnimSpriteGfx_Impact3, 0x0E00, ANIM_TAG_IMPACT_3},
-    {gBattleAnimSpriteGfx_Impact2, 0x0E00, ANIM_TAG_IMPACT_2},
-    {gBattleAnimSpriteGfx_Reticle, 0x0280, ANIM_TAG_RETICLE},
     {gBattleAnimSpriteGfx_Breath, 0x0200, ANIM_TAG_BREATH},
     {gBattleAnimSpriteGfx_Anger, 0x0080, ANIM_TAG_ANGER},
-    {gBattleAnimSpriteGfx_Snowball, 0x00C0, ANIM_TAG_SNOWBALL},
-    {gBattleAnimSpriteGfx_Vine, 0x0A00, ANIM_TAG_VINE},
-    {gBattleAnimSpriteGfx_Sword2, 0x0200, ANIM_TAG_SWORD_2},
-    {gBattleAnimSpriteGfx_Clapping, 0x0180, ANIM_TAG_CLAPPING},
-    {gBattleAnimSpriteGfx_RedTube, 0x0080, ANIM_TAG_RED_TUBE},
     {gBattleAnimSpriteGfx_Amnesia, 0x1000, ANIM_TAG_AMNESIA},
-    {gBattleAnimSpriteGfx_String2, 0x0A00, ANIM_TAG_STRING_2},
-    {gBattleAnimSpriteGfx_Pencil2, 0x0180, ANIM_TAG_PENCIL_2},
-    {gBattleAnimSpriteGfx_Petal, 0x0380, ANIM_TAG_PETAL},
     {gBattleAnimSpriteGfx_BentSpoon, 0x0C00, ANIM_TAG_BENT_SPOON},
-    {gBattleAnimSpriteGfx_Web, 0x0200, ANIM_TAG_WEB},
     {gBattleAnimSpriteGfx_MilkBottle, 0x0200, ANIM_TAG_MILK_BOTTLE},
     {gBattleAnimSpriteGfx_Coin, 0x0200, ANIM_TAG_COIN},
-    {gBattleAnimSpriteGfx_CrackedEgg, 0x0200, ANIM_TAG_CRACKED_EGG},
-    {gBattleAnimSpriteGfx_HatchedEgg, 0x0400, ANIM_TAG_HATCHED_EGG},
-    {gBattleAnimSpriteGfx_FreshEgg, 0x0080, ANIM_TAG_FRESH_EGG},
-    {gBattleAnimSpriteGfx_Fangs, 0x0400, ANIM_TAG_FANGS},
-    {gBattleAnimSpriteGfx_Explosion2, 0x0c00, ANIM_TAG_EXPLOSION_2},
-    {gBattleAnimSpriteGfx_Explosion3, 0x0200, ANIM_TAG_EXPLOSION_3},
-    {gBattleAnimSpriteGfx_WaterDroplet, 0x1000, ANIM_TAG_WATER_DROPLET},
-    {gBattleAnimSpriteGfx_WaterDroplet2, 0x0a00, ANIM_TAG_WATER_DROPLET_2},
-    {gBattleAnimSpriteGfx_Seed2, 0x0020, ANIM_TAG_SEED_2},
-    {gBattleAnimSpriteGfx_Sprout, 0x0e00, ANIM_TAG_SPROUT},
-    {gBattleAnimSpriteGfx_RedWand, 0x0080, ANIM_TAG_RED_WAND},
-    {gBattleAnimSpriteGfx_PurpleGreenUnk, 0x0a00, ANIM_TAG_PURPLE_GREEN_UNK},
-    {gBattleAnimSpriteGfx_WaterColumn, 0x0400, ANIM_TAG_WATER_COLUMN},
-    {gBattleAnimSpriteGfx_MudUnk, 0x0200, ANIM_TAG_MUD_UNK},
     {gBattleAnimSpriteGfx_RainDrops, 0x0700, ANIM_TAG_RAIN_DROPS},
-    {gBattleAnimSpriteGfx_FurySwipes, 0x0800, ANIM_TAG_FURY_SWIPES},
-    {gBattleAnimSpriteGfx_Vine2, 0x0a00, ANIM_TAG_VINE_2},
-    {gBattleAnimSpriteGfx_Teeth, 0x0600, ANIM_TAG_TEETH},
-    {gBattleAnimSpriteGfx_Bone2, 0x0800, ANIM_TAG_BONE_2},
-    {gBattleAnimSpriteGfx_WhiteBag, 0x0200, ANIM_TAG_WHITE_BAG},
-    {gBattleAnimSpriteGfx_Unknown, 0x0040, ANIM_TAG_UNKNOWN},
-    {gBattleAnimSpriteGfx_PurpleCoral, 0x0180, ANIM_TAG_PURPLE_CORAL},
-    {gBattleAnimSpriteGfx_PurpleDroplet, 0x0600, ANIM_TAG_PURPLE_DROPLET},
-    {gBattleAnimSpriteGfx_Shock2, 0x0600, ANIM_TAG_SHOCK_2},
-    {gBattleAnimSpriteGfx_ClosingEye2, 0x0200, ANIM_TAG_CLOSING_EYE_2},
-    {gBattleAnimSpriteGfx_MetalBall, 0x0080, ANIM_TAG_METAL_BALL},
-    {gBattleAnimSpriteGfx_MonsterDoll, 0x0200, ANIM_TAG_MONSTER_DOLL},
-    {gBattleAnimSpriteGfx_Whirlwind, 0x0800, ANIM_TAG_WHIRLWIND},
-    {gBattleAnimSpriteGfx_Whirlwind2, 0x0080, ANIM_TAG_WHIRLWIND_2},
-    {gBattleAnimSpriteGfx_Explosion4, 0x0a00, ANIM_TAG_EXPLOSION_4},
-    {gBattleAnimSpriteGfx_Explosion5, 0x0280, ANIM_TAG_EXPLOSION_5},
-    {gBattleAnimSpriteGfx_Tongue, 0x0280, ANIM_TAG_TONGUE},
-    {gBattleAnimSpriteGfx_Smoke, 0x0100, ANIM_TAG_SMOKE},
-    {gBattleAnimSpriteGfx_Smoke2, 0x0200, ANIM_TAG_SMOKE_2},
     {gBattleAnimSpriteGfx_Impact, 0x0200, ANIM_TAG_IMPACT},
     {gBattleAnimSpriteGfx_CircleImpact, 0x0020, ANIM_TAG_CIRCLE_IMPACT},
     {gBattleAnimSpriteGfx_Scratch, 0x0a00, ANIM_TAG_SCRATCH},
@@ -1307,7 +1228,6 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_String, 0x0400, ANIM_TAG_STRING},
     {gBattleAnimSpriteGfx_WebThread, 0x0020, ANIM_TAG_WEB_THREAD},
     {gBattleAnimSpriteGfx_SpiderWeb, 0x0800, ANIM_TAG_SPIDER_WEB},
-    {gBattleAnimSpriteGfx_Lightbulb, 0x0100, ANIM_TAG_LIGHTBULB},
     {gBattleAnimSpriteGfx_Slash, 0x0800, ANIM_TAG_SLASH},
     {gBattleAnimSpriteGfx_FocusEnergy, 0x0400, ANIM_TAG_FOCUS_ENERGY},
     {gBattleAnimSpriteGfx_SphereToCube, 0x0a00, ANIM_TAG_SPHERE_TO_CUBE},
@@ -1329,7 +1249,6 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_WarmRock, 0x0a80, ANIM_TAG_WARM_ROCK},
     {gBattleAnimSpriteGfx_BreakingEgg, 0x0600, ANIM_TAG_BREAKING_EGG},
     {gBattleAnimSpriteGfx_ThinRing, 0x0800, ANIM_TAG_THIN_RING},
-    {gBattleAnimSpriteGfx_PunchImpact, 0x0200, ANIM_TAG_PUNCH_IMPACT},
     {gBattleAnimSpriteGfx_Bell, 0x0600, ANIM_TAG_BELL},
     {gBattleAnimSpriteGfx_MusicNotes2, 0x0800, ANIM_TAG_MUSIC_NOTES_2},
     {gBattleAnimSpriteGfx_SpeedDust, 0x0180, ANIM_TAG_SPEED_DUST},
@@ -1358,6 +1277,7 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_TriAttackTriangle, 0x0800, ANIM_TAG_TRI_ATTACK_TRIANGLE},
     {gBattleAnimSpriteGfx_WispOrb, 0x0380, ANIM_TAG_WISP_ORB},
     {gBattleAnimSpriteGfx_WispFire, 0x0800, ANIM_TAG_WISP_FIRE},
+    {gBattleAnimSpriteGfx_ShinySquares, 0x00c0, ANIM_TAG_SHINY_SQUARES},
     {gBattleAnimSpriteGfx_GoldStars, 0x00c0, ANIM_TAG_GOLD_STARS},
     {gBattleAnimSpriteGfx_EclipsingOrb, 0x0800, ANIM_TAG_ECLIPSING_ORB},
     {gBattleAnimSpriteGfx_GrayOrb, 0x0060, ANIM_TAG_GRAY_ORB},
@@ -1399,12 +1319,8 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_Sparkle6, 0x0080, ANIM_TAG_SPARKLE_6},
     {gBattleAnimSpriteGfx_Splash, 0x0800, ANIM_TAG_SPLASH},
     {gBattleAnimSpriteGfx_SweatBead, 0x0020, ANIM_TAG_SWEAT_BEAD},
-    {gBattleAnimSpriteGfx_Gem1, 0x0800, ANIM_TAG_GEM_1},
-    {gBattleAnimSpriteGfx_Gem2, 0x0800, ANIM_TAG_GEM_2},
-    {gBattleAnimSpriteGfx_Gem3, 0x0800, ANIM_TAG_GEM_3},
     {gBattleAnimSpriteGfx_SlamHit2, 0x1000, ANIM_TAG_SLAM_HIT_2},
     {gBattleAnimSpriteGfx_Recycle, 0x0800, ANIM_TAG_RECYCLE},
-    {gBattleAnimSpriteGfx_RedParticles, 0x00a0, ANIM_TAG_RED_PARTICLES},
     {gBattleAnimSpriteGfx_Protect, 0x0800, ANIM_TAG_PROTECT},
     {gBattleAnimSpriteGfx_DirtMound, 0x0200, ANIM_TAG_DIRT_MOUND},
     {gBattleAnimSpriteGfx_Shock3, 0x0600, ANIM_TAG_SHOCK_3},
@@ -1426,133 +1342,54 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_Sword, ANIM_TAG_SWORD},
     {gBattleAnimSpritePal_Seed, ANIM_TAG_SEED},
     {gBattleAnimSpritePal_Explosion6, ANIM_TAG_EXPLOSION_6},
-    {gBattleAnimSpritePal_PinkOrb, ANIM_TAG_PINK_ORB},
     {gBattleAnimSpritePal_Gust, ANIM_TAG_GUST},
     {gBattleAnimSpritePal_IceCube, ANIM_TAG_ICE_CUBE},
     {gBattleAnimSpritePal_Spark2, ANIM_TAG_SPARK_2},
-    {gBattleAnimSpritePal_Orange, ANIM_TAG_ORANGE},
     {gBattleAnimSpritePal_YellowBall, ANIM_TAG_YELLOW_BALL},
     {gBattleAnimSpritePal_LockOn, ANIM_TAG_LOCK_ON},
     {gBattleAnimSpritePal_TiedBag, ANIM_TAG_TIED_BAG},
     {gBattleAnimSpritePal_BlackSmoke, ANIM_TAG_BLACK_SMOKE},
     {gBattleAnimSpritePal_BlackSmoke, ANIM_TAG_BLACK_BALL},
     {gBattleAnimSpritePal_Conversion, ANIM_TAG_CONVERSION},
-    {gBattleAnimSpritePal_Glass, ANIM_TAG_GLASS},
     {gBattleAnimSpritePal_HornHit, ANIM_TAG_HORN_HIT},
     {gBattleAnimSpritePal_Hit, ANIM_TAG_HIT},
     {gBattleAnimSpritePal_Hit2, ANIM_TAG_HIT_2},
-    {gBattleAnimSpritePal_BlueShards, ANIM_TAG_BLUE_SHARDS},
-    {gBattleAnimSpritePal_ClosingEye, ANIM_TAG_CLOSING_EYE},
-    {gBattleAnimSpritePal_WavingHand, ANIM_TAG_WAVING_HAND},
-    {gBattleAnimSpritePal_HitDuplicate, ANIM_TAG_HIT_DUPLICATE},
     {gBattleAnimSpritePal_Leer, ANIM_TAG_LEER},
-    {gBattleAnimSpritePal_BlueBurst, ANIM_TAG_BLUE_BURST},
     {gBattleAnimSpritePal_SmallEmber, ANIM_TAG_SMALL_EMBER},
     {gBattleAnimSpritePal_GraySmoke, ANIM_TAG_GRAY_SMOKE},
     {gBattleAnimSpritePal_BlueStar, ANIM_TAG_BLUE_STAR},
     {gBattleAnimSpritePal_BubbleBurst, ANIM_TAG_BUBBLE_BURST},
     {gBattleAnimSpritePal_Fire, ANIM_TAG_FIRE},
-    {gBattleAnimSpritePal_Fire, ANIM_TAG_SPINNING_FIRE},
     {gBattleAnimSpritePal_Fire, ANIM_TAG_FIRE_PLUME},
-    {gBattleAnimSpritePal_Lightning2, ANIM_TAG_LIGHTNING_2},
-    {gBattleAnimSpritePal_Lightning2, ANIM_TAG_LIGHTNING},
-    {gBattleAnimSpritePal_ClawSlash2, ANIM_TAG_CLAW_SLASH_2},
+    {gBattleAnimSpritePal_Lightning, ANIM_TAG_LIGHTNING},
     {gBattleAnimSpritePal_ClawSlash, ANIM_TAG_CLAW_SLASH},
-    {gBattleAnimSpritePal_ClawSlash2, ANIM_TAG_SCRATCH_3},
-    {gBattleAnimSpritePal_ClawSlash2, ANIM_TAG_SCRATCH_2},
-    {gBattleAnimSpritePal_BubbleBurst2, ANIM_TAG_BUBBLE_BURST_2},
     {gBattleAnimSpritePal_IceChunk, ANIM_TAG_ICE_CHUNK},
-    {gBattleAnimSpritePal_Glass2, ANIM_TAG_GLASS_2},
-    {gBattleAnimSpritePal_PinkHeart2, ANIM_TAG_PINK_HEART_2},
-    {gBattleAnimSpritePal_SapDrip, ANIM_TAG_SAP_DRIP},
-    {gBattleAnimSpritePal_SapDrip2, ANIM_TAG_SAP_DRIP},
     {gBattleAnimSpritePal_Sparkle1, ANIM_TAG_SPARKLE_1},
     {gBattleAnimSpritePal_Sparkle2, ANIM_TAG_SPARKLE_2},
     {gBattleAnimSpritePal_HumanoidFoot, ANIM_TAG_HUMANOID_FOOT},
     {gBattleAnimSpritePal_HumanoidFoot, ANIM_TAG_MONSTER_FOOT},
-    {gBattleAnimSpritePal_HumanoidFoot, ANIM_TAG_HUMANOID_HAND},
-    {gBattleAnimSpritePal_HitDuplicate, ANIM_TAG_NOISE_LINE},
-    {gBattleAnimSpritePal_YellowUnk, ANIM_TAG_YELLOW_UNK},
-    {gBattleAnimSpritePal_HumanoidFoot, ANIM_TAG_RED_FIST},
+    {gBattleAnimSpritePal_Hit, ANIM_TAG_NOISE_LINE},
     {gBattleAnimSpritePal_SlamHit, ANIM_TAG_SLAM_HIT},
-    {gBattleAnimSpritePal_Ring, ANIM_TAG_RING},
     {gBattleAnimSpritePal_Rocks, ANIM_TAG_ROCKS},
-    {gBattleAnimSpritePal_Z, ANIM_TAG_Z},
-    {gBattleAnimSpritePal_YellowUnk2, ANIM_TAG_YELLOW_UNK_2},
-    {gBattleAnimSpritePal_AirSlash, ANIM_TAG_AIR_SLASH},
-    {gBattleAnimSpritePal_SpinningGreenOrbs, ANIM_TAG_SPINNING_GREEN_ORBS},
     {gBattleAnimSpritePal_Leaf, ANIM_TAG_LEAF},
     {gBattleAnimSpritePal_Finger, ANIM_TAG_FINGER},
     {gBattleAnimSpritePal_PoisonPowder, ANIM_TAG_POISON_POWDER},
-    {gBattleAnimSpritePal_BrownTriangle, ANIM_TAG_BROWN_TRIANGLE},
     {gBattleAnimSpritePal_SleepPowder, ANIM_TAG_SLEEP_POWDER},
     {gBattleAnimSpritePal_StunSpore, ANIM_TAG_STUN_SPORE},
-    {gBattleAnimSpritePal_PoisonPowder, ANIM_TAG_POWDER},
     {gBattleAnimSpritePal_Sparkle3, ANIM_TAG_SPARKLE_3},
     {gBattleAnimSpritePal_Sparkle3, ANIM_TAG_SPARKLE_4},
     {gBattleAnimSpritePal_MusicNotes, ANIM_TAG_MUSIC_NOTES},
     {gBattleAnimSpritePal_Duck, ANIM_TAG_DUCK},
     {gBattleAnimSpritePal_MudSand, ANIM_TAG_MUD_SAND},
     {gBattleAnimSpritePal_Alert, ANIM_TAG_ALERT},
-    {gBattleAnimSpritePal_BlueFlames, ANIM_TAG_BLUE_FLAMES},
-    {gBattleAnimSpritePal_BlueFlames, ANIM_TAG_BLUE_FLAMES_2},
-    {gBattleAnimSpritePal_Shock4, ANIM_TAG_SHOCK_4},
-    {gBattleAnimSpritePal_Shock4, ANIM_TAG_SHOCK},
-    {gBattleAnimSpritePal_Bell2, ANIM_TAG_BELL_2},
-    {gBattleAnimSpritePal_PinkGlove, ANIM_TAG_PINK_GLOVE},
-    {gBattleAnimSpritePal_BlueLines, ANIM_TAG_BLUE_LINES},
-    {gBattleAnimSpritePal_Impact3, ANIM_TAG_IMPACT_3},
-    {gBattleAnimSpritePal_Impact2, ANIM_TAG_IMPACT_2},
-    {gBattleAnimSpritePal_Reticle, ANIM_TAG_RETICLE},
+    {gBattleAnimSpritePal_Shock, ANIM_TAG_SHOCK},
     {gBattleAnimSpritePal_Breath, ANIM_TAG_BREATH},
     {gBattleAnimSpritePal_Anger, ANIM_TAG_ANGER},
-    {gBattleAnimSpritePal_Snowball, ANIM_TAG_SNOWBALL},
-    {gBattleAnimSpritePal_Vine, ANIM_TAG_VINE},
-    {gBattleAnimSpritePal_Sword2, ANIM_TAG_SWORD_2},
-    {gBattleAnimSpritePal_Clapping, ANIM_TAG_CLAPPING},
-    {gBattleAnimSpritePal_RedTube, ANIM_TAG_RED_TUBE},
     {gBattleAnimSpritePal_Amnesia, ANIM_TAG_AMNESIA},
-    {gBattleAnimSpritePal_String2, ANIM_TAG_STRING_2},
-    {gBattleAnimSpritePal_Pencil2, ANIM_TAG_PENCIL_2},
-    {gBattleAnimSpritePal_Petal, ANIM_TAG_PETAL},
     {gBattleAnimSpritePal_BentSpoon, ANIM_TAG_BENT_SPOON},
-    {gBattleAnimSpritePal_String2, ANIM_TAG_WEB},
     {gBattleAnimSpritePal_MilkBottle, ANIM_TAG_MILK_BOTTLE},
     {gBattleAnimSpritePal_Coin, ANIM_TAG_COIN},
-    {gBattleAnimSpritePal_CrackedEgg, ANIM_TAG_CRACKED_EGG},
-    {gBattleAnimSpritePal_CrackedEgg, ANIM_TAG_HATCHED_EGG},
-    {gBattleAnimSpritePal_FreshEgg, ANIM_TAG_FRESH_EGG},
-    {gBattleAnimSpritePal_Fangs, ANIM_TAG_FANGS},
-    {gBattleAnimSpritePal_Explosion2, ANIM_TAG_EXPLOSION_2},
-    {gBattleAnimSpritePal_Explosion2, ANIM_TAG_EXPLOSION_3},
-    {gBattleAnimSpritePal_WaterDroplet, ANIM_TAG_WATER_DROPLET},
-    {gBattleAnimSpritePal_WaterDroplet, ANIM_TAG_WATER_DROPLET_2},
-    {gBattleAnimSpritePal_Seed2, ANIM_TAG_SEED_2},
-    {gBattleAnimSpritePal_Seed2, ANIM_TAG_SPROUT},
-    {gBattleAnimSpritePal_RedWand, ANIM_TAG_RED_WAND},
-    {gBattleAnimSpritePal_PurpleGreenUnk, ANIM_TAG_PURPLE_GREEN_UNK},
-    {gBattleAnimSpritePal_WaterColumn, ANIM_TAG_WATER_COLUMN},
-    {gBattleAnimSpritePal_MudUnk, ANIM_TAG_MUD_UNK},
     {gBattleAnimSpritePal_RainDrops, ANIM_TAG_RAIN_DROPS},
-    {gBattleAnimSpritePal_FurySwipes, ANIM_TAG_FURY_SWIPES},
-    {gBattleAnimSpritePal_Vine2, ANIM_TAG_VINE_2},
-    {gBattleAnimSpritePal_Teeth, ANIM_TAG_TEETH},
-    {gBattleAnimSpritePal_Bone2, ANIM_TAG_BONE_2},
-    {gBattleAnimSpritePal_WhiteBag, ANIM_TAG_WHITE_BAG},
-    {gBattleAnimSpritePal_Unknown, ANIM_TAG_UNKNOWN},
-    {gBattleAnimSpritePal_PurpleCoral, ANIM_TAG_PURPLE_CORAL},
-    {gBattleAnimSpritePal_PurpleCoral, ANIM_TAG_PURPLE_DROPLET},
-    {gBattleAnimSpritePal_Shock2, ANIM_TAG_SHOCK_2},
-    {gBattleAnimSpritePal_ClosingEye2, ANIM_TAG_CLOSING_EYE_2},
-    {gBattleAnimSpritePal_MetalBall, ANIM_TAG_METAL_BALL},
-    {gBattleAnimSpritePal_MonsterDoll, ANIM_TAG_MONSTER_DOLL},
-    {gBattleAnimSpritePal_Whirlwind, ANIM_TAG_WHIRLWIND},
-    {gBattleAnimSpritePal_Whirlwind, ANIM_TAG_WHIRLWIND_2},
-    {gBattleAnimSpritePal_Explosion4, ANIM_TAG_EXPLOSION_4},
-    {gBattleAnimSpritePal_Explosion4, ANIM_TAG_EXPLOSION_5},
-    {gBattleAnimSpritePal_Tongue, ANIM_TAG_TONGUE},
-    {gBattleAnimSpritePal_Smoke, ANIM_TAG_SMOKE},
-    {gBattleAnimSpritePal_Smoke, ANIM_TAG_SMOKE_2},
     {gBattleAnimSpritePal_Impact, ANIM_TAG_IMPACT},
     {gBattleAnimSpritePal_CircleImpact, ANIM_TAG_CIRCLE_IMPACT},
     {gBattleAnimSpritePal_Impact, ANIM_TAG_SCRATCH},
@@ -1600,7 +1437,6 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_String, ANIM_TAG_STRING},
     {gBattleAnimSpritePal_String, ANIM_TAG_WEB_THREAD},
     {gBattleAnimSpritePal_String, ANIM_TAG_SPIDER_WEB},
-    {gBattleAnimSpritePal_Lightbulb, ANIM_TAG_LIGHTBULB},
     {gBattleAnimSpritePal_Slash, ANIM_TAG_SLASH},
     {gBattleAnimSpritePal_FocusEnergy, ANIM_TAG_FOCUS_ENERGY},
     {gBattleAnimSpritePal_SphereToCube, ANIM_TAG_SPHERE_TO_CUBE},
@@ -1622,7 +1458,6 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_WarmRock, ANIM_TAG_WARM_ROCK},
     {gBattleAnimSpritePal_BreakingEgg, ANIM_TAG_BREAKING_EGG},
     {gBattleAnimSpritePal_ThinRing, ANIM_TAG_THIN_RING},
-    {gBattleAnimSpritePal_PunchImpact, ANIM_TAG_PUNCH_IMPACT},
     {gBattleAnimSpritePal_Bell, ANIM_TAG_BELL},
     {gBattleAnimSpritePal_MusicNotes2, ANIM_TAG_MUSIC_NOTES_2},
     {gBattleAnimSpritePal_SpeedDust, ANIM_TAG_SPEED_DUST},
@@ -1651,6 +1486,7 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_TriAttackTriangle, ANIM_TAG_TRI_ATTACK_TRIANGLE},
     {gBattleAnimSpritePal_WispOrb, ANIM_TAG_WISP_ORB},
     {gBattleAnimSpritePal_WispOrb, ANIM_TAG_WISP_FIRE},
+    {gBattleAnimSpritePal_GoldStars, ANIM_TAG_SHINY_SQUARES},
     {gBattleAnimSpritePal_GoldStars, ANIM_TAG_GOLD_STARS},
     {gBattleAnimSpritePal_EclipsingOrb, ANIM_TAG_ECLIPSING_ORB},
     {gBattleAnimSpritePal_GrayOrb, ANIM_TAG_GRAY_ORB},
@@ -1692,12 +1528,8 @@ const struct CompressedSpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_Sparkle6, ANIM_TAG_SPARKLE_6},
     {gBattleAnimSpritePal_Splash, ANIM_TAG_SPLASH},
     {gBattleAnimSpritePal_Splash, ANIM_TAG_SWEAT_BEAD},
-    {gBattleAnimSpritePal_Gem1, ANIM_TAG_GEM_1},
-    {gBattleAnimSpritePal_Gem1, ANIM_TAG_GEM_2},
-    {gBattleAnimSpritePal_Gem1, ANIM_TAG_GEM_3},
     {gBattleAnimSpritePal_SlamHit2, ANIM_TAG_SLAM_HIT_2},
     {gBattleAnimSpritePal_Recycle, ANIM_TAG_RECYCLE},
-    {gBattleAnimSpritePal_RedParticles, ANIM_TAG_RED_PARTICLES},
     {gBattleAnimSpritePal_Protect, ANIM_TAG_PROTECT},
     {gBattleAnimSpritePal_DirtMound, ANIM_TAG_DIRT_MOUND},
     {gBattleAnimSpritePal_Shock3, ANIM_TAG_SHOCK_3},
@@ -1748,8 +1580,8 @@ static void (* const sScriptCmdTable[])(void) =
     ScriptCmd_createvisualtask,
     ScriptCmd_delay,
     ScriptCmd_waitforvisualfinish,
-    ScriptCmd_hang1,
-    ScriptCmd_hang2,
+    ScriptCmd_hang,
+    ScriptCmd_hang,
     ScriptCmd_end,
     ScriptCmd_playse,
     ScriptCmd_monbg,
@@ -1834,29 +1666,46 @@ void DoMoveAnim(u16 move)
 void LaunchBattleAnimation(const u8 *const animsTable[], u16 tableId, bool8 isMoveAnim)
 {
     s32 i;
+    bool32 hideHpBoxes = (tableId == MOVE_TRANSFORM) ? FALSE : TRUE;
 
-    if (!IsContest())
+    if (!isMoveAnim)
+    {
+        switch (tableId)
+        {
+        case B_ANIM_TURN_TRAP:
+        case B_ANIM_LEECH_SEED_DRAIN:
+        case B_ANIM_MON_HIT:
+        case B_ANIM_SNATCH_MOVE:
+        case B_ANIM_FUTURE_SIGHT_HIT:
+        case B_ANIM_DOOM_DESIRE_HIT:
+        case B_ANIM_WISH_HEAL:
+            hideHpBoxes = TRUE;
+            break;
+        default:
+            hideHpBoxes = FALSE;
+            break;
+        }
+    }
+
+    if (IsContest())
+    {
+        for (i = 0; i < CONTESTANT_COUNT; i++)
+            gAnimBattlerSpecies[i] = gContestResources->moveAnim->species;
+    }
+    else
     {
         sub_80A8278();
-        UpdateOamPriorityInAllHealthboxes(0);
+        UpdateOamPriorityInAllHealthboxes_(0, hideHpBoxes);
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)
         {
-            if (GetBattlerSide(i) != B_SIDE_PLAYER)
+            if (GetBattlerSide(i) == B_SIDE_OPPONENT)
                 gAnimBattlerSpecies[i] = GetMonData(&gEnemyParty[gBattlerPartyIndexes[i]], MON_DATA_SPECIES);
             else
                 gAnimBattlerSpecies[i] = GetMonData(&gPlayerParty[gBattlerPartyIndexes[i]], MON_DATA_SPECIES);
         }
     }
-    else
-    {
-        for (i = 0; i < CONTESTANT_COUNT; i++)
-            gAnimBattlerSpecies[i] = gContestResources->moveAnim->species;
-    }
 
-    if (!isMoveAnim)
-        sAnimMoveIndex = 0;
-    else
-        sAnimMoveIndex = tableId;
+    sAnimMoveIndex = (isMoveAnim) ? tableId : 0;
 
     for (i = 0; i < ANIM_ARGS_COUNT; i++)
         gBattleAnimArgs[i] = 0;
@@ -2080,22 +1929,18 @@ static void ScriptCmd_delay(void)
 // Wait for visual tasks to finish.
 static void ScriptCmd_waitforvisualfinish(void)
 {
-    if (gAnimVisualTaskCount == 0)
+    if (gAnimVisualTaskCount)
+    {
+        gAnimFramesToWait = 1;
+    }
+    else
     {
         sBattleAnimScriptPtr++;
         gAnimFramesToWait = 0;
     }
-    else
-    {
-        gAnimFramesToWait = 1;
-    }
 }
 
-static void ScriptCmd_hang1(void)
-{
-}
-
-static void ScriptCmd_hang2(void)
+static void ScriptCmd_hang(void)
 {
 }
 
@@ -2105,7 +1950,7 @@ static void ScriptCmd_end(void)
     bool32 continuousAnim = FALSE;
 
     // Keep waiting as long as there are animations to be done.
-    if (gAnimVisualTaskCount != 0 || gAnimSoundTaskCount != 0
+    if (gAnimVisualTaskCount || gAnimSoundTaskCount
      || sMonAnimTaskIdArray[0] != TASK_NONE || sMonAnimTaskIdArray[1] != TASK_NONE)
     {
         sSoundAnimFramesToWait = 0;
@@ -2147,7 +1992,7 @@ static void ScriptCmd_end(void)
         if (!IsContest())
         {
             sub_80A8278();
-            UpdateOamPriorityInAllHealthboxes(1);
+            UpdateOamPriorityInAllHealthboxes_(1, TRUE);
         }
         gAnimScriptActive = FALSE;
     }
@@ -2188,15 +2033,15 @@ static void sub_80A40F4(u8 taskId)
     gTasks[newTaskId].data[1] = gSprites[battlerSpriteId].pos1.x + gSprites[battlerSpriteId].pos2.x;
     gTasks[newTaskId].data[2] = gSprites[battlerSpriteId].pos1.y + gSprites[battlerSpriteId].pos2.y;
 
-    if (!selfData[t1_MON_IN_BG2])
-    {
-        gTasks[newTaskId].data[3] = gBattle_BG1_X;
-        gTasks[newTaskId].data[4] = gBattle_BG1_Y;
-    }
-    else
+    if (selfData[t1_MON_IN_BG2])
     {
         gTasks[newTaskId].data[3] = gBattle_BG2_X;
         gTasks[newTaskId].data[4] = gBattle_BG2_Y;
+    }
+    else
+    {
+        gTasks[newTaskId].data[3] = gBattle_BG1_X;
+        gTasks[newTaskId].data[4] = gBattle_BG1_Y;
     }
 
     gTasks[newTaskId].data[t2_MON_IN_BG2] = selfData[t1_MON_IN_BG2];
@@ -2215,18 +2060,12 @@ static void ScriptCmd_monbg(void)
     sBattleAnimScriptPtr++;
 
     animBattler = sBattleAnimScriptPtr[0];
-    if (animBattler & ANIM_TARGET)
-        battlerId = gBattleAnimTarget;
-    else
-        battlerId = gBattleAnimAttacker;
+    battlerId = (animBattler & ANIM_TARGET) ? gBattleAnimTarget : gBattleAnimAttacker;
 
     if (IsBattlerSpriteVisible(battlerId))
     {
         u8 position = GetBattlerPosition(battlerId);
-        if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
-            toBG_2 = FALSE;
-        else
-            toBG_2 = TRUE;
+        toBG_2 = (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest()) ? FALSE : TRUE;
 
         MoveBattlerSpriteToBG(battlerId, toBG_2, FALSE);
         taskId = CreateTask(sub_80A40F4, 10);
@@ -2242,10 +2081,7 @@ static void ScriptCmd_monbg(void)
     if (IsBattlerSpriteVisible(battlerId))
     {
         u8 position = GetBattlerPosition(battlerId);
-        if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
-            toBG_2 = FALSE;
-        else
-            toBG_2 = TRUE;
+        toBG_2 = (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest()) ? FALSE : TRUE;
 
         MoveBattlerSpriteToBG(battlerId, toBG_2, FALSE);
         taskId = CreateTask(sub_80A40F4, 10);
@@ -2264,12 +2100,7 @@ static void ScriptCmd_monbg(void)
 bool8 IsBattlerSpriteVisible(u8 battlerId)
 {
     if (IsContest())
-    {
-        if (battlerId == gBattleAnimAttacker)
-            return TRUE;
-        else
-            return FALSE;
-    }
+        return battlerId == gBattleAnimAttacker;
     if (!IsBattlerSpritePresent(battlerId))
         return FALSE;
     if (IsContest())
@@ -2285,11 +2116,38 @@ void MoveBattlerSpriteToBG(u8 battlerId, bool8 toBG_2, bool8 setSpriteInvisible)
     struct BattleAnimBgData animBg;
     u8 battlerSpriteId;
 
-    if (!toBG_2)
+    if (toBG_2)
+    {
+        RequestDma3Fill(0, (void*)(BG_SCREEN_ADDR(12)), 0x2000, 1);
+        RequestDma3Fill(0, (void*)(BG_SCREEN_ADDR(30)), 0x1000, 1);
+        GetBattleAnimBgData(&animBg, 2);
+        CpuFill16(0, animBg.bgTiles + 0x1000, 0x1000);
+        CpuFill16(0, animBg.bgTilemap + 0x400, 0x800);
+        SetAnimBgAttribute(2, BG_ANIM_PRIORITY, 2);
+        SetAnimBgAttribute(2, BG_ANIM_SCREEN_SIZE, 1);
+        SetAnimBgAttribute(2, BG_ANIM_AREA_OVERFLOW_MODE, 0);
+
+        battlerSpriteId = gBattlerSpriteIds[battlerId];
+
+        gBattle_BG2_X =  -(gSprites[battlerSpriteId].pos1.x + gSprites[battlerSpriteId].pos2.x) + 0x20;
+        gBattle_BG2_Y =  -(gSprites[battlerSpriteId].pos1.y + gSprites[battlerSpriteId].pos2.y) + 0x20;
+
+        if (setSpriteInvisible)
+            gSprites[gBattlerSpriteIds[battlerId]].invisible = TRUE;
+
+        SetGpuReg(REG_OFFSET_BG2HOFS, gBattle_BG2_X);
+        SetGpuReg(REG_OFFSET_BG2VOFS, gBattle_BG2_Y);
+
+        LoadPalette(&gPlttBufferUnfaded[0x100 + battlerId * 16], 0x90, 0x20);
+        CpuCopy32(&gPlttBufferUnfaded[0x100 + battlerId * 16], (void*)(BG_PLTT + 0x120), 0x20);
+
+        sub_8118FBC(2, 0, 0, GetBattlerPosition(battlerId), animBg.paletteId, animBg.bgTiles + 0x1000, animBg.bgTilemap + 0x400, animBg.tilesOffset);
+    }
+    else
     {
         u8 battlerPosition;
 
-        if (IsContest() == TRUE)
+        if (IsContest())
         {
             RequestDma3Fill(0, (void*)(BG_SCREEN_ADDR(16)), 0x2000, 1);
             RequestDma3Fill(0, (void*)(BG_SCREEN_ADDR(30)), 0x1000, 0);
@@ -2334,33 +2192,6 @@ void MoveBattlerSpriteToBG(u8 battlerId, bool8 toBG_2, bool8 setSpriteInvisible)
         if (IsContest())
             sub_80A46A0();
     }
-    else
-    {
-        RequestDma3Fill(0, (void*)(BG_SCREEN_ADDR(12)), 0x2000, 1);
-        RequestDma3Fill(0, (void*)(BG_SCREEN_ADDR(30)), 0x1000, 1);
-        GetBattleAnimBgData(&animBg, 2);
-        CpuFill16(0, animBg.bgTiles + 0x1000, 0x1000);
-        CpuFill16(0, animBg.bgTilemap + 0x400, 0x800);
-        SetAnimBgAttribute(2, BG_ANIM_PRIORITY, 2);
-        SetAnimBgAttribute(2, BG_ANIM_SCREEN_SIZE, 1);
-        SetAnimBgAttribute(2, BG_ANIM_AREA_OVERFLOW_MODE, 0);
-
-        battlerSpriteId = gBattlerSpriteIds[battlerId];
-
-        gBattle_BG2_X =  -(gSprites[battlerSpriteId].pos1.x + gSprites[battlerSpriteId].pos2.x) + 0x20;
-        gBattle_BG2_Y =  -(gSprites[battlerSpriteId].pos1.y + gSprites[battlerSpriteId].pos2.y) + 0x20;
-
-        if (setSpriteInvisible)
-            gSprites[gBattlerSpriteIds[battlerId]].invisible = TRUE;
-
-        SetGpuReg(REG_OFFSET_BG2HOFS, gBattle_BG2_X);
-        SetGpuReg(REG_OFFSET_BG2VOFS, gBattle_BG2_Y);
-
-        LoadPalette(&gPlttBufferUnfaded[0x100 + battlerId * 16], 0x90, 0x20);
-        CpuCopy32(&gPlttBufferUnfaded[0x100 + battlerId * 16], (void*)(BG_PLTT + 0x120), 0x20);
-
-        sub_8118FBC(2, 0, 0, GetBattlerPosition(battlerId), animBg.paletteId, animBg.bgTiles + 0x1000, animBg.bgTilemap + 0x400, animBg.tilesOffset);
-    }
 }
 
 static void sub_80A46A0(void)
@@ -2396,10 +2227,7 @@ void sub_80A4720(u16 a, u16 *b, u32 c, u8 d)
     s32 i, j;
     s32 var;
 
-    if (d == 0)
-        var = 32;
-    else
-        var = 64;
+    var = (d) ? 64 : 32;
     a <<= 12;
     for (i = 0; i < var; i++)
     {
@@ -2439,18 +2267,7 @@ static void task_pA_ma0A_obj_to_bg_pal(u8 taskId)
     x = gTasks[taskId].data[1] - (gSprites[spriteId].pos1.x + gSprites[spriteId].pos2.x);
     y = gTasks[taskId].data[2] - (gSprites[spriteId].pos1.y + gSprites[spriteId].pos2.y);
 
-    if (gTasks[taskId].data[5] == 0)
-    {
-        u16 *src;
-        u16 *dst;
-
-        gBattle_BG1_X = x + gTasks[taskId].data[3];
-        gBattle_BG1_Y = y + gTasks[taskId].data[4];
-        src = gPlttBufferFaded + 0x100 + palIndex * 16;
-        dst = gPlttBufferFaded + 0x100 + animBg.paletteId * 16 - 256;
-        CpuCopy32(src, dst, 0x20);
-    }
-    else
+    if (gTasks[taskId].data[5])
     {
         u16 *src;
         u16 *dst;
@@ -2459,6 +2276,17 @@ static void task_pA_ma0A_obj_to_bg_pal(u8 taskId)
         gBattle_BG2_Y = y + gTasks[taskId].data[4];
         src = gPlttBufferFaded + 0x100 + palIndex * 16;
         dst = gPlttBufferFaded + 0x100 - 112;
+        CpuCopy32(src, dst, 0x20);
+    }
+    else
+    {
+        u16 *src;
+        u16 *dst;
+
+        gBattle_BG1_X = x + gTasks[taskId].data[3];
+        gBattle_BG1_Y = y + gTasks[taskId].data[4];
+        src = gPlttBufferFaded + 0x100 + palIndex * 16;
+        dst = gPlttBufferFaded + 0x100 + animBg.paletteId * 16 - 256;
         CpuCopy32(src, dst, 0x20);
     }
 }
@@ -2477,10 +2305,7 @@ static void ScriptCmd_clearmonbg(void)
     else if (animBattlerId == ANIM_TARGET)
         animBattlerId = ANIM_DEF_PARTNER;
 
-    if (animBattlerId == ANIM_ATTACKER || animBattlerId == ANIM_ATK_PARTNER)
-        battlerId = gBattleAnimAttacker;
-    else
-        battlerId = gBattleAnimTarget;
+    battlerId = (animBattlerId == ANIM_ATTACKER || animBattlerId == ANIM_ATK_PARTNER) ? gBattleAnimAttacker : gBattleAnimTarget;
 
     if (sMonAnimTaskIdArray[0] != TASK_NONE)
         gSprites[gBattlerSpriteIds[battlerId]].invisible = FALSE;
@@ -2503,10 +2328,7 @@ static void sub_80A4980(u8 taskId)
     {
         u8 to_BG2;
         u8 position = GetBattlerPosition(gTasks[taskId].data[2]);
-        if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
-            to_BG2 = FALSE;
-        else
-            to_BG2 = TRUE;
+        to_BG2 = (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest()) ? FALSE : TRUE;
 
         if (sMonAnimTaskIdArray[0] != TASK_NONE)
         {
@@ -2539,18 +2361,12 @@ static void ScriptCmd_monbg_22(void)
     else if (animBattlerId == ANIM_TARGET)
         animBattlerId = ANIM_DEF_PARTNER;
 
-    if (animBattlerId == ANIM_ATTACKER || animBattlerId == ANIM_ATK_PARTNER)
-        battlerId = gBattleAnimAttacker;
-    else
-        battlerId = gBattleAnimTarget;
+    battlerId = (animBattlerId == ANIM_ATTACKER || animBattlerId == ANIM_ATK_PARTNER) ? gBattleAnimAttacker : gBattleAnimTarget;
 
     if (IsBattlerSpriteVisible(battlerId))
     {
         u8 position = GetBattlerPosition(battlerId);
-        if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
-            toBG_2 = FALSE;
-        else
-            toBG_2 = TRUE;
+        toBG_2 = (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest()) ? FALSE : TRUE;
 
         MoveBattlerSpriteToBG(battlerId, toBG_2, FALSE);
     }
@@ -2559,10 +2375,7 @@ static void ScriptCmd_monbg_22(void)
     if (animBattlerId > 1 && IsBattlerSpriteVisible(battlerId))
     {
         u8 position = GetBattlerPosition(battlerId);
-        if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
-            toBG_2 = FALSE;
-        else
-            toBG_2 = TRUE;
+        toBG_2 = (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest()) ? FALSE : TRUE;
 
         MoveBattlerSpriteToBG(battlerId, toBG_2, FALSE);
     }
@@ -2584,10 +2397,7 @@ static void ScriptCmd_clearmonbg_23(void)
     else if (animBattlerId == ANIM_TARGET)
         animBattlerId = ANIM_DEF_PARTNER;
 
-    if (animBattlerId == ANIM_ATTACKER || animBattlerId == ANIM_ATK_PARTNER)
-        battlerId = gBattleAnimAttacker;
-    else
-        battlerId = gBattleAnimTarget;
+    battlerId = (animBattlerId == ANIM_ATTACKER || animBattlerId == ANIM_ATK_PARTNER) ? gBattleAnimAttacker : gBattleAnimTarget;
 
     if (IsBattlerSpriteVisible(battlerId))
         gSprites[gBattlerSpriteIds[battlerId]].invisible = FALSE;
@@ -2611,10 +2421,7 @@ static void sub_80A4BB0(u8 taskId)
         bool8 toBG_2;
         u8 battlerId = gTasks[taskId].data[2];
         u8 position = GetBattlerPosition(battlerId);
-        if (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest())
-            toBG_2 = FALSE;
-        else
-            toBG_2 = TRUE;
+        toBG_2 = (position == B_POSITION_OPPONENT_LEFT || position == B_POSITION_PLAYER_RIGHT || IsContest()) ? FALSE : TRUE;
 
         if (IsBattlerSpriteVisible(battlerId))
             ResetBattleAnimBg(toBG_2);
@@ -2719,10 +2526,7 @@ static void ScriptCmd_goto(void)
 // As a result, if misused, this function cannot reliably discern between field and contest status and could result in undefined behavior.
 bool8 IsContest(void)
 {
-    if (!gMain.inBattle)
-        return TRUE;
-    else
-        return FALSE;
+    return (gMain.inBattle) ? FALSE : TRUE;
 }
 
 #define tBackgroundId   data[0]
@@ -2860,14 +2664,14 @@ static void ScriptCmd_waitbgfadeout(void)
 
 static void ScriptCmd_waitbgfadein(void)
 {
-    if (sAnimBackgroundFadeState == 0)
+    if (sAnimBackgroundFadeState)
     {
-        sBattleAnimScriptPtr++;
-        gAnimFramesToWait = 0;
+        gAnimFramesToWait = 1;
     }
     else
     {
-        gAnimFramesToWait = 1;
+        sBattleAnimScriptPtr++;
+        gAnimFramesToWait = 0;
     }
 }
 
@@ -2882,10 +2686,7 @@ s8 BattleAnimAdjustPanning(s8 pan)
 {
     if (!IsContest() && gBattleSpritesDataPtr->healthBoxesData[gBattleAnimAttacker].statusAnimActive)
     {
-        if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
-            pan = SOUND_PAN_TARGET;
-        else
-            pan = SOUND_PAN_ATTACKER;
+        pan = (GetBattlerSide(gBattleAnimAttacker)) ? SOUND_PAN_TARGET : SOUND_PAN_ATTACKER;
     }
     else if (IsContest())
     {
@@ -2924,10 +2725,7 @@ s8 BattleAnimAdjustPanning2(s8 pan)
 {
     if (!IsContest() && gBattleSpritesDataPtr->healthBoxesData[gBattleAnimAttacker].statusAnimActive)
     {
-        if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
-            pan = SOUND_PAN_TARGET;
-        else
-            pan = SOUND_PAN_ATTACKER;
+        pan = (GetBattlerSide(gBattleAnimAttacker)) ? SOUND_PAN_TARGET : SOUND_PAN_ATTACKER;
     }
     else
     {
@@ -3310,10 +3108,7 @@ static void ScriptCmd_monbgprio_28(void)
     wantedBattler = sBattleAnimScriptPtr[1];
     sBattleAnimScriptPtr += 2;
 
-    if (wantedBattler != ANIM_ATTACKER)
-        battlerId = gBattleAnimTarget;
-    else
-        battlerId = gBattleAnimAttacker;
+    battlerId = (wantedBattler != ANIM_ATTACKER) ? gBattleAnimTarget : gBattleAnimAttacker;
 
     battlerPosition = GetBattlerPosition(battlerId);
     if (!IsContest() && (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_OPPONENT_RIGHT))
@@ -3343,10 +3138,7 @@ static void ScriptCmd_monbgprio_2A(void)
     sBattleAnimScriptPtr += 2;
     if (GetBattlerSide(gBattleAnimAttacker) != GetBattlerSide(gBattleAnimTarget))
     {
-        if (wantedBattler != ANIM_ATTACKER)
-            battlerId = gBattleAnimTarget;
-        else
-            battlerId = gBattleAnimAttacker;
+        battlerId = (wantedBattler != ANIM_ATTACKER) ? gBattleAnimTarget : gBattleAnimAttacker;
 
         battlerPosition = GetBattlerPosition(battlerId);
         if (!IsContest() && (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_OPPONENT_RIGHT))

@@ -1390,6 +1390,14 @@ const s8 gNatureStatTable[NUM_NATURES][NUM_NATURE_STATS] =
 #include "data/pokemon/form_species_tables.h"
 #include "data/pokemon/form_species_table_pointers.h"
 
+static const u16 sBattleMusicTable[][3] =
+{
+    // Hoenn                // Kanto              // Sevii
+    {MUS_VS_FRONTIER_BRAIN, MUS_RG_VS_GYM_LEADER, MUS_DUMMY},         // Gym Leader
+    {MUS_VS_TRAINER,        MUS_RG_VS_TRAINER,    MUS_RG_VS_TRAINER}, // Trainer
+    {MUS_VS_WILD,           MUS_RG_VS_WILD,       MUS_RG_VS_WILD},    // Wild
+};
+
 static const u8 sMonFrontAnimIdsTable[] =
 {
     [SPECIES_NONE]        = ANIM_V_SQUISH_AND_BOUNCE,
@@ -1436,7 +1444,7 @@ static const u8 sMonFrontAnimIdsTable[] =
     [SPECIES_ZUBAT]       = ANIM_V_SQUISH_AND_BOUNCE,
     [SPECIES_GOLBAT]      = ANIM_H_SLIDE_WOBBLE,
     [SPECIES_ODDISH]      = ANIM_V_SQUISH_AND_BOUNCE,
-    [SPECIES_GLOOM]       = ANIM_V_SQUISH_AND_BOUNCE_SLOW,
+    [SPECIES_GLOOM]       = ANIM_V_SQUISH_AND_BOUNCE,
     [SPECIES_VILEPLUME]   = ANIM_BOUNCE_ROTATE_TO_SIDES_SLOW,
     [SPECIES_PARAS]       = ANIM_H_SLIDE_SLOW,
     [SPECIES_PARASECT]    = ANIM_H_SHAKE,
@@ -1644,6 +1652,7 @@ static const u8 sMonFrontAnimIdsTable[] =
     [SPECIES_LUGIA]       = ANIM_GROW_IN_STAGES,
     [SPECIES_HO_OH]       = ANIM_GROW_VIBRATE,
     [SPECIES_CELEBI]      = ANIM_RISING_WOBBLE,
+    [SPECIES_TREECKO]     = ANIM_V_SQUISH_AND_BOUNCE,
     [SPECIES_GROVYLE]     = ANIM_V_STRETCH,
     [SPECIES_SCEPTILE]    = ANIM_V_SHAKE,
     [SPECIES_TORCHIC]     = ANIM_H_STRETCH,
@@ -2040,12 +2049,6 @@ static const struct SpriteTemplate sTrainerBackSpriteTemplates[] =
     },
 };
 
-static const u8 sSecretBaseFacilityClasses[2][5] =
-{
-    {HOENN_FACILITY_CLASS_YOUNGSTER, HOENN_FACILITY_CLASS_BUG_CATCHER, HOENN_FACILITY_CLASS_RICH_BOY, HOENN_FACILITY_CLASS_CAMPER, HOENN_FACILITY_CLASS_COOLTRAINER_M},
-    {HOENN_FACILITY_CLASS_LASS, HOENN_FACILITY_CLASS_SCHOOL_KID_F, HOENN_FACILITY_CLASS_LADY, HOENN_FACILITY_CLASS_PICNICKER, HOENN_FACILITY_CLASS_COOLTRAINER_F}
-};
-
 static const u8 sGetMonDataEVConstants[] =
 {
     MON_DATA_HP_EV,
@@ -2314,6 +2317,12 @@ void CreateMonWithNature(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV,
 void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 gender, u8 nature, u8 unownLetter, u8 form)
 {
     u32 personality;
+    u8 genderRatio;
+
+    if ((genderRatio == MON_MALE)
+     || (genderRatio == MON_FEMALE)
+     || (genderRatio == MON_GENDERLESS))
+        gender = genderRatio;
 
     if ((u8)(unownLetter - 1) < NUM_UNOWN_FORMS)
     {
@@ -2342,7 +2351,7 @@ void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level,
 }
 
 // This is only used to create Wally's Ralts.
-void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level, u8 form)
+void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level)
 {
     u32 personality;
     u32 otId;
@@ -2352,8 +2361,8 @@ void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level, u8 form)
         otId = Random32();
         personality = Random32();
     }
-    while (GetGenderFromSpeciesAndPersonality(GetFormSpecies(species, form), personality) != MON_MALE);
-    CreateMon(mon, species, level, USE_RANDOM_IVS, 1, personality, OT_ID_PRESET, otId, form);
+    while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_MALE);
+    CreateMon(mon, species, level, USE_RANDOM_IVS, 1, personality, OT_ID_PRESET, otId, 0);
 }
 
 void CreateMonWithIVsPersonality(struct Pokemon *mon, u16 species, u8 level, u32 ivs, u32 personality, u8 form)
@@ -2670,7 +2679,7 @@ void CreateEventLegalEnemyMon(void)
     s32 species = gSpecialVar_0x8004;
     s32 level = gSpecialVar_0x8005;
     s32 itemId = gSpecialVar_0x8006;
-    s32 form = 0;
+    s32 form = (species == SPECIES_DEOXYS) ? gSpecialVar_0x8007 : 0;
 
     ZeroEnemyPartyMons();
     CreateEventLegalMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, 0, 0, 0, 0, form);
@@ -3291,8 +3300,7 @@ u8 CountAliveMonsInBattle(u8 caseId)
 static bool8 ShouldGetStatBadgeBoost(u16 badgeFlag, u8 battlerId)
 {
     if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER)
-     || GetBattlerSide(battlerId)
-     || (gBattleTypeFlags & BATTLE_TYPE_TRAINER && gTrainerBattleOpponent_A == TRAINER_SECRET_BASE))
+     || GetBattlerSide(battlerId))
         return FALSE;
     else if (FlagGet(badgeFlag))
         return TRUE;
@@ -3358,6 +3366,10 @@ u8 GetGenderFromSpeciesAndPersonality(u16 species, u32 personality)
 
 void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition, u8 form)
 {
+    u16 formSpeciesTag = GetFormSpecies(speciesTag, form);
+    if (speciesTag > SPECIES_SHINY_TAG)
+        formSpeciesTag = GetFormSpecies(speciesTag - SPECIES_SHINY_TAG, form);
+
     if (gMonSpritesGfxPtr)
         gMultiuseSpriteTemplate = gMonSpritesGfxPtr->templates[battlerPosition];
     else if (gUnknown_020249B4[0])
@@ -3370,10 +3382,7 @@ void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition, u8 f
     gMultiuseSpriteTemplate.paletteTag = speciesTag;
     if (battlerPosition == B_POSITION_PLAYER_LEFT || battlerPosition == B_POSITION_PLAYER_RIGHT)
         gMultiuseSpriteTemplate.anims = gAnims_MonPic;
-    else if (speciesTag > SPECIES_SHINY_TAG)
-        gMultiuseSpriteTemplate.anims = gMonFrontAnimsPtrTable[GetFormSpecies(speciesTag - SPECIES_SHINY_TAG, form)];
-    else
-        gMultiuseSpriteTemplate.anims = gMonFrontAnimsPtrTable[GetFormSpecies(speciesTag, form)];
+    gMultiuseSpriteTemplate.anims = gMonFrontAnimsPtrTable[formSpeciesTag];
 }
 
 void SetMultiuseSpriteTemplateToTrainerBack(u16 trainerSpriteId, u8 battlerPosition)
@@ -4384,53 +4393,6 @@ u8 GetMonAbility(struct Pokemon *mon)
     u8 abilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM, NULL);
     u8 form = GetMonData(mon, MON_DATA_FORM, NULL);
     return GetAbilityBySpecies(species, abilityNum, form);
-}
-
-void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord)
-{
-    s32 i, j;
-
-    ZeroEnemyPartyMons();
-    *gBattleResources->secretBase = *secretBaseRecord;
-
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        if (gBattleResources->secretBase->party.species[i])
-        {
-            CreateMon(&gEnemyParty[i],
-                gBattleResources->secretBase->party.species[i],
-                gBattleResources->secretBase->party.levels[i],
-                15,
-                1,
-                gBattleResources->secretBase->party.personality[i],
-                OT_ID_RANDOM_NO_SHINY,
-                0,
-                0);
-
-            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gBattleResources->secretBase->party.heldItems[i]);
-
-            for (j = 0; j < NUM_STATS; j++)
-                SetMonData(&gEnemyParty[i], MON_DATA_HP_EV + j, &gBattleResources->secretBase->party.EVs[i]);
-
-            for (j = 0; j < MAX_MON_MOVES; j++)
-            {
-                SetMonData(&gEnemyParty[i], MON_DATA_MOVE1 + j, &gBattleResources->secretBase->party.moves[i * MAX_MON_MOVES + j]);
-                SetMonData(&gEnemyParty[i], MON_DATA_PP1 + j, &gBattleMoves[gBattleResources->secretBase->party.moves[i * MAX_MON_MOVES + j]].pp);
-            }
-        }
-    }
-}
-
-u8 GetSecretBaseTrainerPicIndex(void)
-{
-    u8 facilityClass = sSecretBaseFacilityClasses[gBattleResources->secretBase->gender][gBattleResources->secretBase->trainerId[0] % 5];
-    return gFacilityClassToPicIndex[facilityClass];
-}
-
-u8 GetSecretBaseTrainerClass(void)
-{
-    u8 facilityClass = sSecretBaseFacilityClasses[gBattleResources->secretBase->gender][gBattleResources->secretBase->trainerId[0] % 5];
-    return gFacilityClassToTrainerClass[facilityClass];
 }
 
 bool8 IsPlayerPartyAndPokemonStorageFull(void)
@@ -6219,9 +6181,6 @@ u16 GetBattleBGM(void)
             return MUS_VS_AQUA_MAGMA;
         case TRAINER_CLASS_LEADER:
         case TRAINER_CLASS_ELITE_FOUR:
-            return MUS_RG_VS_GYM_LEADER;
-        case TRAINER_CLASS_CHAMPION:
-            return MUS_RG_VS_CHAMPION;
         case HOENN_TRAINER_CLASS_SALON_MAIDEN:
         case HOENN_TRAINER_CLASS_DOME_ACE:
         case HOENN_TRAINER_CLASS_PALACE_MAVEN:
@@ -6229,17 +6188,17 @@ u16 GetBattleBGM(void)
         case HOENN_TRAINER_CLASS_FACTORY_HEAD:
         case HOENN_TRAINER_CLASS_PIKE_QUEEN:
         case HOENN_TRAINER_CLASS_PYRAMID_KING:
-            return MUS_VS_FRONTIER_BRAIN;
+            return sBattleMusicTable[0][gMapHeader.region];
+        case TRAINER_CLASS_CHAMPION:
+            return MUS_RG_VS_CHAMPION;
         default:
-            if (gBattleTypeFlags & (BATTLE_TYPE_LINK 
-                                 | BATTLE_TYPE_RECORDED_LINK
-                                 | BATTLE_TYPE_FRONTIER))
+            if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
                 return MUS_VS_TRAINER;
-            else
-                return MUS_RG_VS_TRAINER;
+            return sBattleMusicTable[1][gMapHeader.region];
         }
     }
     else
+    {
         switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL))
         {
         case SPECIES_ARTICUNO:
@@ -6258,11 +6217,8 @@ u16 GetBattleBGM(void)
         case SPECIES_DEOXYS:
             return MUS_RG_VS_DEOXYS;
 	    default:
-            if (gMapHeader.regionMapSectionId == MAPSEC_BATTLE_FRONTIER 
-             || gMapHeader.regionMapSectionId == MAPSEC_ARTISAN_CAVE)
-                return MUS_VS_WILD;
-            else
-                return MUS_RG_VS_WILD;
+            return sBattleMusicTable[2][gMapHeader.region];
+        }
     }
 }
 
@@ -6528,6 +6484,15 @@ void ChangeForm(void)
     CalculateMonStats(&gPlayerParty[0]);
 }
 
+bool8 IsMonSquareShiny(struct Pokemon *mon)
+{
+    u32 otId = GetMonData(mon, MON_DATA_OT_ID, 0);
+    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, 0);
+    return ((HIHALF(otId) ^ LOHALF(otId) ^ HIHALF(personality) ^ LOHALF(personality)) == 0
+     || ((GetMonData(mon, MON_DATA_EVENT_LEGAL, 0))
+     && (HIHALF(otId) ^ LOHALF(otId) ^ HIHALF(personality) ^ LOHALF(personality)) < SHINY_ODDS));
+}
+
 bool8 IsMonShiny(struct Pokemon *mon)
 {
     u32 otId = GetMonData(mon, MON_DATA_OT_ID, 0);
@@ -6542,17 +6507,6 @@ bool8 IsShinyOtIdPersonality(u32 otId, u32 personality)
     if (shinyValue < SHINY_ODDS)
         retVal = TRUE;
     return retVal;
-}
-
-u32 GetColoration(u32 otId, u32 personality)
-{
-    u32 shinyValue = HIHALF(otId) ^ LOHALF(otId) ^ HIHALF(personality) ^ LOHALF(personality);
-    return shinyValue;
-}
-
-u32 GetColorationFromMon(struct Pokemon *mon)
-{
-    return GetColoration(GetMonData(mon, MON_DATA_OT_ID, 0), GetMonData(mon, MON_DATA_PERSONALITY, 0));
 }
 
 const u8 *GetTrainerPartnerName(void)
@@ -6751,10 +6705,7 @@ u16 FacilityClassToPicIndex(u16 facilityClass)
 
 u16 PlayerGenderToFrontTrainerPicId(u8 playerGender)
 {
-    if (playerGender)
-        return FacilityClassToPicIndex(FACILITY_CLASS_LEAF);
-    else
-        return FacilityClassToPicIndex(FACILITY_CLASS_RED);
+    return FacilityClassToPicIndex((playerGender) ? FACILITY_CLASS_LEAF : FACILITY_CLASS_RED);
 }
 
 void HandleSetPokedexFlag(u16 nationalNum, u8 caseId, u32 personality)

@@ -932,12 +932,11 @@
 	.endm
 
 	@ Gives the player one of the specified (species) Pokemon (with form) at level level holding item.
-	.macro givemon species:req, level:req, item:req, form=0
+	.macro givemon species:req, level:req, item:req
 	.byte 0x79
 	.2byte \species
 	.byte \level
 	.2byte \item
-	.byte \form
 	.endm
 
 	.macro giveegg species:req
@@ -1753,6 +1752,12 @@
 	DYNAMIC_5   = 14
 	DYNAMIC_6   = 15
 	RESET       = 0xFF
+
+    @ Deoxys form IDs
+	NORMAL   = 0
+	SPEED    = 1
+	ATTACK   = 2
+	DEFENSE  = 3
 
 	@ Message box types
 	MSGBOX_NPC = 2

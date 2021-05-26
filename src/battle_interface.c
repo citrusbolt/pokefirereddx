@@ -961,8 +961,6 @@ static void SpriteCB_HealthBar(struct Sprite *sprite)
     switch (sprite->hBar_Data6)
     {
     case 0:
-        sprite->pos1.x = gSprites[healthboxSpriteId].pos1.x + 16;
-        break;
     case 1:
         sprite->pos1.x = gSprites[healthboxSpriteId].pos1.x + 16;
         break;
@@ -1030,7 +1028,24 @@ void DummyBattleInterfaceFunc(u8 healthboxSpriteId, bool8 isDoubleBattleBattlerO
 
 }
 
-void UpdateOamPriorityInAllHealthboxes(u8 priority)
+static void TryToggleHealboxVisibility(u8 priority, u8 healthboxLeftSpriteId, u8 healthboxRightSpriteId, u8 healthbarSpriteId)
+{
+    u8 spriteIds[3] = {healthboxLeftSpriteId, healthboxRightSpriteId, healthbarSpriteId};
+    int i;
+    
+    for (i = 0; i < ARRAY_COUNT(spriteIds); i++)
+    {
+        if (spriteIds[i] == 0xFF)
+            continue;
+
+        if (priority) //end of anim -> make visible
+            gSprites[spriteIds[i]].invisible = FALSE;
+        else //start of anim -> make invisible
+            gSprites[spriteIds[i]].invisible = TRUE;
+    }
+}
+
+void UpdateOamPriorityInAllHealthboxes_(u8 priority, bool32 hideHPBoxes)
 {
     s32 i;
 
@@ -1043,29 +1058,30 @@ void UpdateOamPriorityInAllHealthboxes(u8 priority)
         gSprites[healthboxLeftSpriteId].oam.priority = priority;
         gSprites[healthboxRightSpriteId].oam.priority = priority;
         gSprites[healthbarSpriteId].oam.priority = priority;
+
+        if (hideHPBoxes && IsBattlerAlive(i))
+            TryToggleHealboxVisibility(priority, healthboxLeftSpriteId, healthboxRightSpriteId, healthbarSpriteId);
     }
+}
+
+void UpdateOamPriorityInAllHealthboxes(u8 priority)
+{
+    UpdateOamPriorityInAllHealthboxes_(priority, FALSE);
 }
 
 void InitBattlerHealthboxCoords(u8 battler)
 {
     s16 x = 0, y = 0;
 
-    if (!IsDoubleBattle())
-    {
-        if (GetBattlerSide(battler) != B_SIDE_PLAYER)
-            x = 44, y = 30;
-        else
-            x = 158, y = 88;
-    }
-    else
+    if (IsDoubleBattle())
     {
         switch (GetBattlerPosition(battler))
         {
         case B_POSITION_PLAYER_LEFT:
-            x = 159, y = 76;
+            x = 159, y = 75;
             break;
         case B_POSITION_PLAYER_RIGHT:
-            x = 171, y = 101;
+            x = 171, y = 100;
             break;
         case B_POSITION_OPPONENT_LEFT:
             x = 44, y = 19;
@@ -1074,6 +1090,13 @@ void InitBattlerHealthboxCoords(u8 battler)
             x = 32, y = 44;
             break;
         }
+    }
+    else
+    {
+        if (GetBattlerSide(battler) != B_SIDE_PLAYER)
+            x = 44, y = 30;
+        else
+            x = 158, y = 88;
     }
 
     UpdateSpritePos(gHealthboxSpriteIds[battler], x, y);
@@ -1084,21 +1107,14 @@ static void UpdateLvlInHealthbox(u8 healthboxSpriteId, u8 lvl)
     u32 windowId, spriteTileNum;
     u8 *windowTileData;
     u8 text[16];
-    u32 xPos, var1;
-    void *objVram;
+    u32 xPos;
+    u8 *objVram;
+    
+    text[0] = CHAR_EXTRA_SYMBOL;
+    text[1] = CHAR_LV_2;
 
-    text[0] = 0xF9;
-    text[1] = 5;
-
-    xPos = (u32) ConvertIntToDecimalStringN(text + 2, lvl, STR_CONV_MODE_LEFT_ALIGN, 3);
-    // Alright, that part was unmatchable. It's basically doing:
-    // xPos = 5 * (3 - (u32)(&text[2]));
-    xPos--;
-    xPos--;
-    xPos -= ((u32)(text));
-    var1 = (3 - xPos);
-    xPos = 4 * var1;
-    xPos += var1;
+    objVram = ConvertIntToDecimalStringN(text + 2, lvl, STR_CONV_MODE_LEFT_ALIGN, 3);
+    xPos = 5 * (3 - (objVram - (text + 2)));
 
     windowTileData = AddTextPrinterAndCreateWindowOnHealthbox(text, xPos, 3, 2, &windowId);
     spriteTileNum = gSprites[healthboxSpriteId].oam.tileNum * TILE_SIZE_4BPP;
@@ -1106,10 +1122,10 @@ static void UpdateLvlInHealthbox(u8 healthboxSpriteId, u8 lvl)
     if (GetBattlerSide(gSprites[healthboxSpriteId].hMain_Battler) == B_SIDE_PLAYER)
     {
         objVram = (void*)(OBJ_VRAM0);
-        if (!IsDoubleBattle())
-            objVram += spriteTileNum + 0x820;
-        else
+        if (IsDoubleBattle())
             objVram += spriteTileNum + 0x420;
+        else
+            objVram += spriteTileNum + 0x820;
     }
     else
     {
@@ -1185,7 +1201,7 @@ void UpdateHpTextInHealthbox(u8 healthboxSpriteId, s16 value, u8 maxOrCurrent)
             }
 
             ConvertIntToDecimalStringN(text + 6, value, STR_CONV_MODE_RIGHT_ALIGN, 3);
-            RenderTextFont9(gMonSpritesGfxPtr->barFontGfx, 9, text);
+            RenderTextFont9(gMonSpritesGfxPtr->barFontGfx, 0, text);
 
             for (i = 0; i < 3; i++)
             {
@@ -1254,7 +1270,7 @@ static void UpdateHpTextInHealthboxInDoubles(u8 healthboxSpriteId, s16 value, u8
             txtPtr = ConvertIntToDecimalStringN(text + 6, value, STR_CONV_MODE_RIGHT_ALIGN, 3);
             if (!maxOrCurrent)
                 StringCopy(txtPtr, gText_Slash);
-            RenderTextFont9(gMonSpritesGfxPtr->barFontGfx, 9, text);
+            RenderTextFont9(gMonSpritesGfxPtr->barFontGfx, 0, text);
 
             for (i = var; i < var + 3; i++)
             {
@@ -1281,7 +1297,7 @@ static void UpdateHpTextInHealthboxInDoubles(u8 healthboxSpriteId, s16 value, u8
             }
             else
             {
-                if (GetBattlerSide(battlerId) == B_SIDE_PLAYER) // Impossible to reach part, because the battlerId is from the opponent's side.
+                if (GetBattlerSide(battlerId) == B_SIDE_OPPONENT) // Impossible to reach part, because the battlerId is from the opponent's side.
                 {
                     CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_116),
                           (void*)(OBJ_VRAM0) + ((gSprites[healthboxSpriteId].oam.tileNum + 52) * TILE_SIZE_4BPP),
@@ -1337,21 +1353,20 @@ static void PrintSafariMonInfo(u8 healthboxSpriteId, struct Pokemon *mon)
     ConvertIntToDecimalStringN(text + 9, gBattleStruct->safariEscapeFactor, STR_CONV_MODE_RIGHT_ALIGN, 2);
     text[5] = CHAR_SPACE;
     text[8] = CHAR_SLASH;
-    RenderTextFont9(gMonSpritesGfxPtr->barFontGfx, 9, text);
+    RenderTextFont9(gMonSpritesGfxPtr->barFontGfx, 0, text);
 
-    j = healthBarSpriteId; // Needed to match for some reason.
-    for (j = 0; j < 5; j++)
+    for (healthBarSpriteId = 0; healthBarSpriteId < 5; healthBarSpriteId++)
     {
-        if (j <= 1)
+        if (healthBarSpriteId <= 1)
         {
-            CpuCopy32(&gMonSpritesGfxPtr->barFontGfx[0x40 * j + 0x20],
-                      (void*)(OBJ_VRAM0) + (gSprites[healthBarSpriteId].oam.tileNum + 2 + j) * TILE_SIZE_4BPP,
+            CpuCopy32(&gMonSpritesGfxPtr->barFontGfx[0x40 * healthBarSpriteId + 0x20],
+                      (void*)(OBJ_VRAM0) + (gSprites[healthBarSpriteId].oam.tileNum + 2 + healthBarSpriteId) * TILE_SIZE_4BPP,
                       32);
         }
         else
         {
-            CpuCopy32(&gMonSpritesGfxPtr->barFontGfx[0x40 * j + 0x20],
-                      (void*)(OBJ_VRAM0 + 0xC0) + (j + gSprites[healthBarSpriteId].oam.tileNum) * TILE_SIZE_4BPP,
+            CpuCopy32(&gMonSpritesGfxPtr->barFontGfx[0x40 * healthBarSpriteId + 0x20],
+                      (void*)(OBJ_VRAM0 + 0xC0) + (healthBarSpriteId + gSprites[healthBarSpriteId].oam.tileNum) * TILE_SIZE_4BPP,
                       32);
         }
     }

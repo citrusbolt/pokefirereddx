@@ -22,6 +22,7 @@
 #include "field_message_box.h"
 #include "sound.h"
 #include "strings.h"
+#include "string_util.h"
 #include "trainer_hill.h"
 #include "string_util.h"
 #include "overworld.h"
@@ -125,32 +126,32 @@ static const u8 sBattleTransitionTable_Trainer[][2] =
 // Battle Frontier (excluding Pyramid and Dome, which have their own tables below)
 static const u8 sBattleTransitionTable_BattleFrontier[] =
 {
-    B_TRANSITION_FRONTIER_LOGO_WIGGLE, 
-    B_TRANSITION_FRONTIER_LOGO_WAVE, 
-    B_TRANSITION_FRONTIER_SQUARES, 
+    B_TRANSITION_FRONTIER_LOGO_WIGGLE,
+    B_TRANSITION_FRONTIER_LOGO_WAVE,
+    B_TRANSITION_FRONTIER_SQUARES,
     B_TRANSITION_FRONTIER_SQUARES_SCROLL,
-    B_TRANSITION_FRONTIER_CIRCLES_MEET, 
-    B_TRANSITION_FRONTIER_CIRCLES_CROSS, 
-    B_TRANSITION_FRONTIER_CIRCLES_ASYMMETRIC_SPIRAL, 
+    B_TRANSITION_FRONTIER_CIRCLES_MEET,
+    B_TRANSITION_FRONTIER_CIRCLES_CROSS,
+    B_TRANSITION_FRONTIER_CIRCLES_ASYMMETRIC_SPIRAL,
     B_TRANSITION_FRONTIER_CIRCLES_SYMMETRIC_SPIRAL,
-    B_TRANSITION_FRONTIER_CIRCLES_MEET_IN_SEQ, 
-    B_TRANSITION_FRONTIER_CIRCLES_CROSS_IN_SEQ, 
-    B_TRANSITION_FRONTIER_CIRCLES_ASYMMETRIC_SPIRAL_IN_SEQ, 
+    B_TRANSITION_FRONTIER_CIRCLES_MEET_IN_SEQ,
+    B_TRANSITION_FRONTIER_CIRCLES_CROSS_IN_SEQ,
+    B_TRANSITION_FRONTIER_CIRCLES_ASYMMETRIC_SPIRAL_IN_SEQ,
     B_TRANSITION_FRONTIER_CIRCLES_SYMMETRIC_SPIRAL_IN_SEQ
 };
 
 static const u8 sBattleTransitionTable_BattlePyramid[] =
 {
-    B_TRANSITION_FRONTIER_SQUARES, 
-    B_TRANSITION_FRONTIER_SQUARES_SCROLL, 
+    B_TRANSITION_FRONTIER_SQUARES,
+    B_TRANSITION_FRONTIER_SQUARES_SCROLL,
     B_TRANSITION_FRONTIER_SQUARES_SPIRAL
 };
 
 static const u8 sBattleTransitionTable_BattleDome[] =
 {
-    B_TRANSITION_FRONTIER_LOGO_WIGGLE, 
-    B_TRANSITION_FRONTIER_SQUARES, 
-    B_TRANSITION_FRONTIER_SQUARES_SCROLL, 
+    B_TRANSITION_FRONTIER_LOGO_WIGGLE,
+    B_TRANSITION_FRONTIER_SQUARES,
+    B_TRANSITION_FRONTIER_SQUARES_SCROLL,
     B_TRANSITION_FRONTIER_SQUARES_SPIRAL
 };
 
@@ -483,7 +484,7 @@ static void sub_80B0828(void)
 // Initiates battle where Wally catches Ralts
 void StartWallyTutorialBattle(void)
 {
-    CreateMaleMon(&gEnemyParty[0], SPECIES_RALTS, 5, 0);
+    CreateMaleMon(&gEnemyParty[0], SPECIES_RALTS, 5);
     ScriptContext2_Enable();
     gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
     gBattleTypeFlags = BATTLE_TYPE_WALLY_TUTORIAL;
@@ -570,7 +571,6 @@ u8 BattleSetup_GetTerrainId(void)
     case MAP_TYPE_UNDERGROUND:
         if (MetatileBehavior_IsIndoorEncounter(tileBehavior))
     case MAP_TYPE_INDOOR:
-    case MAP_TYPE_SECRET_BASE:
             return BATTLE_TERRAIN_BUILDING;
         if (MetatileBehavior_IsSurfableWaterOrUnderwater(tileBehavior))
             return BATTLE_TERRAIN_POND;
@@ -706,14 +706,19 @@ static u8 GetWildBattleTransition(void)
     case SPECIES_ARTICUNO:
     case SPECIES_ZAPDOS:
     case SPECIES_MOLTRES:
-    case SPECIES_MEWTWO:
     case SPECIES_LUGIA:
     case SPECIES_HO_OH:
+    case SPECIES_LATIAS:
+    case SPECIES_LATIOS:
+        return B_TRANSITION_BLACK_HOLE;
+    case SPECIES_MEWTWO:
     case SPECIES_DEOXYS:
         return B_TRANSITION_BLUR;
     case SPECIES_MEW:
-        return B_TRANSITION_GRID_SQUARES;
+        return B_TRANSITION_RECTANGULAR_SPIRAL;
     default:
+        if (WILD_DOUBLE_BATTLE)
+            return (Overworld_GetFlashLevel()) ? B_TRANSITION_BLUR : B_TRANSITION_ANTI_CLOCKWISE_SPIRAL;
         if (enemyLevel < playerLevel)
         {
             if (InBattlePyramid())
@@ -738,19 +743,16 @@ static u8 GetTrainerBattleTransition(void)
     u8 enemyLevel;
     u8 playerLevel;
 
-    if (gTrainerBattleOpponent_A == TRAINER_SECRET_BASE)
-        return B_TRANSITION_CHAMPION;
-
     if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_ELITE_FOUR)
     {
         if (gTrainerBattleOpponent_A == TRAINER_SIDNEY)
-            return B_TRANSITION_SIDNEY;
+            return B_TRANSITION_LORELEI;
         if (gTrainerBattleOpponent_A == TRAINER_PHOEBE)
-            return B_TRANSITION_PHOEBE;
+            return B_TRANSITION_BRUNO;
         if (gTrainerBattleOpponent_A == TRAINER_GLACIA)
-            return B_TRANSITION_GLACIA;
+            return B_TRANSITION_AGATHA;
         if (gTrainerBattleOpponent_A == TRAINER_DRAKE)
-            return B_TRANSITION_DRAKE;
+            return B_TRANSITION_LANCE;
         return B_TRANSITION_CHAMPION;
     }
 
@@ -759,7 +761,7 @@ static u8 GetTrainerBattleTransition(void)
 
     if (gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_BOSS
      || gTrainers[gTrainerBattleOpponent_A].trainerClass == TRAINER_CLASS_TEAM_ROCKET)
-        return B_TRANSITION_MAGMA;
+        return B_TRANSITION_ROCKET;
 
     if (gTrainers[gTrainerBattleOpponent_A].doubleBattle)
         minPartyCount = 2; // double battles always at least have 2 pokemon.
@@ -776,16 +778,7 @@ static u8 GetTrainerBattleTransition(void)
         return sBattleTransitionTable_Trainer[transitionType][1];
 }
 
-// 0: Battle Tower
-// 3: Battle Dome
-// 4: Battle Palace
-// 5: Battle Arena
-// 6: Battle Factory
-// 7: Battle Pike
-// 10: Battle Pyramid
 // 11: Trainer Hill
-// 12: Secret Base
-// 13: E-Reader
 u8 GetSpecialBattleTransition(s32 id)
 {
     u16 var;
@@ -794,13 +787,12 @@ u8 GetSpecialBattleTransition(s32 id)
 
     switch (id)
     {
-    case 3:
+    case SPECIAL_BATTLE_DOME:
         return sBattleTransitionTable_BattleDome[Random() % ARRAY_COUNT(sBattleTransitionTable_BattleDome)];
-    case 10:
+    case SPECIAL_BATTLE_PYRAMID:
         return sBattleTransitionTable_BattlePyramid[Random() % ARRAY_COUNT(sBattleTransitionTable_BattlePyramid)];
+    case SPECIAL_BATTLE_EREADER:
     case 11:
-    case 12:
-    case 13:
         if (enemyLevel < playerLevel)
             return B_TRANSITION_POKEBALLS_TRAIL;
         else
@@ -825,12 +817,10 @@ void ChooseStarter(void)
 static void CB2_GiveStarter(void)
 {
     u16 starterMon;
-    u8 form;
 
     *GetVarPointer(VAR_STARTER_MON) = gSpecialVar_Result;
-    starterMon = GetStarterPokemon(gSpecialVar_Result, FALSE);
-    form = GetStarterPokemon(gSpecialVar_Result, TRUE); 
-    ScriptGiveMon(starterMon, 5, ITEM_NONE, form);
+    starterMon = GetStarterPokemon(gSpecialVar_Result);
+    ScriptGiveMon(starterMon, 5, ITEM_NONE);
     ResetTasks();
     PlayBattleBGM();
     SetMainCallback2(CB2_StartFirstBattle);
@@ -1230,11 +1220,7 @@ void BattleSetup_StartTrainerBattle(void)
 
 static void CB2_EndTrainerBattle(void)
 {
-    if (gTrainerBattleOpponent_A == TRAINER_SECRET_BASE)
-    {
-        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
-    }
-    else if (IsPlayerDefeated(gBattleOutcome))
+    if (IsPlayerDefeated(gBattleOutcome))
     {
         if (InBattlePyramid() || InTrainerHillChallenge())
             SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
@@ -1254,11 +1240,7 @@ static void CB2_EndTrainerBattle(void)
 
 static void CB2_EndRematchBattle(void)
 {
-    if (gTrainerBattleOpponent_A == TRAINER_SECRET_BASE)
-    {
-        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
-    }
-    else if (IsPlayerDefeated(gBattleOutcome))
+    if (IsPlayerDefeated(gBattleOutcome))
     {
         SetMainCallback2(CB2_WhiteOut);
     }
@@ -1407,7 +1389,7 @@ static const u8 *ReturnEmptyStringIfNull(const u8 *string)
     if (string)
         return string;
     else
-        return gText_EmptyString2;
+        return gText_ExpandedPlaceholder_Empty;
 }
 
 static const u8 *GetIntroSpeechOfApproachingTrainer(void)
@@ -1461,7 +1443,6 @@ static s32 TrainerIdToRematchTableId(const struct RematchTrainer *table, u16 tra
     {
         for (j = 0; j < REMATCHES_COUNT; j++)
         {
-            if (table[i].trainerIds[j] == 0) break; // one line required to match -g
             if (table[i].trainerIds[j] == trainerId)
                 return i;
         }

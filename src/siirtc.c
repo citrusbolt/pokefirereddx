@@ -67,8 +67,8 @@ extern vu16 GPIOPortDirection;
 
 static bool8 sLocked;
 
-static int WriteCommand(u8 value);
-static int WriteData(u8 value);
+static void WriteCommand(u8 value);
+static void WriteData(u8 value);
 static u8 ReadData();
 static void EnableGpioPortRead();
 static void DisableGpioPortRead();
@@ -97,15 +97,9 @@ u8 SiiRtcProbe(void)
 
     errorCode = 0;
 
-    if ((rtc.status & (SIIRTCINFO_POWER | SIIRTCINFO_24HOUR)) == SIIRTCINFO_POWER
-     || (!rtc.status & (SIIRTCINFO_POWER | SIIRTCINFO_24HOUR)))
+    if (rtc.status & (SIIRTCINFO_POWER | ~SIIRTCINFO_24HOUR))
     {
         // The RTC is in 12-hour mode. Reset it and switch to 24-hour mode.
-
-        // Note that the conditions are redundant and equivalent to simply
-        // "(rtc.status & SIIRTCINFO_24HOUR) == 0". It's possible that this
-        // was also intended to handle resetting the clock after power failure
-        // but a mistake was made.
 
         if (!SiiRtcReset())
             return 0;
@@ -352,10 +346,7 @@ bool8 SiiRtcSetAlarm(struct SiiRtcInfo *rtc)
 
     // The AM/PM flag must be set correctly even in 24-hour mode.
 
-    if (alarmData[0] < 12)
-        alarmData[0] = rtc->alarmHour | ALARM_AM;
-    else
-        alarmData[0] = rtc->alarmHour | ALARM_PM;
+    alarmData[0] = rtc->alarmHour | (alarmData[0] < 12 ? ALARM_AM : ALARM_PM);
 
     alarmData[1] = rtc->alarmMinute;
 
@@ -377,7 +368,7 @@ bool8 SiiRtcSetAlarm(struct SiiRtcInfo *rtc)
     return TRUE;
 }
 
-static int WriteCommand(u8 value)
+static void WriteCommand(u8 value)
 {
     u8 i;
     u8 temp;
@@ -390,11 +381,9 @@ static int WriteCommand(u8 value)
         GPIO_PORT_DATA = (temp << 1) | CS_HI;
         GPIO_PORT_DATA = (temp << 1) | SCK_HI | CS_HI;
     }
-
-    // control reaches end of non-void function
 }
 
-static int WriteData(u8 value)
+static void WriteData(u8 value)
 {
     u8 i;
     u8 temp;
@@ -407,15 +396,13 @@ static int WriteData(u8 value)
         GPIO_PORT_DATA = (temp << 1) | CS_HI;
         GPIO_PORT_DATA = (temp << 1) | SCK_HI | CS_HI;
     }
-
-    // control reaches end of non-void function
 }
 
 static u8 ReadData()
 {
     u8 i;
     u8 temp;
-    u8 value;
+    u8 value = 0;
 
     for (i = 0; i < 8; i++)
     {
@@ -427,7 +414,7 @@ static u8 ReadData()
         GPIO_PORT_DATA = SCK_HI | CS_HI;
 
         temp = ((GPIO_PORT_DATA & SIO_HI) >> 1);
-        value = (value >> 1) | (temp << 7); // UB: accessing uninitialized var
+        value = (value >> 1) | (temp << 7);
     }
 
     return value;

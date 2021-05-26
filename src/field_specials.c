@@ -1263,11 +1263,6 @@ u8 GetPokeblockNameByMonNature(void)
     return CopyMonFavoritePokeblockName(GetNature(&gPlayerParty[GetLeadMonIndex()]), gStringVar1);
 }
 
-void GetSecretBaseNearbyMapName(void)
-{
-    GetMapName(gStringVar1, VarGet(VAR_SECRET_BASE_MAP), 0);
-}
-
 u16 GetBestBattleTowerStreak(void)
 {
     return GetGameStat(GAME_STAT_BATTLE_TOWER_BEST_STREAK);
@@ -1410,7 +1405,7 @@ void PutZigzagoonInPlayerParty(void)
 bool8 IsStarterInParty(void)
 {
     u8 i;
-    u16 starter = GetStarterPokemon(VarGet(VAR_STARTER_MON), FALSE);
+    u16 starter = GetStarterPokemon(VarGet(VAR_STARTER_MON));
     u8 partyCount = CalculatePlayerPartyCount();
     for (i = 0; i < partyCount; i++)
     {
@@ -2709,13 +2704,17 @@ void SetBattleTowerLinkPlayerGfx(void)
     u8 i;
     for (i = 0; i < 2; i++)
     {
-        if (gLinkPlayers[i].gender == MALE)
+        switch (gLinkPlayers[i].version)
         {
-            VarSet(VAR_OBJ_GFX_ID_F - i, OBJ_EVENT_GFX_BRENDAN_NORMAL);
-        }
-        else
-        {
-            VarSet(VAR_OBJ_GFX_ID_F - i, OBJ_EVENT_GFX_MAY_NORMAL);
+            case VERSION_EMERALD:
+                if (gLinkPlayers[i].gender) 
+                    VarSet(VAR_OBJ_GFX_ID_F - i, OBJ_EVENT_GFX_MAY_NORMAL);
+                else
+                    VarSet(VAR_OBJ_GFX_ID_F - i, OBJ_EVENT_GFX_BRENDAN_NORMAL);
+                break;
+            default:
+                VarSet(VAR_OBJ_GFX_ID_F - i, OBJ_EVENT_GFX_RED + gLinkPlayers[i].gender);
+                break;
         }
     }
 }
