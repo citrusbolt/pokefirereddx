@@ -3096,11 +3096,7 @@ static void BufferMonTrainerMemo(void)
         }
         if (sum->metGame == VERSION_GAMECUBE)
         {
-            if (sum->metLocation == ORRE_REGION(DISTANT_LAND))
-            {
-                gText_XNatureMetDistantLand;
-            }
-            if (sum->metLocation == ORRE_REGION(XD_STARTER_EEVEE))
+            if (sum->metLocation == 0 && sMonSummaryScreen->eventLegal)
             {
                 DynamicPlaceholderTextUtil_SetPlaceholderPtr(4, sum->OTName);
                 text = gText_ObtainedFromDad;

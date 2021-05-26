@@ -40,6 +40,7 @@ static const u8 sMapName_GateonPort[] = _("GATEON PORT");
 static const u8 sMapName_KaminkosHouse[] = _("KAMINKO'S HOUSE");
 
 const u8 *const gOrreRegionMapNames[] = {
+	[ORRE_REGION(DISTANT_LAND)]              = gText_XNatureMetDistantLand,
     [ORRE_REGION(OUTSKIRT_STAND)]            = sMapName_OutskirtStand,
     [ORRE_REGION(CIPHER_LAB)]                = sMapName_CipherLab,
     [ORRE_REGION(PHENAC_CITY)]               = sMapName_PhenacCity,

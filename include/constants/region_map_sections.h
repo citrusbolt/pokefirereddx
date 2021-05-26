@@ -360,7 +360,7 @@
 #define ORRE_MAPSEC_POKEMON_HQ_LAB              0x17B
 #define ORRE_MAPSEC_GATEON_PORT                 0x17C
 #define ORRE_MAPSEC_KAMINKOS_HOUSE              0x17D
-#define ORRE_MAPSEC_STARTER_AND_PLUSLE          0x17E
+#define ORRE_MAPSEC_STARTER_AND_PLUSLE          0x256
 
 #define ORRE_MAPSEC_START                 ORRE_MAPSEC_DISTANT_LAND
 #define ORRE_MAPSEC_END                   0x257
